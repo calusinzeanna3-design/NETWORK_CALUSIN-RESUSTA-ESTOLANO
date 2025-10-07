@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>N.E.T.W.O.R.K.</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="jv.js"></script>
+</head>
+<body id="top">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="logo.png" alt="NETWORK Logo" />
+      <span class="org-name">NETWORK</span>
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <div class="nav-links" id="navLinks">
+      <a href="#top">Home</a>
+      <a href="#mission">Mission</a>
+      <a href="#vision">Vision</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#projects">Projects</a>
+      <a href="#comment">Join Us</a>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-overlay"></div>
+    <div class="logo-overlay">
+      <img src="logo.png" alt="NETWORK Logo" class="big-logo" />
+    </div>
+    <h1>New Enhanced Team With Oriented Knowledge</h1>
+    <h4>(N.E.T.W.O.R.K)</h4>
+    <p>Empowering students through leadership and collaboration.</p>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <section id="welcome">
+      <h2>Welcome to NETWORK</h2>
+      <div class="container"> 
+        <p>
+          The <strong>New Enhanced Team With Oriented Knowledge (NETWORK)</strong> is a dynamic student organization
+          dedicated to growth, unity, and innovation through educational activities and leadership development.
+        </p>
+      </div>
+    </section>
+
+    <section id="vision">
+      <h2>Vision</h2>
+      <div>
+        <p>
+          NETWORK envisions an inclusive community that empowers students in
+          technology-related fields. We aim to create a welcoming and creative
+          atmosphere where learners grow into leaders, innovators, and team
+          players ready to face challenges in today’s fast-changing world.
+        </p>
+        <p>
+          By promoting curiosity, growth, and collaboration, we seek to mold a
+          generation that uses technology to bring about positive change while
+          working toward a common goal.
+        </p>
+      </div>
+    </section>
+
+    <section id="mission">
+      <h2>Mission</h2>
+      <div>
+        <p>
+          Our mission is to provide students with resources, exposure, and
+          opportunities to excel in the technology industry. We focus on
+          developing not only technical proficiency but also communication,
+          teamwork, and leadership skills through hands-on projects and
+          community service.
+        </p>
+        <p>
+          NETWORK is committed to building well-rounded individuals prepared to
+          contribute to society and their careers. By fostering creativity,
+          accountability, and continuous growth, we believe our members can
+          achieve more together than they ever dreamed—creating futures, not
+          just skills.
+        </p>
+      </div>
+    </section>
+
+    <section id="gallery">
+      <h2>Gallery</h2>
+      <div class="gallery">
+        <figure>
+          <img src="SCITECH.jpg" alt="TRAINING BIT">
+          <figcaption>Leadership Training 2025</figcaption>
+        </figure>
+        <figure>
+          <img src="BIT NIGHT.jpg" alt="FUN ACTIVITIES">
+          <figcaption>Team Building Day</figcaption>
+        </figure>
+        <figure>
+          <img src="SEMINAR.jpg" alt="SEMINARS/WORKSHOP">
+          <figcaption>Community Outreach</figcaption>
+        </figure>
+        <figure>
+          <img src="future.jpg" alt="About Future">
+          <figcaption>Future IT</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2>Benefits of Joining Our Organization</h2>
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <h3>Leadership Growth</h3>
+          <p>Enhance your leadership potential through hands-on experiences, decision-making opportunities, and team management skills.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Collaboration & Networking</h3>
+          <p>Connect with passionate students, mentors, and professionals while working together on meaningful projects and events.</p>
+        </div>
+        <div class="benefit-item">
+          <h3>Community Impact</h3>
+          <p>Contribute to outreach programs and initiatives that create lasting positive change within the school and local community.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="comment">
+      <h2>Join NETWORK</h2>
+      <form action="submit.php" method="post">
+        <label for="name">Full Name:</label><br />
+        <input type="text" id="name" name="name" required><br /><br />
+
+        <label for="email">Email:</label><br />
+        <input type="email" id="email" name="email" required><br /><br />
+
+        <label for="comments">Why do you want to join?</label><br />
+        <textarea id="comments" name="comments" required></textarea><br /><br />
+
+        <p>Gender:</p>
+        <label><input type="checkbox" name="Gender"> Male</label>
+        <label><input type="checkbox" name="Gender"> Female</label>
+        <label><input type="checkbox" name="Gender"> LGBTQ+</label><br /><br />
+
+        <p>Have you ever had experience being in an organization?</p>
+        <label><input type="checkbox" name="skills"> Yes</label>
+        <label><input type="checkbox" name="skills"> No</label>
+
+        <p>Preferred Contact:</p>
+        <label><input type="radio" name="contact" required> Email</label>
+        <label><input type="radio" name="contact" required> Message</label><br /><br />
+
+        <label for="Course">Course:</label>
+        <select id="Course" name="Course" required>
+          <option value="">--Select--</option>
+          <option>BIT</option>
+          <option>BindTech</option>
+          <option>Both</option>
+        </select><br /><br />
+
+        <label for="Relationship">Relationship:</label>
+        <select id="Relationship" name="RelationshipS" required>
+          <option value="">--Select--</option>
+          <option>Student</option>
+          <option>Teacher</option>
+          <option>Other</option>
+        </select><br /><br />
+
+        <label for="profile">Upload Profile Photo:</label>
+        <input type="file" id="profile" name="profile" accept="image/*" required><br /><br />
+
+        <input type="submit" value="Submit Application">
+      </form>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="bottom">
+    <p>&copy; 2025 NETWORK Organization | Developed for student leadership</p>
+    <a href="#top">⬆ Back to Top</a>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("active");
+    }
+  </script>
+</body>
+</html>
