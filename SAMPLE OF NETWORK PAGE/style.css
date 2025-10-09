@@ -10,8 +10,9 @@ body {
   background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
   color: #222;
   line-height: 1.6;
-  padding: 60px;
-  margin: 10px;
+  padding: auto;
+  margin: auto;
+  
 
 }
 
