@@ -15,7 +15,7 @@ body {
 
 }
 
-/* NAVBAR */
+
 .navbar {
   background: linear-gradient(90deg, maroon, black);
   color: white;
@@ -92,7 +92,7 @@ body {
   }
 }
 
-/* HEADER */
+
 .main-header {
   text-align: center;
   padding: 80px 20px;
@@ -132,7 +132,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* SECTIONS */
+
 .main section {
   margin: 50px auto;
   padding: 100px 50px;
@@ -155,12 +155,12 @@ body {
   text-align: center;
 }
 
-/* ABOUT SECTION */
+
 .about-us {
   text-align: center;
 }
 
-/* GALLERY */
+
 .gallery-section {
   text-align: center;
 }
@@ -190,7 +190,7 @@ body {
   color: #555;
 }
 
-/* FOOTER */
+
 footer {
   text-align: center;
   padding: 20px;
