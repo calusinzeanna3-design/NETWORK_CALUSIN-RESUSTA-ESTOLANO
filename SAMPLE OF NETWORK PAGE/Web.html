@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NETWORK</title>
+    <title>NETWORK Organization</title>
     <link rel="stylesheet" href="style.css" />
-    <script defer src="jv.js"></script>
+    <script defer src="script.js"></script>
   </head>
-  <body>
+  <body id="top">
   
     <nav class="navbar">
       <div class="logo">
@@ -17,83 +17,130 @@
       <div class="menu-toggle" onclick="toggleMenu()">☰</div>
       <div class="nav-links" id="navLinks">
         <a href="#top">Home</a>
-        <a href="#about">About Us</a>
+        <a href="#about">About</a>
+        <a href="#activities">Activities</a>
+        <a href="#officers">Officers</a>
+        <a href="#contact">Contact</a>
       </div>
     </nav>
 
-    <header class="main-header" id="top">
-      <div class="header-overlay"></div>
-      <div class="logo-overlay">
-        <img src="logo.png" alt="NETWORK Logo" class="big-logo" />
-        <h1>WELCOME</h1>
-        <h4>to</h4>
-        <h2>New Enhanced Team With Oriented Knowledge</h2>
+   
+    <header class="main-header" id="home">
+      <div class="header-panel">
+        <div class="panel-content">
+          <h1>Brewed with Knowledge, Served with Passion</h1>
+          <p>
+            Empowering BIT students to connect, innovate, and grow through teamwork and technology.
+          </p>
+          <div class="header-buttons">
+            <a href="#about" class="btn gold">Learn More</a>
+            <a href="#contact" class="btn dark">Join Us</a>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="main">
-      <section class="introduction">
-        <h2>What is NETWORK?</h2>
-        <p>
-          NETWORK Organization is exclusively for BIT students only. Our organization
-          strives to make a healthy environment, strong communication, and team
-          collaboration for all students. Our aim is to develop and hone the skills
-          that each BIT student can possess and implement activities such as workshops
-          and seminars for them to gain valuable knowledge about the field they’re
-          taking.
-        </p>
-      </section>
+<section id="about" class="about-section">
+  <div class="about-container">
+    <div class="about-text">
+      <h2>About Us</h2>
+      <p class="intro">
+        NETWORK is an organization exclusively for BIT students, focused on building
+        collaboration, leadership, and innovation. We strive to cultivate a healthy
+        learning environment and enhance technical skills through workshops, seminars,
+        and teamwork.
+      </p>
 
-      <section id="about">
-        <div class="about-us">
-        <h2>Vision</h2>
-        <p>
-          NETWORK envisions an inclusive community that empowers students in
-          technology-related fields. We aim to create a welcoming and creative
-          atmosphere where learners grow into leaders, innovators, and team players
-          ready to face challenges in today’s fast-changing world.
-        </p>
-        <h2>Mission</h2>
-        <p>
-          By promoting curiosity, growth, and collaboration, we seek to mold a
-          generation that uses technology to bring about positive change while working
-          toward a common goal.
-        </p>
+      <div class="vision-mission">
+        <div class="vision">
+          <h3>Vision</h3>
+          <p>
+            To create an inclusive and empowering community that shapes future innovators
+            in technology and leadership.
+          </p>
         </div>
-      </section>
 
-      <section id="activities" class="gallery-section">
+        <div class="mission">
+          <h3>Mission</h3>
+          <p>
+            To inspire curiosity, collaboration, and excellence among BIT students,
+            helping them harness technology to create positive impact.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <section id="activities" class="activities-section section">
+      <div class="section-content">
         <h2>Activities</h2>
         <div class="gallery">
-          <figure>
-            <img src="SCITECH.jpg" alt="Leadership Training 2025" />
-            <figcaption>Leadership Training 2025</figcaption>
-          </figure>
-          <figure>
-            <img src="BIT NIGHT.jpg" alt="Team Building Day" />
-            <figcaption>Team Building Day</figcaption>
-          </figure>
-          <figure>
-            <img src="SEMINAR.jpg" alt="Community Outreach" />
-            <figcaption>Community Outreach</figcaption>
-          </figure>
-          <figure>
-            <img src="future.jpg" alt="Future IT" />
-            <figcaption>Future IT</figcaption>
-          </figure>
+          <div><img src="BIT NIGHT.jpg" alt="BIT Night" /><p>BIT Night</p></div>
+          <div><img src="SEMINAR.jpg" alt="Seminar" /><p>Seminar & Workshop</p></div>
+          <div><img src="future.jpg" alt="Future IT" /><p>Future IT Event</p></div>
+          <div><img src="SCITECH.jpg" alt="SciTech" /><p>SciTech Expo</p></div>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
 
-    <footer id="bottom">
-      <p>&copy; 2025 NETWORK Organization | Developed for student leadership</p>
-      <a href="#top">⬆ Back to Top</a>
+   
+    <section id="officers" class="officers-section section">
+      <div class="section-content">
+        <h2>Our Executives</h2>
+        <div class="officer-grid">
+          <div class="officer">
+            <img src="president.png" alt="President" />
+            <h3>Zeanna Patricia D. Calusin</h3><p>President</p>
+          </div>
+          <div class="officer">
+            <img src="vp.png" alt="Vice President" />
+            <h3>John Paulo L. Manuel</h3><p>Vice President</p>
+          </div>
+          <div class="officer">
+            <img src="secretary.png" alt="Secretary" />
+            <h3>Jessa Mae R. Pines</h3><p>Secretary</p>
+          </div>
+          <div class="officer">
+            <img src="treasurer.png" alt="Treasurer" />
+            <h3>Arrone B. Caagbay</h3><p>Treasurer</p>
+          </div>
+          <div class="officer">
+            <img src="auditor.png" alt="Auditor" />
+            <h3>Angelica S. Aguila</h3><p>Auditor</p>
+          </div>
+          <div class="officer">
+            <img src="Ly1.png" alt="Layout Artist 1" />
+            <h3>Jona M. Tan</h3><p>Layout Artist 1</p>
+          </div>
+          <div class="officer">
+            <img src="Ly2.png" alt="Layout Artist 2" />
+            <h3>Princess Nicole D. Martinez</h3><p>Layout Artist 2</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section id="contact" class="contact-section section">
+      <div class="section-content">
+        <h2>Join Us Now!</h2>
+        <p>We’d love to welcome you to this organization! Send us a message now.</p>
+        <form class="contact-form">
+          <input type="text" placeholder="Your Name" required />
+          <input type="email" placeholder="Your Email" required />
+          <textarea rows="4" placeholder="Your Message" required></textarea>
+          <button type="submit" class="btn gold">Send Message</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+      
+      <div class="footer-content">
+        <p>© 2025 NETWORK Organization | All Rights Reserved</p>
+      </div>
     </footer>
-
-    <script>
-      function toggleMenu() {
-        document.getElementById("navLinks").classList.toggle("active");
-      }
-    </script>
   </body>
 </html>
