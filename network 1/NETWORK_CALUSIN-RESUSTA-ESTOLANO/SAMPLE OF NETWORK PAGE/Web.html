@@ -7,94 +7,130 @@
     <link rel="stylesheet" href="style.css" />
     <script defer src="jv.js"></script>
   </head>
+  
   <body>
-    <!-- Navigation Bar -->
+
     <nav class="navbar">
       <div class="logo">
-        <img src="logo.png" alt="NETWORK Logo" />
         <span class="org-name">NETWORK</span>
+        <img src="../SAMPLE OF NETWORK PAGE/pics/logo.png"  alt="NETWORK Logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" />
+        <span class="org-name" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">NETWORK</span>
+
       </div>
-      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+      <div class="menu-toggle" id="toggleMenu()">☰</div>
       <div class="nav-links" id="navLinks">
         <a href="#top">Home</a>
         <a href="#about">About Us</a>
+        <a href="#activities">Activities</a>
+        <a href="#">Officers</a>
+        <a href="#contact">Contact</a>
       </div>
     </nav>
 
-    <!-- Header -->
     <header class="main-header" id="top">
       <div class="header-overlay"></div>
-      <div class="logo-overlay">
-        <img src="logo.png" alt="NETWORK Logo" class="big-logo" />
+      
+        <img
+          src="../SAMPLE OF NETWORK PAGE/pics/logo.png"
+          alt="NETWORK Logo"
+          class="big-logo"
+        />
         <h1>WELCOME</h1>
         <h4>to</h4>
         <h2>New Enhanced Team With Oriented Knowledge</h2>
       </div>
     </header>
 
-    <!-- Main Content -->
+    
     <main class="main">
       <section class="introduction">
-        <h2>What is NETWORK?</h2>
+        <h2>About Us</h2>
         <p>
-          NETWORK organization is exclusively for BIT students only. Our organization
-          strives to make a healthy environment, strong communication, and team
-          collaboration for all students. Our aim is to develop and hone the skills
-          that each BIT student can possess and implement activities such as workshops
-          and seminars for them to gain valuable knowledge about the field they’re
-          taking.
+          NETWORK is an organization exclusively for BIT students, focused on building
+          collaboration, leadership, and innovation. We strive to cultivate a healthy
+          learning environment and enhance technical skills through workshops, seminars,
+          and teamwork.
         </p>
       </section>
 
-      <section id="about" class="about-us">
-        <h2>Vision</h2>
-        <p>
-          NETWORK envisions an inclusive community that empowers students in
-          technology-related fields. We aim to create a welcoming and creative
-          atmosphere where learners grow into leaders, innovators, and team players
-          ready to face challenges in today’s fast-changing world.
-        </p>
-        <h2>Mission</h2>
-        <p>
-          By promoting curiosity, growth, and collaboration, we seek to mold a
-          generation that uses technology to bring about positive change while working
-          toward a common goal.
-        </p>
+      <section id="about">
+        <div class="about-us">
+          <div class="vision">
+            <h2>Vision</h2>
+            <p>
+              NETWORK envisions an inclusive community that empowers students in
+              technology-related fields. We aim to create a welcoming and creative
+              atmosphere where learners grow into leaders, innovators, and team players
+              ready to face challenges in today’s fast-changing world.
+            </p>
+          </div>
+
+          <div class="mission">
+            <h2>Mission</h2>
+            <p>
+              By promoting curiosity, growth, and collaboration, we seek to mold a
+              generation that uses technology to bring about positive change while working
+              toward a common goal.
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section id="about" class="gallery-section">
+      <section id="activities" class="gallery-section">
         <h2>Activities</h2>
         <div class="gallery">
           <figure>
-            <img src="SCITECH.jpg" alt="Leadership Training 2025" />
+            <img src="../SAMPLE OF NETWORK PAGE/pics/SCITECH.jpg" alt="Leadership Training 2025" />
             <figcaption>Leadership Training 2025</figcaption>
           </figure>
           <figure>
-            <img src="BIT NIGHT.jpg" alt="Team Building Day" />
+            <img src="../SAMPLE OF NETWORK PAGE/pics/BIT NIGHT.jpg" alt="Team Building Day" />
             <figcaption>Team Building Day</figcaption>
           </figure>
           <figure>
-            <img src="SEMINAR.jpg" alt="Community Outreach" />
+            <img src="../SAMPLE OF NETWORK PAGE/pics/SEMINAR.jpg" alt="Community Outreach" />
             <figcaption>Community Outreach</figcaption>
           </figure>
           <figure>
-            <img src="future.jpg" alt="Future IT" />
+            <img src="../SAMPLE OF NETWORK PAGE/pics/future.jpg" alt="Future IT" />
             <figcaption>Future IT</figcaption>
           </figure>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
-    <footer id="bottom">
-      <p>&copy; 2025 NETWORK Organization | Developed for student leadership</p>
-      <a href="#top">⬆ Back to Top</a>
+     <aside class="join-us">
+      <h2>Join Us</h2>
+      <form id="joinForm">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="year">Year Level</label>
+        <select id="year" name="year" required>
+          <option value="">Select Year</option>
+          <option value="1st">1st Year</option>
+          <option value="2nd">2nd Year</option>
+          <option value="3rd">3rd Year</option>
+          <option value="4th">4th Year</option>
+        </select>
+
+        <button type="submit">Join Now</button>
+      </form>
+    </aside>
+
+    <footer id="contact">
+      <p>&copy; 2025 NETWORK Organization | Developed for Student Leadership</p>
     </footer>
 
     <script>
-      function toggleMenu() {
-        document.getElementById("navLinks").classList.toggle("active");
-      }
-    </script>
+  function toggleMenu() {
+    const navLinks = document.getElementById("navLinks");
+    navLinks.classList.toggle("active");
+  }
+</script>
+
   </body>
 </html>
