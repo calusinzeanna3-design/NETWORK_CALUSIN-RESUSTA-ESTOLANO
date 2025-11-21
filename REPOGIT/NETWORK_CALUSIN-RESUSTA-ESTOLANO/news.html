@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK</title>
+
+  <!-- TAILWIND CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ICONS -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    html { scroll-behavior: smooth; }
+
+    /* Upcoming Events slider positions */
+    .event-slide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-origin: center center;
+      transition: all 0.6s ease;
+    }
+    .event-center {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 30;
+      pointer-events: auto;
+    }
+    .event-left {
+      opacity: 0.5;
+      transform: translate(-115%, -50%) scale(0.85);
+      z-index: 20;
+      pointer-events: none;
+    }
+    .event-right {
+      opacity: 0.5;
+      transform: translate(15%, -50%) scale(0.85);
+      z-index: 20;
+      pointer-events: none;
+    }
+    .event-hidden {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+
+  <script>
+    /* Existing placeholders (not used but kept) */
+    let officerSlideIndex = 0;
+    function showOfficerSlide(n) {
+      const slides = document.getElementsByClassName("officer-slide");
+      if (!slides.length) return;
+      if (n >= slides.length) officerSlideIndex = 0;
+      if (n < 0) officerSlideIndex = slides.length - 1;
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.add("opacity-0");
+        slides[i].classList.remove("opacity-100");
+      }
+      slides[officerSlideIndex].classList.remove("opacity-0");
+      slides[officerSlideIndex].classList.add("opacity-100");
+    }
+    function changeOfficerSlide(step) {
+      officerSlideIndex += step;
+      showOfficerSlide(officerSlideIndex);
+    }
+
+    let activitySlideIndex = 0;
+    function showActivitySlide(n) {
+      const slides = document.getElementsByClassName("activity-slide");
+      if (!slides.length) return;
+      if (n >= slides.length) activitySlideIndex = 0;
+      if (n < 0) activitySlideIndex = slides.length - 1;
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.add("opacity-0", "pointer-events-none");
+        slides[i].classList.remove("opacity-100", "pointer-events-auto");
+      }
+      slides[activitySlideIndex].classList.remove("opacity-0", "pointer-events-none");
+      slides[activitySlideIndex].classList.add("opacity-100", "pointer-events-auto");
+    }
+    function changeActivitySlide(step) {
+      activitySlideIndex += step;
+      showActivitySlide(activitySlideIndex);
+    }
+
+    /* NEWS: See More toggle */
+    function toggleMoreNews() {
+      const moreNews = document.getElementById("moreNews");
+      const btn = document.getElementById("seeMoreBtn");
+
+      if (moreNews.classList.contains("hidden")) {
+        moreNews.classList.remove("hidden");
+        btn.textContent = "See Less";
+      } else {
+        moreNews.classList.add("hidden");
+        btn.textContent = "See More";
+      }
+    }
+
+    /* UPCOMING EVENTS SLIDER */
+    let eventIndex = 0;
+    function showEventSlide(n) {
+      const slides = document.getElementsByClassName("event-slide");
+      if (!slides.length) return;
+
+      const total = slides.length;
+      if (n >= total) eventIndex = 0;
+      if (n < 0) eventIndex = total - 1;
+
+      const center = eventIndex;
+      const left = (eventIndex - 1 + total) % total;
+      const right = (eventIndex + 1) % total;
+
+      for (let i = 0; i < total; i++) {
+        slides[i].classList.remove("event-center", "event-left", "event-right", "event-hidden");
+        slides[i].classList.add("event-hidden");
+      }
+
+      slides[center].classList.remove("event-hidden");
+      slides[center].classList.add("event-center");
+
+      slides[left].classList.remove("event-hidden");
+      slides[left].classList.add("event-left");
+
+      slides[right].classList.remove("event-hidden");
+      slides[right].classList.add("event-right");
+    }
+
+    function changeEventSlide(step) {
+      eventIndex += step;
+      showEventSlide(eventIndex);
+    }
+
+    window.addEventListener("load", () => {
+      showOfficerSlide(officerSlideIndex);
+      showActivitySlide(activitySlideIndex);
+      showEventSlide(eventIndex);      // initialize upcoming events slider
+    });
+  </script>
+
+</head>
+
+<body class="bg-white text-gray-900 text-[17px] md:text-[18px]">
+
+<!-- NAVIGATION -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4">
+
+    <div class="w-full flex justify-center mb-3">
+      <div
+        class="text-3xl md:text-4xl font-extrabold cursor-pointer"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      >
+        NETWORK
+      </div>
+    </div>
+
+    <div class="w-full flex justify-center mb-4">
+      <div class="w-40 h-[2px] bg-gray-300"></div>
+    </div>
+
+    <div class="flex items-center justify-center relative">
+      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl">
+        <a href="index.html" class="hover:text-blue-600">Home</a>
+        <a href="about.html" class="hover:text-blue-600">About</a>
+        <a href="news.html" class="hover:text-blue-600">News</a>
+        <a href="administration.html" class="hover:text-blue-600">Administration</a>
+      </div>
+
+      <div class="absolute right-0 group">
+        <a
+          href="#contact"
+          class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition">
+          Join Us
+        </a>
+
+        <div class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-sm text-gray-700 border border-gray-200">
+          Be part of NETWORK! Click here to contact us or sign up as a member.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- NEWS SECTION -->
+<section class="max-w-7xl mx-auto px-6 pt-10 pb-16 bg-white">
+  <h2 class="text-4xl md:text-5xl font-semibold mb-8 text-[#7c0024]">
+    News
+  </h2>
+
+  <div class="grid gap-10 lg:grid-cols-3">
+
+    <!-- MAIN NEWS -->
+    <article class="lg:col-span-2 cursor-pointer" onclick="window.location.href='#'">
+      <div class="overflow-hidden">
+        <img
+          src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg"
+          alt="Main news"
+          class="w-full h-[260px] md:h-[340px] object-cover"
+        />
+      </div>
+
+      <div class="mt-6">
+        <h3 class="text-xl md:text-2xl font-semibold text-[#7c0024] mb-3 leading-snug">
+          NETWORK Council launches Cybersecurity Awareness Program
+        </h3>
+        <p class="text-gray-700 mb-4 text-[15px] leading-relaxed">
+          Student leaders and faculty members gathered to discuss the importance of 
+          cybersecurity, digital responsibility, and safe online practices for the entire
+          campus community.
+        </p>
+        <button
+          class="px-4 py-2 border border-[#7c0024] text-[#7c0024] text-sm rounded hover:bg-[#7c0024] hover:text-white transition">
+          Read More
+        </button>
+      </div>
+    </article>
+
+    <!-- SIDE NEWS -->
+    <div class="space-y-10">
+
+      <!-- News 2 -->
+      <article class="flex flex-col cursor-pointer" onclick="window.location.href='#'">
+        <div class="overflow-hidden">
+          <img
+            src="https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg"
+            alt="News item"
+            class="w-full h-[170px] md:h-[180px] object-cover"
+          />
+        </div>
+        <div class="mt-4">
+          <h3 class="text-lg md:text-xl font-semibold text-[#7c0024] mb-2 leading-snug">
+            NETWORK recognizes outstanding student volunteers
+          </h3>
+          <p class="text-gray-700 mb-3 text-[15px] leading-relaxed">
+            Student volunteers are honored for their service in various programs,
+            including tutorials, events, and community extension projects...
+          </p>
+          <button
+            class="px-4 py-2 border border-[#7c0024] text-[#7c0024] text-sm rounded hover:bg-[#7c0024] hover:text-white transition">
+            Read More
+          </button>
+        </div>
+      </article>
+
+      <!-- News 3 -->
+      <article class="flex flex-col cursor-pointer" onclick="window.location.href='#'">
+        <div class="overflow-hidden">
+          <img
+            src="https://images.pexels.com/photos/1707823/pexels-photo-1707823.jpeg"
+            alt="News item"
+            class="w-full h-[170px] md:h-[180px] object-cover"
+          />
+        </div>
+        <div class="mt-4">
+          <h3 class="text-lg md:text-xl font-semibold text-[#7c0024] mb-2 leading-snug">
+            NETWORK hosts Tech & Sustainability Dialogue 2025
+          </h3>
+          <p class="text-gray-700 mb-3 text-[15px] leading-relaxed">
+            Industry experts and student leaders discuss how emerging technologies
+            can support sustainable development and community innovation...
+          </p>
+          <button
+            class="px-4 py-2 border border-[#7c0024] text-[#7c0024] text-sm rounded hover:bg-[#7c0024] hover:text-white transition">
+            Read More
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- EXTRA NEWS (HIDDEN) -->
+  <div id="moreNews" class="hidden mt-14">
+    <div class="grid md:grid-cols-3 gap-10">
+
+      <article class="cursor-pointer" onclick="window.location.href='#'">
+        <img
+          src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg"
+          alt="Extra news 1"
+          class="w-full h-[200px] object-cover rounded"
+        />
+        <h3 class="mt-4 text-xl font-semibold text-[#7c0024]">
+          Leadership Training 2025 Kickoff
+        </h3>
+        <p class="text-gray-700 mt-2 text-sm">
+          Student leaders undergo intensive leadership and project management training for the year...
+        </p>
+      </article>
+
+      <article class="cursor-pointer" onclick="window.location.href='#'">
+        <img
+          src="https://images.pexels.com/photos/3182801/pexels-photo-3182801.jpeg"
+          alt="Extra news 2"
+          class="w-full h-[200px] object-cover rounded"
+        />
+        <h3 class="mt-4 text-xl font-semibold text-[#7c0024]">
+          NETWORK Community Outreach
+        </h3>
+        <p class="text-gray-700 mt-2 text-sm">
+          Volunteers reached over 300 families with donations, tech tutorials, and mentoring sessions...
+        </p>
+      </article>
+
+      <article class="cursor-pointer" onclick="window.location.href='#'">
+        <img
+          src="https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg"
+          alt="Extra news 3"
+          class="w-full h-[200px] object-cover rounded"
+        />
+        <h3 class="mt-4 text-xl font-semibold text-[#7c0024]">
+          Women in Tech Forum
+        </h3>
+        <p class="text-gray-700 mt-2 text-sm">
+          Empowering women leaders in technology through panel talks, mentorship, and networking...
+        </p>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- SEE MORE BUTTON -->
+  <div class="mt-12 flex justify-center">
+    <button
+      id="seeMoreBtn"
+      onclick="toggleMoreNews()"
+      class="px-8 py-3 bg-[#7c0024] text-white rounded shadow hover:bg-[#5a001a] transition text-sm md:text-base">
+      See More
+    </button>
+  </div>
+</section>
+
+<!-- UPCOMING EVENTS SECTION -->
+<section class="w-full bg-gray-50 border-t border-gray-200">
+  <div class="max-w-7xl mx-auto px-6 py-14">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Upcoming Events</h2>
+        <p class="text-gray-600 text-sm md:text-base mt-1">
+          Stay updated with NETWORK’s latest activities, seminars, and gatherings.
+        </p>
+      </div>
+    </div>
+
+    <div class="relative h-[360px] md:h-[430px]">
+      <!-- Slides -->
+      <div class="event-slide event-center w-[80%] md:w-[60%] max-w-3xl">
+        <div class="rounded-2xl overflow-hidden shadow-2xl bg-black relative">
+          <img src="https://images.pexels.com/photos/1181395/pexels-photo-1181395.jpeg"
+               class="w-full h-[260px] md:h-[320px] object-cover opacity-90" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 text-white">
+            <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-blue-300 mb-1">Seminar</p>
+            <h3 class="text-xl md:text-2xl font-bold mb-1">Digital Leadership Summit 2025</h3>
+            <p class="text-sm md:text-base text-gray-200">March 10, 2025 • Innovation Hall</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-slide event-right w-[70%] md:w-[50%] max-w-2xl">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-black relative">
+          <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg"
+               class="w-full h-[230px] md:h-[290px] object-cover opacity-80" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-4 left-4 right-4 text-white">
+            <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-emerald-300 mb-1">Workshop</p>
+            <h3 class="text-lg md:text-xl font-semibold mb-1">Hands-on Cybersecurity Workshop</h3>
+            <p class="text-xs md:text-sm text-gray-200">April 02, 2025 • Lab 3B</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-slide event-left w-[70%] md:w-[50%] max-w-2xl">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-black relative">
+          <img src="https://images.pexels.com/photos/1181400/pexels-photo-1181400.jpeg"
+               class="w-full h-[230px] md:h-[290px] object-cover opacity-80" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-4 left-4 right-4 text-white">
+            <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-pink-300 mb-1">BIT Night</p>
+            <h3 class="text-lg md:text-xl font-semibold mb-1">Tech & Talent Night</h3>
+            <p class="text-xs md:text-sm text-gray-200">May 15, 2025 • University Grounds</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-slide event-hidden w-[70%] md:w-[50%] max-w-2xl">
+        <div class="rounded-2xl overflow-hidden shadow-xl bg-black relative">
+          <img src="https://images.pexels.com/photos/935949/pexels-photo-935949.jpeg"
+               class="w-full h-[230px] md:h-[290px] object-cover opacity-80" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+          <div class="absolute bottom-4 left-4 right-4 text-white">
+            <p class="text-xs md:text-sm uppercase tracking-[0.2em] text-yellow-300 mb-1">Outreach</p>
+            <h3 class="text-lg md:text-xl font-semibold mb-1">Community Tech Bootcamp</h3>
+            <p class="text-xs md:text-sm text-gray-200">June 08, 2025 • Partner Community Center</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARROWS -->
+      <button
+        onclick="changeEventSlide(-1)"
+        class="absolute left-0 md:left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/60 hover:bg-black/80 text-white shadow-lg">
+        <i class="fas fa-chevron-left text-sm"></i>
+      </button>
+      <button
+        onclick="changeEventSlide(1)"
+        class="absolute right-0 md:right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/60 hover:bg-black/80 text-white shadow-lg">
+        <i class="fas fa-chevron-right text-sm"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact" class="bg-gray-900 text-white mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+
+    <div>
+      <h3 class="text-xl font-bold mb-4">Empowering Students, Powering Technology.</h3>
+
+      <div class="flex items-center gap-3 mb-3 group">
+        <i class="fas fa-envelope text-lg"></i>
+        <div class="w-[2px] h-5 bg-gray-400"></div>
+        <span class="text-sm opacity-0 transition-all duration-300 group-hover:opacity-100">
+          support@bitcourse.com
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3 group">
+        <i class="fas fa-phone text-lg"></i>
+        <div class="w-[2px] h-5 bg-gray-400"></div>
+        <span class="text-sm opacity-0 transition-all duration-300 group-hover:opacity-100">
+          1800-1234-5678
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-bold mb-2">Company</h4>
+        <ul class="space-y-1">
+          <li><a href="#" class="hover:text-blue-400">About Us</a></li>
+          <li><a href="#" class="hover:text-blue-400">Officers</a></li>
+          <li><a href="#" class="hover:text-blue-400">Activities</a></li>
+          <li><a href="#" class="hover:text-blue-400">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-2">Help</h4>
+        <ul class="space-y-1">
+          <li><a href="#" class="hover:text-blue-400">FAQ</a></li>
+          <li><a href="#" class="hover:text-blue-400">Support</a></li>
+          <li><a href="#" class="hover:text-blue-400">Leadership Center</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-3">Get In Touch!</h4>
+      <form class="flex">
+        <input type="email" placeholder="Enter your email"
+               class="px-3 py-2 w-full rounded-l-lg text-black" />
+        <button class="bg-blue-600 px-4 py-2 rounded-r-lg">Subscribe</button>
+      </form>
+
+      <div class="flex gap-4 mt-4 text-xl">
+        <a href="#"><i class="fab fa-facebook-f hover:text-blue-400"></i></a>
+        <a href="#"><i class="fab fa-instagram hover:text-pink-400"></i></a>
+        <a href="#"><i class="fab fa-youtube hover:text-red-500"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="border-t border-white/20 py-4 text-center text-sm">
+    © 2025 NETWORK Organization | Developed for Student Leadership
+  </div>
+</footer>
+
+</body>
+</html>
