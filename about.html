@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK</title>
+
+  <!-- TAILWIND CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ICONS -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+
+  <!-- SLIDESHOW SCRIPTS -->
+  <script>
+    // OFFICER MOTTOS SLIDESHOW
+    let officerSlideIndex = 0;
+
+    function showOfficerSlide(n) {
+      const slides = document.getElementsByClassName("officer-slide");
+      if (!slides.length) return;
+
+      if (n >= slides.length) officerSlideIndex = 0;
+      if (n < 0) officerSlideIndex = slides.length - 1;
+
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.add("opacity-0");
+        slides[i].classList.remove("opacity-100");
+      }
+
+      slides[officerSlideIndex].classList.remove("opacity-0");
+      slides[officerSlideIndex].classList.add("opacity-100");
+    }
+
+    function changeOfficerSlide(step) {
+      officerSlideIndex += step;
+      showOfficerSlide(officerSlideIndex);
+    }
+
+    // ACTIVITIES SLIDESHOW (CATEGORIES)
+    let activitySlideIndex = 0;
+
+    function showActivitySlide(n) {
+      const slides = document.getElementsByClassName("activity-slide");
+      if (!slides.length) return;
+
+      if (n >= slides.length) activitySlideIndex = 0;
+      if (n < 0) activitySlideIndex = slides.length - 1;
+
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.add("opacity-0", "pointer-events-none");
+        slides[i].classList.remove("opacity-100", "pointer-events-auto");
+      }
+
+      slides[activitySlideIndex].classList.remove("opacity-0", "pointer-events-none");
+      slides[activitySlideIndex].classList.add("opacity-100", "pointer-events-auto");
+    }
+
+    function changeActivitySlide(step) {
+      activitySlideIndex += step;
+      showActivitySlide(activitySlideIndex);
+    }
+
+    window.addEventListener("load", () => {
+      // Officer slides auto
+      showOfficerSlide(officerSlideIndex);
+      setInterval(() => {
+        officerSlideIndex++;
+        showOfficerSlide(officerSlideIndex);
+      }, 5000);
+
+      // Activity slides auto
+      showActivitySlide(activitySlideIndex);
+      setInterval(() => {
+        activitySlideIndex++;
+        showActivitySlide(activitySlideIndex);
+      }, 7000);
+    });
+  </script>
+
+</head>
+
+<body class="bg-gray-100 text-gray-900 text-[17px] md:text-[18px]">
+
+<!-- NAVIGATION -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4">
+
+    <div class="w-full flex justify-center mb-3">
+      <div
+        class="text-3xl md:text-4xl font-extrabold cursor-pointer"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      >
+        NETWORK
+      </div>
+    </div>
+
+    <div class="w-full flex justify-center mb-4">
+      <div class="w-40 h-[2px] bg-gray-300"></div>
+    </div>
+
+    <div class="flex items-center justify-center relative">
+      <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl">
+        <a href="index.html" class="hover:text-blue-600">Home</a>
+        <a href="about.html" class="hover:text-blue-600">About</a>
+        <a href="news.html" class="hover:text-blue-600">News</a>
+        <a href="administration.html" class="hover:text-blue-600">Administration</a>
+      </div>
+
+      <div class="absolute right-0 group">
+        <a
+          href="#contact"
+          class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition">
+          Join Us
+        </a>
+
+        <div class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-sm text-gray-700 border border-gray-200">
+          Be part of NETWORK! Click here to contact us or sign up as a member.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- MISSION & VISION SECTION – FULLSCREEN FLEXBOX -->
+<section class="w-full h-screen bg-gray-900 text-white overflow-hidden">
+  <div class="w-full h-full flex flex-col md:flex-row items-stretch">
+
+    <!-- LEFT: IMAGE (FULL HEIGHT) -->
+    <div class="w-full md:w-1/2 h-1/2 md:h-full relative">
+      <img
+        src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+        class="w-full h-full object-cover opacity-80"
+      />
+      <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+
+    <!-- RIGHT: MISSION + VISION (FULL HEIGHT) -->
+    <div
+      class="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-8 md:px-12 py-10 md:py-14 bg-black/60 backdrop-blur-lg"
+      style="
+        background-image:
+          linear-gradient(
+            to top right,
+            rgba(10,10,10,0.85),
+            rgba(15,15,15,0.85)
+          ),
+          url('https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg');
+        background-size: cover;
+        background-position: center;
+      "
+    >
+      <h2 class="text-3xl md:text-5xl font-extrabold mb-8">Mission & Vision</h2>
+
+      <!-- MISSION -->
+      <div class="mb-8">
+        <h3 class="text-xl md:text-2xl font-semibold flex items-center gap-2 mb-3">
+          <span class="inline-block w-1.5 h-6 bg-blue-400 rounded-full"></span>
+          Mission
+        </h3>
+        <p class="text-gray-200 text-base md:text-lg leading-relaxed">
+          To empower students through collaboration, leadership, and technology-driven
+          initiatives that promote innovation, critical thinking, and personal growth.
+        </p>
+      </div>
+
+      <!-- VISION -->
+      <div>
+        <h3 class="text-xl md:text-2xl font-semibold flex items-center gap-2 mb-3">
+          <span class="inline-block w-1.5 h-6 bg-emerald-400 rounded-full"></span>
+          Vision
+        </h3>
+        <p class="text-gray-200 text-base md:text-lg leading-relaxed">
+          To create a future-ready network of leaders who elevate the impact of technology
+          across communities and generations.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- OFFICER MOTTOS SLIDESHOW -->
+<section class="relative w-full text-white">
+  <div class="relative min-h-[80vh] md:min-h-[90vh] overflow-hidden">
+
+    <!-- Slide 1 -->
+    <div class="officer-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <img src="https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg"
+        class="w-full h-full object-cover blur-sm" />
+      <div class="absolute inset-0 bg-black/60"></div>
+
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+        <p class="uppercase tracking-[0.3em] text-blue-300 mb-3 text-sm md:text-base">
+          President
+        </p>
+        <h2 class="text-3xl md:text-5xl font-extrabold mb-4 max-w-3xl">
+          "Lead with vision, serve with passion."
+        </h2>
+        <p class="mt-4 text-xl md:text-2xl font-semibold flex items-center gap-3">
+          <span class="text-3xl">—</span>
+          <span>Juan Dela Cruz</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="officer-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <img src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+        class="w-full h-full object-cover blur-sm" />
+      <div class="absolute inset-0 bg-black/60"></div>
+
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+        <p class="uppercase tracking-[0.3em] text-emerald-300 mb-3 text-sm md:text-base">
+          Vice President
+        </p>
+        <h2 class="text-3xl md:text-5xl font-extrabold mb-4 max-w-3xl">
+          "Turning ideas into reality—together."
+        </h2>
+        <p class="mt-4 text-xl md:text-2xl font-semibold flex items-center gap-3">
+          <span class="text-3xl">—</span>
+          <span>Maria Santos</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="officer-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <img src="https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg"
+        class="w-full h-full object-cover blur-sm" />
+      <div class="absolute inset-0 bg-black/60"></div>
+
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+        <p class="uppercase tracking-[0.3em] text-sky-300 mb-3 text-sm md:text-base">
+          Secretary
+        </p>
+        <h2 class="text-3xl md:text-5xl font-extrabold mb-4 max-w-3xl">
+          "Details create the bigger picture."
+        </h2>
+        <p class="mt-4 text-xl md:text-2xl font-semibold flex items-center gap-3">
+          <span class="text-3xl">—</span>
+          <span>Carlos Reyes</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Arrows -->
+    <button
+      onclick="changeOfficerSlide(-1)"
+      class="absolute left-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-black/60 hover:bg-black/80">
+      <i class="fas fa-chevron-left text-white text-sm"></i>
+    </button>
+    <button
+      onclick="changeOfficerSlide(1)"
+      class="absolute right-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-black/60 hover:bg-black/80">
+      <i class="fas fa-chevron-right text-white text-sm"></i>
+    </button>
+
+  </div>
+</section>
+
+<!-- ACTIVITIES GALLERY WITH CATEGORIES (SLIDESHOW) -->
+<section class="relative w-full bg-gray-950 text-white">
+  <div class="relative min-h-screen max-w-7xl mx-auto px-6 py-14 overflow-hidden">
+
+    <!-- SEMINAR -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">SEMINAR</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            Seminars focused on leadership, technology trends, and student development.
+          </p>
+        </div>
+
+        <!-- PURE PICTURE GRID -->
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181395/pexels-photo-1181395.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3182763/pexels-photo-3182763.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3184302/pexels-photo-3184302.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181679/pexels-photo-1181679.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKSHOP -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">WORKSHOP</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            Hands-on workshops enhancing skills in coding, design, and creative problem solving.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3861964/pexels-photo-3861964.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3184632/pexels-photo-3184632.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181355/pexels-photo-1181355.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181359/pexels-photo-1181359.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRAINING -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">TRAINING</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            Structured training sessions building leadership, communication, and project skills.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181533/pexels-photo-1181533.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181243/pexels-photo-1181243.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3861948/pexels-photo-3861948.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/3861952/pexels-photo-3861952.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCITECH -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">SCITECH</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            Science and technology events highlighting innovation and creativity.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIT NIGHT -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">BIT NIGHT</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            A celebration of talent, camaraderie, and creativity within the NETWORK community.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/761543/pexels-photo-761543.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1047442/pexels-photo-1047442.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIT DAY -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">BIT DAY</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            A day dedicated to showcasing BIT pride, achievements, and student excellence.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/207691/pexels-photo-207691.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/269140/pexels-photo-269140.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/21014/pexels-photo.jpg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTHER ACTIVITIES -->
+    <div class="activity-slide absolute inset-0 transition-opacity duration-700 opacity-0">
+      <div class="flex flex-col h-full">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-2">OTHER ACTIVITIES</h2>
+          <p class="text-gray-300 max-w-2xl mx-auto text-sm md:text-base">
+            Various projects, outreach, and collaborative events beyond the usual lineup.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 flex-1">
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/935949/pexels-photo-935949.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181400/pexels-photo-1181400.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+          <div class="rounded-2xl overflow-hidden shadow-lg">
+            <img src="https://images.pexels.com/photos/1181375/pexels-photo-1181375.jpeg"
+                 class="w-full h-44 md:h-52 object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <button
+      onclick="changeActivitySlide(-1)"
+      class="absolute left-2 md:left-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/60 hover:bg-black/80">
+      <i class="fas fa-chevron-left text-white text-sm"></i>
+    </button>
+    <button
+      onclick="changeActivitySlide(1)"
+      class="absolute right-2 md:right-5 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full bg-black/60 hover:bg-black/80">
+      <i class="fas fa-chevron-right text-white text-sm"></i>
+    </button>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact" class="bg-gray-900 text-white mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+
+    <div>
+      <h3 class="text-xl font-bold mb-4">Empowering Students, Powering Technology.</h3>
+
+      <div class="flex items-center gap-3 mb-3 group">
+        <i class="fas fa-envelope text-lg"></i>
+        <div class="w-[2px] h-5 bg-gray-400"></div>
+        <span class="text-sm opacity-0 transition-all duration-300 group-hover:opacity-100">
+          support@bitcourse.com
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3 group">
+        <i class="fas fa-phone text-lg"></i>
+        <div class="w-[2px] h-5 bg-gray-400"></div>
+        <span class="text-sm opacity-0 transition-all duration-300 group-hover:opacity-100">
+          1800-1234-5678
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-bold mb-2">Company</h4>
+        <ul class="space-y-1">
+          <li><a href="#" class="hover:text-blue-400">About Us</a></li>
+          <li><a href="#" class="hover:text-blue-400">Officers</a></li>
+          <li><a href="#" class="hover:text-blue-400">Activities</a></li>
+          <li><a href="#" class="hover:text-blue-400">Contact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-2">Help</h4>
+        <ul class="space-y-1">
+          <li><a href="#" class="hover:text-blue-400">FAQ</a></li>
+          <li><a href="#" class="hover:text-blue-400">Support</a></li>
+          <li><a href="#" class="hover:text-blue-400">Leadership Center</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-3">Get In Touch!</h4>
+      <form class="flex">
+        <input type="email" placeholder="Enter your email"
+          class="px-3 py-2 w-full rounded-l-lg text-black" />
+        <button class="bg-blue-600 px-4 py-2 rounded-r-lg">Subscribe</button>
+      </form>
+
+      <div class="flex gap-4 mt-4 text-xl">
+        <a href="#"><i class="fab fa-facebook-f hover:text-blue-400"></i></a>
+        <a href="#"><i class="fab fa-instagram hover:text-pink-400"></i></a>
+        <a href="#"><i class="fab fa-youtube hover:text-red-500"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="border-t border-white/20 py-4 text-center text-sm">
+    © 2025 NETWORK Organization | Developed for Student Leadership
+  </div>
+</footer>
+
+</body>
+</html>

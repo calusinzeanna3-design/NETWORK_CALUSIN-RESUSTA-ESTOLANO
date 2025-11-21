@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK | Administration</title>
+
+  <!-- TAILWIND CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ICONS -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+
+  <script>
+    /* ===============================
+       TOP LEADERS CAROUSEL
+       =============================== */
+    const leaders = [
+      {
+        name: "Engr. Juan Dela Cruz",
+        position: "Head of the Organization",
+        image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+        facebook: "https://facebook.com/"
+      },
+      {
+        name: "Dr. Maria Santos",
+        position: "Campus Director – Lucena",
+        image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
+        facebook: "https://facebook.com/"
+      },
+      {
+        name: "Engr. Carlos Reyes",
+        position: "Chairperson – BIT / BINDTECH",
+        image: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+        facebook: "https://facebook.com/"
+      },
+      {
+        name: "Prof. Ana Lopez",
+        position: "Organization Adviser",
+        image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+        facebook: "https://facebook.com/"
+      }
+    ];
+
+    let leaderIndex = 0;
+
+    function setCard(slot, data) {
+      const img = document.getElementById(slot + "Img");
+      const name = document.getElementById(slot + "Name");
+      const pos = document.getElementById(slot + "Pos");
+
+      if (img) img.src = data.image;
+      if (name) name.textContent = data.name;
+      if (pos) pos.textContent = data.position;
+
+      if (slot === "center") {
+        const fb = document.getElementById("centerFb");
+        if (fb) fb.href = data.facebook;
+      }
+    }
+
+    function updateLeaders() {
+      const total = leaders.length;
+      const center = leaders[leaderIndex];
+      const left = leaders[(leaderIndex - 1 + total) % total];
+      const right = leaders[(leaderIndex + 1) % total];
+
+      setCard("left", left);
+      setCard("center", center);
+      setCard("right", right);
+
+      const dots = document.querySelectorAll(".leader-dot");
+      dots.forEach((dot, i) => {
+        dot.classList.remove("bg-blue-600");
+        dot.classList.add("bg-gray-300");
+        if (i === leaderIndex) {
+          dot.classList.remove("bg-gray-300");
+          dot.classList.add("bg-blue-600");
+        }
+      });
+    }
+
+    function changeLeader(step) {
+      leaderIndex = (leaderIndex + step + leaders.length) % leaders.length;
+      updateLeaders();
+    }
+
+    function goToLeader(index) {
+      leaderIndex = index;
+      updateLeaders();
+    }
+
+    /* ===============================
+       OFFICERS CURVED SLIDER
+       =============================== */
+    let officerCards = [];
+    let officerActiveIndex = 0;
+
+    // Modal refs
+    let officerModal,
+        officerModalImg,
+        officerModalName,
+        officerModalPosition,
+        officerModalFacebook;
+
+    function initOfficerSlider() {
+      officerCards = Array.from(
+        document.querySelectorAll("#officers .officer-card")
+      );
+
+      officerModal = document.getElementById("officerModal");
+      officerModalImg = document.getElementById("officerModalImg");
+      officerModalName = document.getElementById("officerModalName");
+      officerModalPosition = document.getElementById("officerModalPosition");
+      officerModalFacebook = document.getElementById("officerModalFacebook");
+
+      if (!officerCards.length) return;
+
+      positionOfficerCards();
+    }
+
+    function positionOfficerCards() {
+      const n = officerCards.length;
+      if (!n) return;
+
+      // curve settings
+      const angleStep = 18 * Math.PI / 180; // pagitan ng cards
+      const radiusX = 360;                  // sakop buong screen sa lapad
+      const radiusY = 220;                  // lalim ng curve
+      const baseY   = 40;                   // starting taas ng arc
+
+      officerCards.forEach((card, i) => {
+        let d = i - officerActiveIndex;
+        if (d > n / 2) d -= n;
+        if (d < -n / 2) d += n;
+
+        const abs = Math.abs(d);
+        const angle = d * angleStep;
+
+        // kinu-curve
+        const x = Math.sin(angle) * radiusX;
+        const y = baseY + (1 - Math.cos(angle)) * radiusY;
+
+        // scaling – center pinakamalaki
+        let scale = 1.25 - abs * 0.15;
+        if (abs === 0) scale += 0.05;          // dagdag laki sa gitna
+        scale = Math.max(scale, 0.6);
+
+        // rotation
+        const rotate = d * -10;
+
+        // opacity – malalayong card fade
+        let opacity = 1 - abs * 0.18;
+        if (abs > 4) opacity = 0;
+        opacity = Math.max(opacity, 0);
+
+        card.style.transform =
+          "translateX(" + x + "px) translateY(" + y + "px) scale(" + scale +
+          ") rotate(" + rotate + "deg)";
+
+        card.style.zIndex = String(100 - abs);
+        card.style.opacity = String(opacity);
+      });
+    }
+
+    function moveSlide(step) {
+      if (!officerCards.length) return;
+      officerActiveIndex =
+        (officerActiveIndex + step + officerCards.length) %
+        officerCards.length;
+      positionOfficerCards();
+    }
+
+    function showOfficerDetails(imgEl) {
+      const card = imgEl.closest(".officer-card");
+      if (!card) return;
+
+      // gawing active (sa gitna) yung cliniclick
+      const index = officerCards.indexOf(card);
+      if (index !== -1) {
+        officerActiveIndex = index;
+        positionOfficerCards();
+      }
+
+      const name = card.dataset.name || "";
+      const pos = card.dataset.position || "";
+      const social = card.dataset.social || "#";
+      const imgSrc = imgEl.getAttribute("src");
+
+      if (officerModalImg) officerModalImg.src = imgSrc;
+      if (officerModalName) officerModalName.textContent = name;
+      if (officerModalPosition) officerModalPosition.textContent = pos;
+      if (officerModalFacebook) officerModalFacebook.href = social;
+
+      if (officerModal) officerModal.classList.remove("hidden");
+    }
+
+    function closeOfficerModal() {
+      if (officerModal) officerModal.classList.add("hidden");
+    }
+
+    /* ===============================
+       WINDOW LOAD
+       =============================== */
+    window.addEventListener("load", () => {
+      updateLeaders();
+      initOfficerSlider();
+    });
+  </script>
+</head>
+
+<body class="bg-gray-100 text-gray-900 text-[17px] md:text-[18px]">
+
+  <!-- NAVIGATION -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+
+      <div class="w-full flex justify-center mb-3">
+        <div
+          class="text-3xl md:text-4xl font-extrabold cursor-pointer"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        >
+          NETWORK
+        </div>
+      </div>
+
+      <div class="w-full flex justify-center mb-4">
+        <div class="w-40 h-[2px] bg-gray-300"></div>
+      </div>
+
+      <div class="flex items-center justify-center relative">
+        <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl">
+          <a href="index.html" class="hover:text-blue-600">Home</a>
+          <a href="about.html" class="hover:text-blue-600">About</a>
+          <a href="news.html" class="hover:text-blue-600">News</a>
+          <a href="administration.html" class="hover:text-blue-600">Administration</a>
+        </div>
+
+        <div class="absolute right-0 group">
+          <a
+            href="#contact"
+            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition">
+            Join Us
+          </a>
+
+          <div
+            class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-sm text-gray-700 border border-gray-200">
+            Be part of NETWORK! Click here to contact us or sign up as a member.
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- TOP LEADERS CAROUSEL -->
+  <section class="bg-gray-100 py-16 min-h-[80vh] flex items-center">
+    <div class="max-w-7xl mx-auto px-6 w-full">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">NETWORK Administration</h2>
+        <p class="text-gray-600 text-sm md:text-base mt-2">
+          Core leaders of the organization and academic unit.
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center gap-10">
+        <div class="flex items-center justify-center gap-4 md:gap-8">
+
+          <!-- LEFT -->
+          <div
+            class="relative rounded-2xl overflow-hidden shadow-md w-40 h-52 md:w-48 md:h-64 opacity-40 scale-90 md:scale-95 bg-gray-300 transition-all duration-300">
+            <img id="leftImg" src="" alt="" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <p id="leftPos" class="text-xs font-semibold uppercase tracking-wide mb-1"></p>
+              <p id="leftName" class="text-sm font-bold leading-tight"></p>
+            </div>
+          </div>
+
+          <!-- CENTER -->
+          <div
+            class="relative rounded-3xl overflow-hidden shadow-2xl w-52 h-64 md:w-72 md:h-80 bg-gray-300 transition-all duration-300">
+            <img id="centerImg" src="" alt="" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+            <div class="absolute bottom-5 left-5 right-5 text-white">
+              <p
+                id="centerPos"
+                class="text-xs md:text-sm font-semibold uppercase tracking-[0.18em] mb-2 text-blue-200"
+              ></p>
+              <p
+                id="centerName"
+                class="text-lg md:text-2xl font-bold leading-snug mb-3"
+              ></p>
+              <a
+                id="centerFb"
+                href="#"
+                target="_blank"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-xs md:text-sm font-semibold hover:bg-blue-700 transition">
+                <i class="fab fa-facebook-f text-sm"></i>
+                <span>View Profile</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- RIGHT -->
+          <div
+            class="relative rounded-2xl overflow-hidden shadow-md w-40 h-52 md:w-48 md:h-64 opacity-40 scale-90 md:scale-95 bg-gray-300 transition-all duration-300">
+            <img id="rightImg" src="" alt="" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <p id="rightPos" class="text-xs font-semibold uppercase tracking-wide mb-1"></p>
+              <p id="rightName" class="text-sm font-bold leading-tight"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- controls -->
+        <div class="flex items-center justify-center gap-4 mt-2">
+          <button
+            onclick="changeLeader(-1)"
+            class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 hover:bg-gray-800 hover:text-white transition">
+            <i class="fas fa-chevron-left text-sm"></i>
+          </button>
+
+          <div class="flex items-center gap-2">
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-gray-300" onclick="goToLeader(0)"></button>
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-gray-300" onclick="goToLeader(1)"></button>
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-gray-300" onclick="goToLeader(2)"></button>
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-gray-300" onclick="goToLeader(3)"></button>
+          </div>
+
+          <button
+            onclick="changeLeader(1)"
+            class="w-9 h-9 flex items-center justify-center rounded-full border border-gray-400 hover:bg-gray-800 hover:text-white transition">
+            <i class="fas fa-chevron-right text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEET OUR OFFICERS – CURVED SLIDER -->
+  <section id="officers" class="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Meet Our Officers</h2>
+        <p class="text-slate-300 text-sm md:text-base mt-2 max-w-2xl mx-auto">
+          Student leaders who serve the NETWORK organization and the BIT / BINDTECH community.
+        </p>
+      </div>
+
+      <!-- slider container – mas mataas para sakop curve -->
+      <div class="slider-container relative w-full max-w-5xl mx-auto h-[460px] md:h-[520px]">
+        <div id="slider" class="slider relative w-full h-full">
+
+          <!-- OFFICER CARDS (existing + new 3) -->
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="ZEANNA PATRICIA D. CALUSIN"
+            data-position="President"
+            data-social="https://www.facebook.com/zeannapat.15">
+            <img src="./pics/president.jpg" alt="President" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="JOHN PAULO L. MANUEL"
+            data-position="Vice President"
+            data-social="https://facebook.com">
+            <img src="./pics/vice pres.jpg" alt="Vice President" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="JESSA MAE R. PINES"
+            data-position="Secretary"
+            data-social="https://facebook.com">
+            <img src="./pics/secretary.jpg" alt="Secretary" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="ARRONE B. CAAGBAY"
+            data-position="Treasurer"
+            data-social="https://facebook.com">
+            <img src="./pics/treasurer.jpg" alt="Treasurer" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="ANGELICA S. AGUILA"
+            data-position="Auditor"
+            data-social="https://facebook.com">
+            <img src="./pics/auditor.jpg" alt="Auditor" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="JONA M. TAN"
+            data-position="Layout Artist"
+            data-social="https://www.facebook.com/tan77777777777777777">
+            <img src="./pics/layout.jpg" alt="Layout Artist" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="ASHLEY NICOLE G. YUBION"
+            data-position="2nd Year Representative"
+            data-social="https://facebook.com">
+            <img src="./pics/2nd.jpg" alt="2nd Year Representative" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="MARISSA M. FAMADULAN"
+            data-position="3rd Year Representative"
+            data-social="https://facebook.com">
+            <img src="./pics/3rd.jpg" alt="3rd Year Representative" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="RUSSEL KEN D. RUEDAS"
+            data-position="4th Year Representative"
+            data-social="https://facebook.com">
+            <img src="./pics/4th.jpg" alt="4th Year Representative" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="DEN MARK R. LADEZA"
+            data-position="Project Manager"
+            data-social="https://www.facebook.com/denmark.ladeza5">
+            <img src="./pics/project manager.jpg" alt="Project Manager" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="JOHN RICK R. VILLENA"
+            data-position="Sports"
+            data-social="https://facebook.com">
+            <img src="./pics/sports.jpg" alt="Sports" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="ARIEL JAKE MARAYA"
+            data-position="Gender and Development"
+            data-social="https://facebook.com">
+            <img src="./pics/GAD.jpg" alt="Gender and Development" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="PRICESS NICOLE V. QUEJANO"
+            data-position="Legal Matters"
+            data-social="https://facebook.com">
+            <img src="./pics/legal matters.jpg" alt="Legal Matters" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <!-- NEW OFFICERS – TEMP IMAGES -->
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="PRINCESS NICOLE MARTINEZ"
+            data-position="Layout Artist 2"
+            data-social="https://facebook.com">
+            <img src="https://picsum.photos/400/500?random=101" alt="Layout Artist 2" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="AYO BRACERO"
+            data-position="Culture and Arts Committee"
+            data-social="https://facebook.com">
+            <img src="https://picsum.photos/400/500?random=102" alt="Culture and Arts Committee" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+
+          <div
+            class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
+            data-name="JAZZMINE MAGABO"
+            data-position="1st Year Representative"
+            data-social="https://facebook.com">
+            <img src="https://picsum.photos/400/500?random=103" alt="1st Year Representative" class="w-full h-full object-cover" onclick="showOfficerDetails(this)" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- arrows under slider -->
+      <div class="mt-10 flex items-center justify-center gap-6">
+        <button
+          class="slide-btn prev w-10 h-10 rounded-full border border-purple-400/70 flex items-center justify-center hover:bg-purple-500 hover:text-white transition"
+          onclick="moveSlide(-1)">
+          <i class="fas fa-chevron-left text-sm"></i>
+        </button>
+        <button
+          class="slide-btn next w-10 h-10 rounded-full border border-purple-400/70 flex items-center justify-center hover:bg-purple-500 hover:text-white transition"
+          onclick="moveSlide(1)">
+          <i class="fas fa-chevron-right text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFICER MODAL -->
+  <div
+    id="officerModal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    onclick="if(event.target === this) closeOfficerModal()"
+  >
+    <div class="bg-slate-900 rounded-2xl px-6 py-6 max-w-sm w-[90%] text-center relative border border-slate-700">
+      <button
+        class="absolute right-4 top-4 text-slate-400 hover:text-white"
+        onclick="closeOfficerModal()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-28 h-28 rounded-2xl overflow-hidden bg-slate-800 shadow-lg">
+          <img id="officerModalImg" src="" class="w-full h-full object-cover" alt="Officer photo" />
+        </div>
+        <div>
+          <h3 id="officerModalName" class="text-xl font-bold mb-1"></h3>
+          <p id="officerModalPosition" class="text-slate-300 text-sm mb-4"></p>
+        </div>
+        <a
+          id="officerModalFacebook"
+          href="#"
+          target="_blank"
+          class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-purple-600 text-sm text-white font-semibold hover:bg-purple-700 transition"
+        >
+          <i class="fab fa-facebook-f text-sm"></i>
+          <span>View Facebook</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="contact" class="bg-gray-900 text-white mt-16">
+    <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+
+      <div>
+        <h3 class="text-xl font-bold mb-4">Empowering Students, Powering Technology.</h3>
+
+        <div class="flex items-center gap-3 mb-3 group">
+          <i class="fas fa-envelope text-lg"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-sm opacity-0 transition-all duration-300 group-hover:opacity-100">
+            support@bitcourse.com
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3 group">
+          <i class="fas fa-phone text-lg"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-sm opacity-0 transition-all duration-300 group-hover:opacity-100">
+            1800-1234-5678
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold mb-2">Company</h4>
+          <ul class="space-y-1">
+            <li><a href="#" class="hover:text-blue-400">About Us</a></li>
+            <li><a href="#" class="hover:text-blue-400">Officers</a></li>
+            <li><a href="#" class="hover:text-blue-400">Activities</a></li>
+            <li><a href="#" class="hover:text-blue-400">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-2">Help</h4>
+          <ul class="space-y-1">
+            <li><a href="#" class="hover:text-blue-400">FAQ</a></li>
+            <li><a href="#" class="hover:text-blue-400">Support</a></li>
+            <li><a href="#" class="hover:text-blue-400">Leadership Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-bold mb-3">Get In Touch!</h4>
+        <form class="flex">
+          <input type="email" placeholder="Enter your email"
+                 class="px-3 py-2 w-full rounded-l-lg text-black" />
+          <button class="bg-blue-600 px-4 py-2 rounded-r-lg">Subscribe</button>
+        </form>
+
+        <div class="flex gap-4 mt-4 text-xl">
+          <a href="#"><i class="fab fa-facebook-f hover:text-blue-400"></i></a>
+          <a href="#"><i class="fab fa-instagram hover:text-pink-400"></i></a>
+          <a href="#"><i class="fab fa-youtube hover:text-red-500"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-white/20 py-4 text-center text-sm">
+      © 2025 NETWORK Organization | Developed for Student Leadership
+    </div>
+  </footer>
+</body>
+</html>

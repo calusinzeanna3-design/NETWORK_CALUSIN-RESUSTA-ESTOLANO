@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK</title>
+
+  <!-- TAILWIND CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ICONS -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- SLIDESHOW SCRIPT -->
+  <script>
+    let slideIndex = 0;
+
+    function showSlides(n) {
+      let slides = document.getElementsByClassName("slide");
+      if (n >= slides.length) slideIndex = 0;
+      if (n < 0) slideIndex = slides.length - 1;
+
+      Array.from(slides).forEach((s) => (s.style.display = "none"));
+      slides[slideIndex].style.display = "block";
+    }
+
+    function changeSlide(n) {
+      slideIndex += n;
+      showSlides(slideIndex);
+    }
+
+    setInterval(() => {
+      changeSlide(1);
+    }, 4000);
+
+    window.onload = () => showSlides(slideIndex);
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth; /* smooth scroll when clicking nav links */
+    }
+
+    .events-slide {
+      display: none;
+      transition: opacity 0.5s ease;
+    }
+    .events-slide.active {
+      display: block;
+    }
+    .event-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #cbd5e0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .event-indicator.active {
+      background-color: #3b82f6;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900 text-[17px] md:text-[18px]">
+
+<!-- NAVBAR -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4">
+
+    <!-- CENTERED LOGO -->
+    <div class="w-full flex justify-center mb-3">
+      <div
+        class="text-3xl md:text-4xl font-extrabold cursor-pointer"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      >
+        NETWORK
+      </div>
+    </div>
+
+    <!-- LINE UNDER LOGO -->
+    <div class="w-full flex justify-center mb-4">
+      <div class="w-40 h-[2px] bg-gray-300"></div>
+    </div>
+<!-- NAVIGATION ROW -->
+<div class="flex items-center justify-center relative">
+
+  <!-- CENTER NAV ITEMS -->
+  <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl">
+    <!-- This page -->
+    <a href="index.html" class="hover:text-blue-600">Home</a>
+
+    <!-- Other pages -->
+    <a href="about.html" class="hover:text-blue-600">About</a>
+    <a href="news.html" class="hover:text-blue-600">News</a>
+    <a href="officers.html" class="hover:text-blue-600">Administration</a>
+    <a href="administration.html" class="hover:text-blue-600">Administration</a>
+
+  </div>
+
+  <!-- RIGHT: JOIN US BUTTON -->
+  <div class="absolute right-0 group">
+    <a
+      href="#contact"
+      class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition"
+    >
+      Join Us
+    </a>
+
+    <div class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-sm text-gray-700 border border-gray-200">
+      Be part of NETWORK! Click here to contact us or sign up as a member.
+    </div>
+  </div>
+
+</div>
+
+
+        <!-- HOVER TOOLTIP -->
+        <div class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-sm text-gray-700 border border-gray-200">
+          Be part of NETWORK! Click here to contact us or sign up as a member.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</nav>
+
+<!-- HEADER SLIDESHOW -->
+<header id="top" class="relative w-full h-screen">
+
+  <div class="slide">
+    <img src="https://picsum.photos/1920/1080?random=1"
+         class="w-full h-screen object-cover" />
+  </div>
+
+  <div class="slide">
+    <img src="https://picsum.photos/1920/1080?random=2"
+         class="w-full h-screen object-cover" />
+  </div>
+
+  <div class="slide">
+    <img src="https://picsum.photos/1920/1080?random=3"
+         class="w-full h-screen object-cover" />
+  </div>
+
+  <div class="absolute inset-0 bg-black/50"></div>
+
+  <div class="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4">
+
+    <img src="pics/logo.png" 
+         class="w-40 h-40 rounded-full object-cover shadow-xl border-4 border-white mb-4">
+
+    <h2 class="text-3xl md:text-5xl font-bold">New Enhanced Team With Oriented Knowledge</h2>
+  </div>
+
+  <button onclick="changeSlide(-1)"
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-5xl font-bold">
+    &#10094;
+  </button>
+
+  <button onclick="changeSlide(1)"
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-5xl font-bold">
+    &#10095;
+  </button>
+</header>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="w-full py-0 mt-0 pt-0 min-h-screen flex items-stretch">
+
+  <div class="grid grid-cols-1 md:grid-cols-2 w-full">
+
+    <!-- LEFT SIDE: FULL IMAGE -->
+    <div class="w-full h-[600px] md:h-auto m-0 p-0">
+      <img 
+        src="https://picsum.photos/1400/1600" 
+        class="w-full h-full object-cover"
+      >
+    </div>
+
+    <!-- RIGHT SIDE: CONTENT AREA -->
+    <div class="bg-white flex flex-col justify-center px-10 md:px-20 py-16 m-0">
+
+      <!-- LARGE TITLE -->
+      <h1 class="text-5xl md:text-6xl font-light mb-6">
+        NEW ENHANCED TEAM WITH ORIENTED KNOWLEDGE
+      </h1>
+
+      <!-- UNDERLINE -->
+      <div class="w-32 h-[2px] bg-gray-600 mb-8"></div>
+
+      <!-- PARAGRAPH TEXT -->
+      <p class="text-lg leading-relaxed mb-6 text-gray-700">
+        The New Enhanced Team With Oriented Knowledge (NETWORK) is a student-led 
+        organization committed to empowering future professionals through seminars, 
+        workshops, and collaborative activities focused on innovation and leadership.
+      </p>
+
+      <p class="text-lg leading-relaxed mb-6 text-gray-700">
+        NETWORK builds a strong academic community by promoting teamwork, enhancing 
+        technical skills, and fostering growth among BIT students.
+      </p>
+
+      <p class="text-lg leading-relaxed mb-10 text-gray-700">
+        Through its initiatives, the organization prepares members to adapt and 
+        thrive in a fast-changing technological environment.
+      </p>
+
+      <!-- BUTTON -->
+      <a 
+        href="#news"
+        class="border border-gray-700 px-8 py-3 rounded-full text-gray-800 hover:bg-gray-100 transition text-lg w-fit"
+      >
+        LEARN MORE
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- NEWS SECTION -->
+<section id="news" class="w-full bg-gradient-to-br from-blue-50 to-indigo-50 py-20 m-0 min-h-screen flex items-center">
+  <div class="max-w-7xl mx-auto px-8 w-full">
+
+    <!-- TITLE -->
+    <h2 class="text-4xl font-bold mb-4">LATEST UPDATES & ANNOUNCEMENTS</h2>
+    <p class="text-gray-600 mb-12">
+      Stay updated on the newest events, activities, and announcements from NETWORK.
+    </p>
+
+    <!-- FLEX WRAPPER -->
+    <div class="flex flex-col md:flex-row gap-12 md:justify-between">
+
+      <!-- CARD 1 -->
+      <div class="w-full md:w-1/3">
+        <div class="rounded-xl overflow-hidden shadow-lg">
+          <img src="https://picsum.photos/800/450?random=21"
+               class="w-full h-60 object-cover transition duration-300 hover:scale-105">
+        </div>
+
+        <p class="text-center mt-4 font-semibold text-green-700">
+          General Assembly 2025
+        </p>
+
+        <button onclick="toggleDetails(this)"
+                class="block mx-auto text-blue-600 font-semibold mt-2">
+          Read More
+        </button>
+
+        <div class="hidden mt-4 text-gray-700 leading-relaxed text-center">
+          A gathering of BIT students for announcements, orientation, and future programs.
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="w-full md:w-1/3">
+        <div class="rounded-xl overflow-hidden shadow-lg">
+          <img src="https://picsum.photos/800/450?random=22"
+               class="w-full h-60 object-cover transition duration-300 hover:scale-105">
+        </div>
+
+        <p class="text-center mt-4 font-semibold text-green-700">
+          Seminar Workshop
+        </p>
+
+        <button onclick="toggleDetails(this)"
+                class="block mx-auto text-blue-600 font-semibold mt-2">
+          Read More
+        </button>
+
+        <div class="hidden mt-4 text-gray-700 leading-relaxed text-center">
+          Students learned essential technical skills through a hands-on workshop.
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="w-full md:w-1/3">
+        <div class="rounded-xl overflow-hidden shadow-lg">
+          <img src="https://picsum.photos/800/450?random=23"
+               class="w-full h-60 object-cover transition duration-300 hover:scale-105">
+        </div>
+
+        <p class="text-center mt-4 font-semibold text-green-700">
+          Community Outreach
+        </p>
+
+        <button onclick="toggleDetails(this)"
+                class="block mx-auto text-blue-600 font-semibold mt-2">
+          Read More
+        </button>
+
+        <div class="hidden mt-4 text-gray-700 leading-relaxed text-center">
+          NETWORK extends support through volunteer activities and community work.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS SECTION -->
+<section id="events" class="w-full bg-white py-20 min-h-screen flex items-center">
+  <div class="max-w-7xl mx-auto px-8 w-full">
+    <h2 class="text-4xl font-bold mb-4 text-center">UPCOMING EVENTS</h2>
+    <p class="text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+      Discover our upcoming activities and mark your calendars. Join us for these exciting events designed to enhance your skills and expand your network.
+    </p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- LEFT SIDE: EVENT DETAILS -->
+      <div class="space-y-8">
+        <!-- EVENT 1 -->
+        <div class="events-slide active" data-index="0">
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-l-4 border-blue-500">
+            <span class="inline-block bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3">TECH WORKSHOP</span>
+            <h3 class="text-2xl font-bold mb-3">Web Development Bootcamp</h3>
+            <div class="flex items-center text-gray-600 mb-4">
+              <i class="fas fa-calendar-alt mr-2"></i>
+              <span>March 15, 2025 | 9:00 AM - 4:00 PM</span>
+            </div>
+            <div class="flex items-center text-gray-600 mb-4">
+              <i class="fas fa-map-marker-alt mr-2"></i>
+              <span>SLSU Campus, Computer Lab Building</span>
+            </div>
+            <p class="text-gray-700 mb-4">
+              A full-day intensive workshop covering HTML, CSS, JavaScript, and modern web development frameworks. Perfect for beginners and intermediate developers looking to enhance their skills.
+            </p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Hands-on coding exercises</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Project-based learning approach</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Certificate of completion</span>
+              </li>
+            </ul>
+            <div class="flex gap-4">
+              <button class="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Register Now</button>
+              <button class="border border-blue-600 text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-blue-50 transition">Add to Calendar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENT 2 -->
+        <div class="events-slide" data-index="1">
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border-l-4 border-green-500">
+            <span class="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3">NETWORKING</span>
+            <h3 class="text-2xl font-bold mb-3">Industry Leaders Forum</h3>
+            <div class="flex items-center text-gray-600 mb-4">
+              <i class="fas fa-calendar-alt mr-2"></i>
+              <span>March 22, 2025 | 1:00 PM - 5:00 PM</span>
+            </div>
+            <div class="flex items-center text-gray-600 mb-4">
+              <i class="fas fa-map-marker-alt mr-2"></i>
+              <span>SLSU Auditorium</span>
+            </div>
+            <p class="text-gray-700 mb-4">
+              Connect with industry professionals and alumni who have successfully built careers in technology. Learn about current trends and career opportunities in the IT industry.
+            </p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Panel discussions with IT professionals</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Networking sessions</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Resume review and career advice</span>
+              </li>
+            </ul>
+            <div class="flex gap-4">
+              <button class="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition">Register Now</button>
+              <button class="border border-green-600 text-green-600 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition">Add to Calendar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENT 3 -->
+        <div class="events-slide" data-index="2">
+          <div class="bg-gradient-to-r from-purple-50 to-violet-50 p-6 rounded-xl border-l-4 border-purple-500">
+            <span class="inline-block bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3">HACKATHON</span>
+            <h3 class="text-2xl font-bold mb-3">Code for Community Hackathon</h3>
+            <div class="flex items-center text-gray-600 mb-4">
+              <i class="fas fa-calendar-alt mr-2"></i>
+              <span>April 5-6, 2025 | 24-hour event</span>
+            </div>
+            <div class="flex items-center text-gray-600 mb-4">
+              <i class="fas fa-map-marker-alt mr-2"></i>
+              <span>SLSU Innovation Center</span>
+            </div>
+            <p class="text-gray-700 mb-4">
+              A 24-hour coding competition where teams develop innovative solutions to address community challenges. Open to all students regardless of programming experience.
+            </p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Team-based competition (3-5 members)</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Mentorship from industry experts</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                <span>Cash prizes and internship opportunities</span>
+              </li>
+            </ul>
+            <div class="flex gap-4">
+              <button class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition">Register Now</button>
+              <button class="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition">Add to Calendar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENT INDICATORS -->
+        <div class="flex justify-center gap-3 mt-6">
+          <div class="event-indicator active" data-target="0"></div>
+          <div class="event-indicator" data-target="1"></div>
+          <div class="event-indicator" data-target="2"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: EVENT SLIDESHOW -->
+      <div class="relative h-[500px] rounded-xl overflow-hidden shadow-xl">
+        <!-- EVENT 1 IMAGE -->
+        <div class="events-slide active absolute inset-0 w-full h-full" data-index="0">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&h=700" 
+               class="w-full h-full object-cover" alt="Web Development Workshop">
+        </div>
+
+        <!-- EVENT 2 IMAGE -->
+        <div class="events-slide absolute inset-0 w-full h-full" data-index="1">
+          <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&h=700" 
+               class="w-full h-full object-cover" alt="Industry Leaders Forum">
+        </div>
+
+        <!-- EVENT 3 IMAGE -->
+        <div class="events-slide absolute inset-0 w-full h-full" data-index="2">
+          <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&h=700" 
+               class="w-full h-full object-cover" alt="Hackathon Event">
+        </div>
+
+        <!-- SLIDE NAVIGATION -->
+        <button class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white transition" onclick="changeEventSlide(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white transition" onclick="changeEventSlide(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOGGLE SCRIPT -->
+<script>
+  function toggleDetails(btn) {
+    const content = btn.nextElementSibling;
+    if (content.classList.contains("hidden")) {
+      content.classList.remove("hidden");
+      btn.textContent = "Show Less";
+    } else {
+      content.classList.add("hidden");
+      btn.textContent = "Read More";
+    }
+  }
+
+  // Events Slideshow Functionality
+  let currentEventSlide = 0;
+  const eventSlides = document.querySelectorAll('.events-slide');
+  const eventIndicators = document.querySelectorAll('.event-indicator');
+
+  function showEventSlide(n) {
+    // Hide all slides
+    eventSlides.forEach(slide => {
+      slide.classList.remove('active');
+    });
+    
+    // Remove active class from all indicators
+    eventIndicators.forEach(indicator => {
+      indicator.classList.remove('active');
+    });
+    
+    // Show the selected slide
+    eventSlides[n].classList.add('active');
+    eventIndicators[n].classList.add('active');
+    
+    currentEventSlide = n;
+  }
+
+  function changeEventSlide(n) {
+    let newIndex = currentEventSlide + n;
+    
+    if (newIndex >= eventSlides.length / 2) {
+      newIndex = 0;
+    }
+    if (newIndex < 0) {
+      newIndex = (eventSlides.length / 2) - 1;
+    }
+    
+    showEventSlide(newIndex);
+  }
+
+  // Add click event to indicators
+  eventIndicators.forEach(indicator => {
+    indicator.addEventListener('click', function() {
+      const targetIndex = parseInt(this.getAttribute('data-target'));
+      showEventSlide(targetIndex);
+    });
+  });
+
+  // Auto-advance events slideshow
+  setInterval(() => {
+    changeEventSlide(1);
+  }, 5000);
+</script>
+
+<!-- FOOTER -->
+<footer id="contact" class="bg-gray-900 text-white mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+
+    <!-- CONTACT WITH ANIMATED TEXT + VERTICAL LINES -->
+    <div>
+      <h3 class="text-xl font-bold mb-4">Empowering Students, Powering Technology.</h3>
+
+      <!-- EMAIL ROW -->
+      <div class="flex items-center gap-3 mb-3 group">
+        <i class="fas fa-envelope text-lg cursor-pointer"></i>
+
+        <!-- Vertical line between icon and text -->
+        <div class="w-[2px] h-5 bg-gray-400"></div>
+
+        <!-- Animated text -->
+        <span
+          class="text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+        >
+          support@bitcourse.com
+        </span>
+      </div>
+
+      <!-- PHONE ROW -->
+      <div class="flex items-center gap-3 group">
+        <i class="fas fa-phone text-lg cursor-pointer"></i>
+
+        <!-- Vertical line between icon and text -->
+        <div class="w-[2px] h-5 bg-gray-400"></div>
+
+        <!-- Animated text -->
+        <span
+          class="text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+        >
+          1800-1234-5678
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <h4 class="font-bold mb-2">Company</h4>
+        <ul class="space-y-1">
+          <li><a href="#about" class="hover:text-blue-400">About Us</a></li>
+          <li><a href="#officers" class="hover:text-blue-400">Officers</a></li>
+          <li><a href="#events" class="hover:text-blue-400">Activities</a></li>
+          <li><a href="#contact" class="hover:text-blue-400">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-2">Help</h4>
+        <ul class="space-y-1">
+          <li><a href="#" class="hover:text-blue-400">FAQ</a></li>
+          <li><a href="#" class="hover:text-blue-400">Support</a></li>
+          <li><a href="#" class="hover:text-blue-400">Leadership Center</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-3">Get In Touch!</h4>
+      <form class="flex">
+        <input type="email" placeholder="Enter your email"
+               class="px-3 py-2 w-full rounded-l-lg text-black" />
+        <button class="bg-blue-600 px-4 py-2 rounded-r-lg">Subscribe</button>
+      </form>
+
+      <div class="flex gap-4 mt-4 text-xl">
+        <a href="#"><i class="fab fa-facebook-f hover:text-blue-400"></i></a>
+        <a href="#"><i class="fab fa-instagram hover:text-pink-400"></i></a>
+        <a href="#"><i class="fab fa-youtube hover:text-red-500"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="border-t border-white/20 py-4 text-center text-sm">
+    © 2025 NETWORK Organization | Developed for Student Leadership
+  </div>
+</footer>
+
+</body>
+</html>
