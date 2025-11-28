@@ -68,6 +68,22 @@
     .event-indicator.active {
       background-color: #3b82f6;
     }
+
+    .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-round {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
   </style>
 </head>
 
@@ -77,13 +93,21 @@
   <div class="max-w-7xl mx-auto px-6 py-4">
       <!-- CENTERED LOGO -->
       <div class="w-full flex justify-center mb-3">
-        <div
-          class="text-3xl hover:text-yellow-600 font-extrabold cursor-pointer"
-          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-        >
-          NETWORKkk
-        </div>
-      </div>
+  <div
+    class="text-3xl font-extrabold hover:text-yellow-600 cursor-pointer logo-container"
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+  >
+    <!-- Left Logo -->
+    <img src="./pics/logo.png" alt="network logo" class="logo-round">
+
+    <!-- Text -->
+    <span class="mx-3">NETWORK</span>
+
+    <!-- Right Logo -->
+    <img src="./pics/lucena logo.jpg" alt="lucena logo" class="logo-round">
+  </div>
+</div>
+
 
       <!-- LINE UNDER LOGO -->
       <div class="w-full flex justify-center mb-4">
@@ -111,7 +135,7 @@
         <div class="absolute right-0 group">
           <a
             href="#contact"
-            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-600 text-white-600 hover:bg-yellow-600 hover:text-white transition">
+            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-700 text-white-600 hover:bg-yellow-700 hover:text-white transition">
             Join Us
           </a>
 
@@ -147,15 +171,16 @@
       <img src="pics/ha.jpg" class="w-full h-screen object-cover" />
     </div>
 
+    <div class="slide">
+      <img src="header/members.jpg" class="w-full h-screen object-cover" />
+    </div>
+
     <div class="absolute inset-0 bg-black/50"></div>
 
     <div
       class="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4"
     >
-      <img
-        src="pics/logo.png"
-        class="w-40 h-40 rounded-full object-cover shadow-xl border-4 border-white mb-4"
-      />
+     
 
       <h2 class="text-3xl md:text-5xl font-bold">
         New Enhanced Team With Oriented Knowledge
