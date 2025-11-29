@@ -21,6 +21,7 @@
     /* Custom styles for better modal display */
     .modal-content {
       animation: fadeIn 0.3s ease-out;
+      z-index: 1000; /* Ensure modal is on top */
     }
     
     @keyframes fadeIn {
@@ -29,20 +30,31 @@
     }
 
     .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.logo-round {
-  width: 45px;
-  height: 45px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
+    .logo-round {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
 
+    /* Performance improvements for officer slider */
+    .slider-container {
+      will-change: transform;
+      transform: translateZ(0);
+    }
+    
+    .officer-card {
+      will-change: transform;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+    }
   </style>
 
   <script>
@@ -57,22 +69,22 @@
         facebook: "https://facebook.com/"
       },
       {
-        name: "Dr. Maria Santos",
+        name: "Dr. Jess Mark L. Alinea",
         position: "Campus Director – Lucena",
         image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
         facebook: "https://facebook.com/"
       },
       {
-        name: "Engr. Carlos Reyes",
+        name: "Sir Joriel Flynn V. Mazo",
         position: "Chairperson – BIT / BINDTECH",
-        image: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+        image: "./pics/chairperson.jpg",
         facebook: "https://facebook.com/"
       },
       {
-        name: "Prof. Ana Lopez",
+        name: "Prof. Jerome A. Yanga",
         position: "Organization Adviser",
-        image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
-        facebook: "https://facebook.com/"
+        image: "./pics/adviser.jpg",
+        facebook: "https://www.facebook.com/jerome.yanga.18"
       }
     ];
 
@@ -129,6 +141,7 @@
        =============================== */
     let officerCards = [];
     let officerActiveIndex = 0;
+    let isAnimating = false; // Prevent rapid clicking
 
     // Modal refs
     let officerModal,
@@ -207,11 +220,18 @@
     }
 
     function moveSlide(step) {
-      if (!officerCards.length) return;
+      if (!officerCards.length || isAnimating) return;
+      
+      isAnimating = true;
       officerActiveIndex =
         (officerActiveIndex + step + officerCards.length) %
         officerCards.length;
       positionOfficerCards();
+      
+      // Reset animation flag after transition
+      setTimeout(() => {
+        isAnimating = false;
+      }, 500);
     }
 
     function showOfficerDetails(card) {
@@ -229,8 +249,11 @@
       if (officerModalAge) officerModalAge.textContent = "Age: " + age; 
       if (officerModalFacebook) officerModalFacebook.href = social;
 
-      // Show modal
-      if (officerModal) officerModal.classList.remove("hidden");
+      // Show modal with higher z-index
+      if (officerModal) {
+        officerModal.classList.remove("hidden");
+        officerModal.style.zIndex = "9999"; // Ensure it's on top
+      }
       
       // Also center the clicked card
       const index = officerCards.indexOf(card);
@@ -241,7 +264,10 @@
     }
 
     function closeOfficerModal() {
-      if (officerModal) officerModal.classList.add("hidden");
+      if (officerModal) {
+        officerModal.classList.add("hidden");
+        officerModal.style.zIndex = ""; // Reset z-index
+      }
     }
 
     /* ===============================
@@ -261,21 +287,20 @@
     <div class="max-w-7xl mx-auto px-6 py-4">
 
       <div class="w-full flex justify-center mb-3">
-  <div
-    class="text-3xl font-extrabold hover:text-yellow-600 cursor-pointer logo-container"
-    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-  >
-    <!-- Left Logo -->
-    <img src="./pics/logo.png" alt="network logo" class="logo-round">
+        <div
+          class="text-3xl font-extrabold hover:text-yellow-600 cursor-pointer logo-container"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        >
+          <!-- Left Logo -->
+          <img src="./pics/logo.png" alt="network logo" class="logo-round">
 
-    <!-- Text -->
-    <span class="mx-3">NETWORK</span>
+          <!-- Text -->
+          <span class="mx-3">NETWORK</span>
 
-    <!-- Right Logo -->
-    <img src="./pics/lucena logo.jpg" alt="lucena logo" class="logo-round">
-  </div>
-</div>
-
+          <!-- Right Logo -->
+          <img src="./pics/lucena logo.jpg" alt="lucena logo" class="logo-round">
+        </div>
+      </div>
 
       <div class="w-full flex justify-center mb-4">
         <div class="w-40 h-[2px] bg-gray-300"></div>
@@ -285,8 +310,8 @@
         <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl">
           <a href="index.html" class="hover:text-yellow-600">Home</a>
           <a href="about.html" class="hover:text-yellow-600">About</a>
-          <a href="news.html" class="hover:text-blue-600">News</a>
-          <a href="administration.html" class="hover:text-blue-600">Administration</a>
+          <a href="news.html" class="hover:text-yellow-600">News</a>
+          <a href="administration.html" class="hover:text-yellow-600">Administration</a>
         </div>
 
         <div class="absolute right-0 group">
@@ -620,7 +645,7 @@
   <!-- OFFICER MODAL -->
   <div
     id="officerModal"
-    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] hidden"
     onclick="if(event.target === this) closeOfficerModal()"
   >
     <div class="modal-content bg-slate-900 rounded-2xl px-6 py-6 max-w-sm w-[100%] text-center relative border border-slate-700">
