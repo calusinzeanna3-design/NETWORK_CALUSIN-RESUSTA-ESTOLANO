@@ -68,17 +68,31 @@
     .event-indicator.active {
       background-color: #3b82f6;
     }
+
+    /* EXTRA MOBILE TWEAKS */
+    @media (max-width: 640px) {
+      /* reduce header height a bit so it fits better with navbar */
+      header#top {
+        height: 75vh;
+      }
+
+      header#top .slide img {
+        height: 75vh;
+        object-position: center;
+      }
+    }
   </style>
 </head>
 
-<body class="bg-gray-100 text-gray-900 text-[17px] md:text-[18px]">
+<body class="bg-gray-100 text-gray-900 text-[15px] sm:text-[16px] md:text-[18px]">
+
   <!-- NAVBAR -->
   <nav class="bg-[#800000] text-white shadow-md sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-6 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
       <!-- CENTERED LOGO -->
-      <div class="w-full flex justify-center mb-3">
+      <div class="w-full flex justify-center mb-2 sm:mb-3">
         <div
-          class="text-3xl hover:text-yellow-600 font-extrabold cursor-pointer"
+          class="text-2xl sm:text-3xl hover:text-yellow-600 font-extrabold cursor-pointer"
           onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
         >
           NETWORK
@@ -86,15 +100,15 @@
       </div>
 
       <!-- LINE UNDER LOGO -->
-      <div class="w-full flex justify-center mb-4">
-        <div class="w-40 h-[2px] bg-gray-300"></div>
+      <div class="w-full flex justify-center mb-3 sm:mb-4">
+        <div class="w-32 sm:w-40 h-[2px] bg-gray-300"></div>
       </div>
 
       <!-- NAVIGATION ROW -->
       <div class="flex items-center justify-center relative">
         <!-- CENTER NAV ITEMS -->
         <div
-          class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl"
+          class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 font-semibold text-sm sm:text-base md:text-lg"
         >
           <!-- This page -->
           <a href="index.html" class="hover:text-yellow-600">Home</a>
@@ -102,24 +116,26 @@
           <!-- Other pages -->
           <a href="about.html" class="hover:text-yellow-600">About</a>
           <a href="news.html" class="hover:text-yellow-600">News</a>
-          <a href="administration.html" class="hover:text-yellow-600"
-            >Administration</a
-          >
+          <a href="administration.html" class="hover:text-yellow-600">
+            Administration
+          </a>
         </div>
 
         <!-- RIGHT: JOIN US BUTTON -->
-        <div class="absolute right-0 group">
+        <div class="absolute right-0 hidden sm:block group">
           <a
             href="#contact"
-            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-600 text-white-600 hover:bg-yellow-600 hover:text-white transition">
+            class="inline-block font-semibold text-sm md:text-lg px-4 py-2 rounded-full border border-white-600 text-white-600 hover:bg-yellow-600 hover:text-white transition"
+          >
             Join Us
           </a>
 
           <!-- HOVER TOOLTIP -->
           <div
-            class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-sm text-gray-700 border border-gray-200"
+            class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-xs sm:text-sm text-gray-700 border border-gray-200"
           >
-            Be part of NETWORK! Click here to contact us or sign up as a member.
+            Be part of NETWORK! Click here to contact us or sign up as a
+            member.
           </div>
         </div>
       </div>
@@ -127,24 +143,24 @@
   </nav>
 
   <!-- HEADER SLIDESHOW -->
-  <header id="top" class="relative w-full h-screen">
+  <header id="top" class="relative w-full h-[75vh] md:h-screen">
     <div class="slide">
       <img
         src="./pics/headermain.png"
-        class="w-full h-screen object-cover"
+        class="w-full h-[75vh] md:h-screen object-cover"
       />
     </div>
 
     <div class="slide">
-      <img src="pics/bg2.jpg" class="w-full h-screen object-cover" />
+      <img src="pics/bg2.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
     </div>
 
     <div class="slide">
-      <img src="./pics/ha.jpg" class="w-full h-screen object-cover" />
+      <img src="./pics/ha.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
     </div>
 
     <div class="slide">
-      <img src="pics/ha.jpg" class="w-full h-screen object-cover" />
+      <img src="pics/ha.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
     </div>
 
     <div class="absolute inset-0 bg-black/50"></div>
@@ -154,24 +170,24 @@
     >
       <img
         src="pics/logo.png"
-        class="w-40 h-40 rounded-full object-cover shadow-xl border-4 border-white mb-4"
+        class="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full object-cover shadow-xl border-4 border-white mb-4"
       />
 
-      <h2 class="text-3xl md:text-5xl font-bold">
+      <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold max-w-2xl">
         New Enhanced Team With Oriented Knowledge
       </h2>
     </div>
 
     <button
       onclick="changeSlide(-1)"
-      class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-5xl font-bold"
+      class="hidden sm:block absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl md:text-5xl font-bold"
     >
       &#10094;
     </button>
 
     <button
       onclick="changeSlide(1)"
-      class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-5xl font-bold"
+      class="hidden sm:block absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl md:text-5xl font-bold"
     >
       &#10095;
     </button>
@@ -184,34 +200,34 @@
   >
     <div class="grid grid-cols-1 md:grid-cols-2 w-full">
       <!-- LEFT SIDE: FULL IMAGE -->
-      <div class="w-full h-[600px] md:h-auto m-0 p-0">
+      <div class="w-full h-64 sm:h-80 md:h-auto m-0 p-0">
         <img src="pics/intro.JPG" class="w-full h-full object-cover" />
       </div>
 
       <!-- RIGHT SIDE: CONTENT AREA -->
-      <div class="bg-white flex flex-col justify-center px-10 md:px-20 py-16 m-0">
+      <div class="bg-white flex flex-col justify-center px-6 sm:px-10 md:px-20 py-10 sm:py-16 m-0">
         <!-- LARGE TITLE -->
-        <h1 class="text-5xl md:text-6xl font-light mb-6">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light mb-6">
           NEW ENHANCED TEAM WITH ORIENTED KNOWLEDGE
         </h1>
 
         <!-- UNDERLINE -->
-        <div class="w-32 h-[2px] bg-gray-600 mb-8"></div>
+        <div class="w-24 sm:w-32 h-[2px] bg-gray-600 mb-8"></div>
 
         <!-- PARAGRAPH TEXT -->
-        <p class="text-lg leading-relaxed mb-6 text-gray-700">
+        <p class="text-base sm:text-lg leading-relaxed mb-4 sm:mb-6 text-gray-700">
           The New Enhanced Team With Oriented Knowledge (NETWORK) is a
           student-led organization committed to empowering future professionals
           through seminars, workshops, and collaborative activities focused on
           innovation and leadership.
         </p>
 
-        <p class="text-lg leading-relaxed mb-6 text-gray-700">
+        <p class="text-base sm:text-lg leading-relaxed mb-4 sm:mb-6 text-gray-700">
           NETWORK builds a strong academic community by promoting teamwork,
           enhancing technical skills, and fostering growth among BIT students.
         </p>
 
-        <p class="text-lg leading-relaxed mb-10 text-gray-700">
+        <p class="text-base sm:text-lg leading-relaxed mb-6 sm:mb-10 text-gray-700">
           Through its initiatives, the organization prepares members to adapt
           and thrive in a fast-changing technological environment.
         </p>
@@ -219,7 +235,7 @@
         <!-- BUTTON -->
         <a
           href="about.html"
-          class="border border-gray-700 px-8 py-3 rounded-full text-gray-800 hover:bg-gray-100 transition text-lg w-fit"
+          class="border border-gray-700 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-lg text-gray-800 hover:bg-gray-100 transition w-fit"
         >
           LEARN MORE
         </a>
@@ -230,39 +246,41 @@
   <!-- NEWS SECTION -->
   <section
     id="news"
-    class="w-full bg-gradient-to-br from-blue-50 to-indigo-50 py-20 m-0 min-h-screen flex items-center"
+    class="w-full bg-gradient-to-br from-blue-50 to-indigo-50 py-16 sm:py-20 m-0 min-h-screen flex items-center"
   >
-    <div class="max-w-7xl mx-auto px-8 w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
       <!-- TITLE -->
-      <h2 class="text-4xl font-bold mb-4">LATEST UPDATES & ANNOUNCEMENTS</h2>
-      <p class="text-gray-600 mb-12">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+        LATEST UPDATES & ANNOUNCEMENTS
+      </h2>
+      <p class="text-gray-600 mb-8 sm:mb-12 text-sm sm:text-base">
         Stay updated on the newest events, activities, and announcements from
         NETWORK.
       </p>
 
       <!-- FLEX WRAPPER -->
-      <div class="flex flex-col md:flex-row gap-12 md:justify-between">
+      <div class="flex flex-col md:flex-row gap-8 sm:gap-12 md:justify-between">
         <!-- CARD 1 -->
         <div class="w-full md:w-1/3">
           <div class="rounded-xl overflow-hidden shadow-lg">
             <img
               src="pics/assembly.jpg"
-              class="w-full h-60 object-cover transition duration-300 hover:scale-105"
+              class="w-full h-44 sm:h-60 object-cover transition duration-300 hover:scale-105"
             />
           </div>
 
-          <p class="text-center mt-4 font-semibold text-green-700">
+          <p class="text-center mt-4 font-semibold text-green-700 text-sm sm:text-base">
             General Assembly 2025
           </p>
 
           <button
             onclick="toggleDetails(this)"
-            class="block mx-auto text-blue-600 font-semibold mt-2"
+            class="block mx-auto text-blue-600 font-semibold mt-2 text-sm sm:text-base"
           >
             Read More
           </button>
 
-          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center">
+          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-sm sm:text-base">
             A gathering of BIT students for announcements, orientation, and
             future programs.
           </div>
@@ -273,22 +291,22 @@
           <div class="rounded-xl overflow-hidden shadow-lg">
             <img
               src="./pics/SEMINAR.jpg"
-              class="w-full h-60 object-cover transition duration-300 hover:scale-105"
+              class="w-full h-44 sm:h-60 object-cover transition duration-300 hover:scale-105"
             />
           </div>
 
-          <p class="text-center mt-4 font-semibold text-green-700">
+          <p class="text-center mt-4 font-semibold text-green-700 text-sm sm:text-base">
             Seminar Workshop
           </p>
 
           <button
             onclick="toggleDetails(this)"
-            class="block mx-auto text-blue-600 font-semibold mt-2"
+            class="block mx-auto text-blue-600 font-semibold mt-2 text-sm sm:text-base"
           >
             Read More
           </button>
 
-          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center">
+          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-sm sm:text-base">
             Students learned essential technical skills through a hands-on
             workshop.
           </div>
@@ -299,22 +317,22 @@
           <div class="rounded-xl overflow-hidden shadow-lg">
             <img
               src="./pics/Sci.JPG"
-              class="w-full h-60 object-cover transition duration-300 hover:scale-105"
+              class="w-full h-44 sm:h-60 object-cover transition duration-300 hover:scale-105"
             />
           </div>
 
-          <p class="text-center mt-4 font-semibold text-green-700">
+          <p class="text-center mt-4 font-semibold text-green-700 text-sm sm:text-base">
             SciTech
           </p>
 
           <button
             onclick="toggleDetails(this)"
-            class="block mx-auto text-blue-600 font-semibold mt-2"
+            class="block mx-auto text-blue-600 font-semibold mt-2 text-sm sm:text-base"
           >
             Read More
           </button>
 
-          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center">
+          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-sm sm:text-base">
             NETWORK extends support through volunteer activities and community
             work.
           </div>
@@ -326,47 +344,49 @@
   <!-- EVENTS SECTION (FIXED / MATCHES PHOTOS) -->
   <section
     id="events"
-    class="w-full bg-white py-20 min-h-screen flex items-center"
+    class="w-full bg-white py-16 sm:py-20 min-h-screen flex items-center"
   >
-    <div class="max-w-7xl mx-auto px-8 w-full">
-      <h2 class="text-4xl font-bold mb-4 text-center">UPCOMING EVENTS</h2>
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-center">
+        UPCOMING EVENTS
+      </h2>
       <p
-        class="text-gray-600 mb-12 text-center max-w-3xl mx-auto"
+        class="text-gray-600 mb-8 sm:mb-12 text-center max-w-3xl mx-auto text-sm sm:text-base"
       >
         Discover our upcoming activities and mark your calendars. Join us for
         these exciting events designed to enhance your skills and expand your
         network.
       </p>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 items-center">
         <!-- LEFT SIDE: EVENT DETAILS -->
         <div class="space-y-8">
           <!-- EVENT 1 - VALENTINES -->
           <div class="event-text-slide active" data-index="0">
             <div
-              class="bg-gradient-to-r from-pink-50 to-red-50 p-6 rounded-xl border-l-4 border-pink-500"
+              class="bg-gradient-to-r from-pink-50 to-red-50 p-5 sm:p-6 rounded-xl border-l-4 border-pink-500"
             >
               <span
-                class="inline-block bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3"
+                class="inline-block bg-pink-500 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
               >
                 SPECIAL EVENT
               </span>
-              <h3 class="text-2xl font-bold mb-3">
+              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
                 Valentine’s Day Celebration
               </h3>
-              <div class="flex items-center text-gray-600 mb-4">
+              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                 <i class="fas fa-calendar-alt mr-2"></i>
                 <span>February 14, 2025 | 4:00 PM - 9:00 PM</span>
               </div>
-              <div class="flex items-center text-gray-600 mb-4">
+              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                 <i class="fas fa-map-marker-alt mr-2"></i>
                 <span>SLSU Campus Grounds</span>
               </div>
-              <p class="text-gray-700 mb-4">
+              <p class="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
                 An evening of music, games, and activities to celebrate
                 friendship and love within the BIT community.
               </p>
-              <ul class="space-y-2 mb-6">
+              <ul class="space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
                 <li class="flex items-start">
                   <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
                   <span>Photo booths and mini-program</span>
@@ -380,18 +400,18 @@
                   <span>Open to all BIT students</span>
                 </li>
               </ul>
-              <div class="flex gap-4">
+              <div class="flex flex-wrap gap-3 sm:gap-4">
                 <!-- VIEW CALENDAR BUTTON FOR VALENTINES -->
                 <a
                   href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Valentines+Day+Celebration&dates=20250214T160000/20250214T210000&details=An+evening+of+music%2C+games%2C+and+activities+to+celebrate+friendship+and+love+within+the+BIT+community.&location=SLSU+Campus+Grounds"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-block bg-pink-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-pink-700 transition"
+                  class="inline-block bg-pink-600 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-pink-700 transition"
                 >
                   View Calendar
                 </a>
                 <button
-                  class="border border-pink-600 text-pink-600 px-6 py-2 rounded-lg font-semibold hover:bg-pink-50 transition"
+                  class="border border-pink-600 text-pink-600 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-pink-50 transition"
                 >
                   Add to Calendar
                 </button>
@@ -402,27 +422,29 @@
           <!-- EVENT 2 - INTRAMS -->
           <div class="event-text-slide" data-index="1">
             <div
-              class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border-l-4 border-green-500"
+              class="bg-gradient-to-r from-green-50 to-emerald-50 p-5 sm:p-6 rounded-xl border-l-4 border-green-500"
             >
               <span
-                class="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3"
+                class="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
               >
                 SPORTS FEST
               </span>
-              <h3 class="text-2xl font-bold mb-3">Intramurals 2025</h3>
-              <div class="flex items-center text-gray-600 mb-4">
+              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
+                Intramurals 2025
+              </h3>
+              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                 <i class="fas fa-calendar-alt mr-2"></i>
                 <span>September 10–14, 2025 | Whole Day</span>
               </div>
-              <div class="flex items-center text-gray-600 mb-4">
+              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                 <i class="fas fa-map-marker-alt mr-2"></i>
                 <span>SLSU Gymnasium & Open Field</span>
               </div>
-              <p class="text-gray-700 mb-4">
+              <p class="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
                 A week-long celebration of sportsmanship, teamwork, and school
                 spirit featuring different college teams.
               </p>
-              <ul class="space-y-2 mb-6">
+              <ul class="space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
                 <li class="flex items-start">
                   <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
                   <span>Multiple sports and e-sports events</span>
@@ -436,18 +458,18 @@
                   <span>Awards and recognition for winning teams</span>
                 </li>
               </ul>
-              <div class="flex gap-4">
+              <div class="flex flex-wrap gap-3 sm:gap-4">
                 <!-- VIEW CALENDAR BUTTON FOR INTRAMS -->
                 <a
                   href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Intramurals+2025&dates=20250910/20250915&details=A+week-long+celebration+of+sportsmanship%2C+teamwork%2C+and+school+spirit+featuring+different+college+teams.&location=SLSU+Gymnasium+%26+Open+Field"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+                  class="inline-block bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-700 transition"
                 >
                   View Calendar
                 </a>
                 <button
-                  class="border border-green-600 text-green-600 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition"
+                  class="border border-green-600 text-green-600 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-50 transition"
                 >
                   Join a Team
                 </button>
@@ -458,27 +480,29 @@
           <!-- EVENT 3 - NIGHT -->
           <div class="event-text-slide" data-index="2">
             <div
-              class="bg-gradient-to-r from-purple-50 to-violet-50 p-6 rounded-xl border-l-4 border-purple-500"
+              class="bg-gradient-to-r from-purple-50 to-violet-50 p-5 sm:p-6 rounded-xl border-l-4 border-purple-500"
             >
               <span
-                class="inline-block bg-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold mb-3"
+                class="inline-block bg-purple-500 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
               >
                 SOCIAL NIGHT
               </span>
-              <h3 class="text-2xl font-bold mb-3">Acquaintance Night 2025</h3>
-              <div class="flex items-center text-gray-600 mb-4">
+              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
+                Acquaintance Night 2025
+              </h3>
+              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                 <i class="fas fa-calendar-alt mr-2"></i>
                 <span>December 5, 2025 | 6:00 PM - 11:00 PM</span>
               </div>
-              <div class="flex items-center text-gray-600 mb-4">
+              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                 <i class="fas fa-map-marker-alt mr-2"></i>
                 <span>SLSU Auditorium</span>
               </div>
-              <p class="text-gray-700 mb-4">
+              <p class="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
                 A night of music, performances, and bonding to welcome new
                 members and celebrate the NETWORK family.
               </p>
-              <ul class="space-y-2 mb-6">
+              <ul class="space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
                 <li class="flex items-start">
                   <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
                   <span>Live performances and program numbers</span>
@@ -492,18 +516,18 @@
                   <span>Photo sessions and closing ceremony</span>
                 </li>
               </ul>
-              <div class="flex gap-4">
+              <div class="flex flex-wrap gap-3 sm:gap-4">
                 <!-- VIEW CALENDAR BUTTON FOR ACQUAINTANCE NIGHT -->
                 <a
                   href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Acquaintance+Night+2025&dates=20251205T180000/20251205T230000&details=A+night+of+music%2C+performances%2C+and+bonding+to+welcome+new+members+and+celebrate+the+NETWORK+family.&location=SLSU+Auditorium"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition"
+                  class="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-purple-700 transition"
                 >
                   View Calendar
                 </a>
                 <button
-                  class="border border-purple-600 text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition"
+                  class="border border-purple-600 text-purple-600 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-purple-50 transition"
                 >
                   Event Details
                 </button>
@@ -512,7 +536,7 @@
           </div>
 
           <!-- EVENT INDICATORS -->
-          <div class="flex justify-center gap-3 mt-6">
+          <div class="flex justify-center gap-3 mt-4 sm:mt-6">
             <div class="event-indicator active" data-target="0"></div>
             <div class="event-indicator" data-target="1"></div>
             <div class="event-indicator" data-target="2"></div>
@@ -520,7 +544,7 @@
         </div>
 
         <!-- RIGHT SIDE: EVENT SLIDESHOW IMAGES -->
-        <div class="relative h-[500px] rounded-xl overflow-hidden shadow-xl">
+        <div class="relative h-72 sm:h-80 md:h-[500px] rounded-xl overflow-hidden shadow-xl">
           <!-- EVENT 1 IMAGE -->
           <div
             class="event-image-slide active absolute inset-0 w-full h-full"
@@ -559,16 +583,16 @@
 
           <!-- SLIDE NAVIGATION -->
           <button
-            class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white transition"
+            class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white transition"
             onclick="changeEventSlide(-1)"
           >
-            <i class="fas fa-chevron-left"></i>
+            <i class="fas fa-chevron-left text-xs sm:text-sm"></i>
           </button>
           <button
-            class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-10 h-10 rounded-full flex items-center justify-center hover:bg-white transition"
+            class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white transition"
             onclick="changeEventSlide(1)"
           >
-            <i class="fas fa-chevron-right"></i>
+            <i class="fas fa-chevron-right text-xs sm:text-sm"></i>
           </button>
         </div>
       </div>
@@ -576,24 +600,24 @@
   </section>
 
   <!-- FOOTER -->
-  <footer id="contact" class="bg-[#800000] text-white mt-16">
-  <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+  <footer id="contact" class="bg-[#800000] text-white mt-10 sm:mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid md:grid-cols-3 gap-8">
       <!-- CONTACT WITH ANIMATED TEXT + VERTICAL LINES -->
       <div>
-        <h3 class="text-xl font-bold mb-4">
+        <h3 class="text-lg sm:text-xl font-bold mb-4">
           Empowering Students, Powering Technology.
         </h3>
 
         <!-- EMAIL ROW -->
         <div class="flex items-center gap-3 mb-3 group">
-          <i class="fas fa-envelope text-lg cursor-pointer"></i>
+          <i class="fas fa-envelope text-base sm:text-lg cursor-pointer"></i>
 
           <!-- Vertical line between icon and text -->
           <div class="w-[2px] h-5 bg-gray-400"></div>
 
           <!-- Animated text -->
           <span
-            class="text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+            class="text-xs sm:text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
           >
             support@bitcourse.com
           </span>
@@ -601,14 +625,14 @@
 
         <!-- PHONE ROW -->
         <div class="flex items-center gap-3 group">
-          <i class="fas fa-phone text-lg cursor-pointer"></i>
+          <i class="fas fa-phone text-base sm:text-lg cursor-pointer"></i>
 
           <!-- Vertical line between icon and text -->
           <div class="w-[2px] h-5 bg-gray-400"></div>
 
           <!-- Animated text -->
           <span
-            class="text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+            class="text-xs sm:text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
           >
             1800-1234-5678
           </span>
@@ -617,8 +641,8 @@
 
       <div class="grid grid-cols-2 gap-6">
         <div>
-          <h4 class="font-bold mb-2">Company</h4>
-          <ul class="space-y-1">
+          <h4 class="font-bold mb-2 text-sm sm:text-base">Company</h4>
+          <ul class="space-y-1 text-xs sm:text-sm">
             <li>
               <a href="#about" class="hover:text-yellow-400">About Us</a>
             </li>
@@ -634,8 +658,8 @@
           </ul>
         </div>
         <div>
-          <h4 class="font-bold mb-2">Help</h4>
-          <ul class="space-y-1">
+          <h4 class="font-bold mb-2 text-sm sm:text-base">Help</h4>
+          <ul class="space-y-1 text-xs sm:text-sm">
             <li><a href="#" class="hover:text-yellow-400">FAQ</a></li>
             <li><a href="#" class="hover:text-yellow-400">Support</a></li>
             <li>
@@ -646,19 +670,19 @@
       </div>
 
       <div>
-        <h4 class="font-bold mb-3">Get In Touch!</h4>
+        <h4 class="font-bold mb-3 text-sm sm:text-base">Get In Touch!</h4>
         <form class="flex">
           <input
             type="email"
             placeholder="Enter your email"
-            class="px-3 py-2 w-full rounded-l-lg text-black"
+            class="px-3 py-2 w-full rounded-l-lg text-black text-sm sm:text-base"
           />
-          <button class="bg-blue-600 px-4 py-2 rounded-r-lg">
+          <button class="bg-blue-600 px-3 sm:px-4 py-2 rounded-r-lg text-sm sm:text-base">
             Subscribe
           </button>
         </form>
 
-        <div class="flex gap-4 mt-4 text-xl">
+        <div class="flex gap-4 mt-4 text-lg sm:text-xl">
           <a href="#"><i class="fab fa-facebook-f hover:text-blue-400"></i></a>
           <a href="#"><i class="fab fa-instagram hover:text-pink-400"></i></a>
           <a href="#"><i class="fab fa-youtube hover:text-red-500"></i></a>
@@ -666,7 +690,7 @@
       </div>
     </div>
 
-    <div class="border-t border-white/20 py-4 text-center text-sm">
+    <div class="border-t border-white/20 py-3 sm:py-4 text-center text-[11px] sm:text-sm">
       © 2025 NETWORK Organization | Developed for Student Leadership
     </div>
   </footer>
