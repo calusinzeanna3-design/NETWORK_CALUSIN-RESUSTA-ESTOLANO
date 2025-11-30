@@ -21,11 +21,39 @@
     /* Custom styles for better modal display */
     .modal-content {
       animation: fadeIn 0.3s ease-out;
+      z-index: 1000; /* Ensure modal is on top */
     }
     
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-round {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    /* Performance improvements for officer slider */
+    .slider-container {
+      will-change: transform;
+      transform: translateZ(0);
+    }
+    
+    .officer-card {
+      will-change: transform;
+      backface-visibility: hidden;
+      transform: translateZ(0);
     }
   </style>
 
@@ -41,22 +69,22 @@
         facebook: "https://facebook.com/"
       },
       {
-        name: "Dr. Maria Santos",
+        name: "Dr. Jess Mark L. Alinea",
         position: "Campus Director – Lucena",
         image: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg",
         facebook: "https://facebook.com/"
       },
       {
-        name: "Engr. Carlos Reyes",
+        name: "Sir Joriel Flynn V. Mazo",
         position: "Chairperson – BIT / BINDTECH",
-        image: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+        image: "./pics/chairperson.jpg",
         facebook: "https://facebook.com/"
       },
       {
-        name: "Prof. Ana Lopez",
+        name: "Prof. Jerome A. Yanga",
         position: "Organization Adviser",
-        image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
-        facebook: "https://facebook.com/"
+        image: "./pics/adviser.jpg",
+        facebook: "https://www.facebook.com/jerome.yanga.18"
       }
     ];
 
@@ -113,6 +141,7 @@
        =============================== */
     let officerCards = [];
     let officerActiveIndex = 0;
+    let isAnimating = false; // Prevent rapid clicking
 
     // Modal refs
     let officerModal,
@@ -191,11 +220,18 @@
     }
 
     function moveSlide(step) {
-      if (!officerCards.length) return;
+      if (!officerCards.length || isAnimating) return;
+      
+      isAnimating = true;
       officerActiveIndex =
         (officerActiveIndex + step + officerCards.length) %
         officerCards.length;
       positionOfficerCards();
+      
+      // Reset animation flag after transition
+      setTimeout(() => {
+        isAnimating = false;
+      }, 500);
     }
 
     function showOfficerDetails(card) {
@@ -213,8 +249,11 @@
       if (officerModalAge) officerModalAge.textContent = "Age: " + age; 
       if (officerModalFacebook) officerModalFacebook.href = social;
 
-      // Show modal
-      if (officerModal) officerModal.classList.remove("hidden");
+      // Show modal with higher z-index
+      if (officerModal) {
+        officerModal.classList.remove("hidden");
+        officerModal.style.zIndex = "9999"; // Ensure it's on top
+      }
       
       // Also center the clicked card
       const index = officerCards.indexOf(card);
@@ -225,7 +264,10 @@
     }
 
     function closeOfficerModal() {
-      if (officerModal) officerModal.classList.add("hidden");
+      if (officerModal) {
+        officerModal.classList.add("hidden");
+        officerModal.style.zIndex = ""; // Reset z-index
+      }
     }
 
     /* ===============================
@@ -246,10 +288,17 @@
 
       <div class="w-full flex justify-center mb-3">
         <div
-          class="text-3xl hover:text-yellow-600 font-extrabold cursor-pointer"
+          class="text-3xl font-extrabold hover:text-yellow-600 cursor-pointer logo-container"
           onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
         >
-          NETWORK
+          <!-- Left Logo -->
+          <img src="./pics/logo.png" alt="network logo" class="logo-round">
+
+          <!-- Text -->
+          <span class="mx-3">NETWORK</span>
+
+          <!-- Right Logo -->
+          <img src="./pics/lucena logo.jpg" alt="lucena logo" class="logo-round">
         </div>
       </div>
 
@@ -261,14 +310,14 @@
         <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12 font-semibold text-lg md:text-xl">
           <a href="index.html" class="hover:text-yellow-600">Home</a>
           <a href="about.html" class="hover:text-yellow-600">About</a>
-          <a href="news.html" class="hover:text-blue-600">News</a>
-          <a href="administration.html" class="hover:text-blue-600">Administration</a>
+          <a href="news.html" class="hover:text-yellow-600">News</a>
+          <a href="administration.html" class="hover:text-yellow-600">Administration</a>
         </div>
 
         <div class="absolute right-0 group">
           <a
             href="#contact"
-            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-600 text-white-600 hover:bg-yellow-600 hover:text-white transition">
+            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-700 text-white-700 hover:bg-yellow-600 hover:text-white transition">
             Join Us
           </a>
 
@@ -397,7 +446,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="JOHN PAULO L. MANUEL"
-            data-age="21"
+            data-age="20"
             data-position="Vice President"
             data-social="https://facebook.com">
             <img src="./pics/vice pres.jpg" alt="Vice President" class="w-full h-full object-cover" />
@@ -409,7 +458,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="JESSA MAE R. PINES"
-            data-age="21"
+            data-age="20"
             data-position="Secretary"
             data-social="https://facebook.com">
             <img src="./pics/secretary.jpg" alt="Secretary" class="w-full h-full object-cover" />
@@ -433,7 +482,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="ANGELICA S. AGUILA"
-            data-age="21"
+            data-age="20"
             data-position="Auditor"
             data-social="https://facebook.com">
             <img src="./pics/auditor.jpg" alt="Auditor" class="w-full h-full object-cover" />
@@ -445,7 +494,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="JONA M. TAN"
-            data-age="21"
+            data-age="23"
             data-position="Layout Artist"
             data-social="https://www.facebook.com/tan77777777777777777">
             <img src="./pics/layout.jpg" alt="Layout Artist" class="w-full h-full object-cover" />
@@ -457,7 +506,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="ASHLEY NICOLE G. YUBION"
-            data-age="21"
+            data-age="20"
             data-position="2nd Year Representative"
             data-social="https://facebook.com">
             <img src="./pics/2nd.jpg" alt="2nd Year Representative" class="w-full h-full object-cover" />
@@ -469,7 +518,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="MARISSA M. FAMADULAN"
-            data-age="21"
+            data-age="26"
             data-position="3rd Year Representative"
             data-social="https://facebook.com">
             <img src="./pics/3rd.jpg" alt="3rd Year Representative" class="w-full h-full object-cover" />
@@ -481,7 +530,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="RUSSEL KEN D. RUEDAS"
-            data-age="21"
+            data-age="20"
             data-position="4th Year Representative"
             data-social="https://facebook.com">
             <img src="./pics/4th.jpg" alt="4th Year Representative" class="w-full h-full object-cover" />
@@ -493,7 +542,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="DEN MARK R. LADEZA"
-            data-age="21"
+            data-age="20"
             data-position="Project Manager"
             data-social="https://www.facebook.com/denmark.ladeza5">
             <img src="./pics/project manager.jpg" alt="Project Manager" class="w-full h-full object-cover" />
@@ -505,7 +554,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="JOHN RICK R. VILLENA"
-            data-age="21"
+            data-age="20"
             data-position="Sports"
             data-social="https://facebook.com">
             <img src="./pics/sports.jpg" alt="Sports" class="w-full h-full object-cover" />
@@ -517,7 +566,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="ARIEL JAKE MARAYA"
-            data-age="21"
+            data-age="23"
             data-position="Gender and Development"
             data-social="https://facebook.com">
             <img src="./pics/GAD.jpg" alt="Gender and Development" class="w-full h-full object-cover" />
@@ -529,7 +578,7 @@
           <div
             class="officer-card absolute left-1/2 top-0 w-32 h-40 md:w-40 md:h-52 rounded-3xl overflow-hidden bg-slate-800 shadow-xl cursor-pointer transition-transform duration-500 ease-out"
             data-name="PRICESS NICOLE V. QUEJANO"
-            data-age="21"
+            data-age="20"
             data-position="Legal Matters"
             data-social="https://facebook.com">
             <img src="./pics/legal matters.jpg" alt="Legal Matters" class="w-full h-full object-cover" />
@@ -596,7 +645,7 @@
   <!-- OFFICER MODAL -->
   <div
     id="officerModal"
-    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 hidden"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] hidden"
     onclick="if(event.target === this) closeOfficerModal()"
   >
     <div class="modal-content bg-slate-900 rounded-2xl px-6 py-6 max-w-sm w-[100%] text-center relative border border-slate-700">

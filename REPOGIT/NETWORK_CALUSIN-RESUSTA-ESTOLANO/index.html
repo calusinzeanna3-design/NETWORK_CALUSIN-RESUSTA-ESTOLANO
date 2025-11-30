@@ -69,6 +69,7 @@
       background-color: #3b82f6;
     }
 
+<<<<<<< HEAD
     /* EXTRA MOBILE TWEAKS */
     @media (max-width: 640px) {
       /* reduce header height a bit so it fits better with navbar */
@@ -81,6 +82,23 @@
         object-position: center;
       }
     }
+=======
+    .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-round {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+>>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
   </style>
 </head>
 
@@ -90,6 +108,7 @@
   <nav class="bg-[#800000] text-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
       <!-- CENTERED LOGO -->
+<<<<<<< HEAD
       <div class="w-full flex justify-center mb-2 sm:mb-3">
         <div
           class="text-2xl sm:text-3xl hover:text-yellow-600 font-extrabold cursor-pointer"
@@ -98,6 +117,24 @@
           NETWORK
         </div>
       </div>
+=======
+      <div class="w-full flex justify-center mb-3">
+  <div
+    class="text-3xl font-extrabold hover:text-yellow-600 cursor-pointer logo-container"
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+  >
+    <!-- Left Logo -->
+    <img src="./pics/logo.png" alt="network logo" class="logo-round">
+
+    <!-- Text -->
+    <span class="mx-3">NETWORK</span>
+
+    <!-- Right Logo -->
+    <img src="./pics/lucena logo.jpg" alt="lucena logo" class="logo-round">
+  </div>
+</div>
+
+>>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
 
       <!-- LINE UNDER LOGO -->
       <div class="w-full flex justify-center mb-3 sm:mb-4">
@@ -125,8 +162,12 @@
         <div class="absolute right-0 hidden sm:block group">
           <a
             href="#contact"
+<<<<<<< HEAD
             class="inline-block font-semibold text-sm md:text-lg px-4 py-2 rounded-full border border-white-600 text-white-600 hover:bg-yellow-600 hover:text-white transition"
           >
+=======
+            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-700 text-white-600 hover:bg-yellow-700 hover:text-white transition">
+>>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
             Join Us
           </a>
 
@@ -152,7 +193,11 @@
     </div>
 
     <div class="slide">
+<<<<<<< HEAD
       <img src="pics/bg2.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
+=======
+      <img src="./pics/NETWORK.png" class="w-full h-screen object-cover" />
+>>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
     </div>
 
     <div class="slide">
@@ -163,15 +208,23 @@
       <img src="pics/ha.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
     </div>
 
+    <div class="slide">
+      <img src="header/members.jpg" class="w-full h-screen object-cover" />
+    </div>
+
     <div class="absolute inset-0 bg-black/50"></div>
 
     <div
       class="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4"
     >
+<<<<<<< HEAD
       <img
         src="pics/logo.png"
         class="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full object-cover shadow-xl border-4 border-white mb-4"
       />
+=======
+     
+>>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
 
       <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold max-w-2xl">
         New Enhanced Team With Oriented Knowledge
@@ -677,7 +730,11 @@
             placeholder="Enter your email"
             class="px-3 py-2 w-full rounded-l-lg text-black text-sm sm:text-base"
           />
+<<<<<<< HEAD
           <button class="bg-blue-600 px-3 sm:px-4 py-2 rounded-r-lg text-sm sm:text-base">
+=======
+          <button class="bg-yellow-600 px-4 py-2 rounded-r-lg">
+>>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
             Subscribe
           </button>
         </form>
