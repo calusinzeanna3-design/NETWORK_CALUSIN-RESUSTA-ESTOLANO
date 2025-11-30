@@ -17,14 +17,21 @@
   <!-- HEADER SLIDESHOW SCRIPT -->
   <script>
     let slideIndex = 0;
+    let slideTimer = null;
 
     function showSlides(n) {
-      let slides = document.getElementsByClassName("slide");
-      if (n >= slides.length) slideIndex = 0;
-      if (n < 0) slideIndex = slides.length - 1;
+      const slides = document.getElementsByClassName("slide");
+      const total = slides.length;
+      if (!total) return;
+
+      if (n >= total) slideIndex = 0;
+      if (n < 0) slideIndex = total - 1;
 
       Array.from(slides).forEach((s) => (s.style.display = "none"));
-      slides[slideIndex].style.display = "block";
+
+      if (slides[slideIndex]) {
+        slides[slideIndex].style.display = "block";
+      }
     }
 
     function changeSlide(n) {
@@ -32,19 +39,25 @@
       showSlides(slideIndex);
     }
 
-    setInterval(() => {
-      changeSlide(1);
-    }, 4000);
+    window.addEventListener("load", () => {
+      showSlides(slideIndex);
 
-    window.onload = () => showSlides(slideIndex);
+      slideTimer = setInterval(() => {
+        changeSlide(1);
+      }, 4000);
+    });
   </script>
 
   <style>
     html {
-      scroll-behavior: smooth; /* smooth scroll when clicking nav links */
+      scroll-behavior: smooth;
     }
 
-    /* EVENTS SLIDES (TEXT + IMAGES) */
+    body {
+      background-color: #800000; /* maroon theme */
+      overscroll-behavior-y: contain;
+    }
+
     .event-text-slide,
     .event-image-slide {
       display: none;
@@ -69,147 +82,129 @@
       background-color: #3b82f6;
     }
 
-<<<<<<< HEAD
-    /* EXTRA MOBILE TWEAKS */
-    @media (max-width: 640px) {
-      /* reduce header height a bit so it fits better with navbar */
-      header#top {
-        height: 75vh;
-      }
-
-      header#top .slide img {
-        height: 75vh;
-        object-position: center;
-      }
-    }
-=======
     .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-.logo-round {
-  width: 45px;
-  height: 45px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-
->>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
+    .logo-round {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
   </style>
 </head>
 
-<body class="bg-gray-100 text-gray-900 text-[15px] sm:text-[16px] md:text-[18px]">
+<body class="text-gray-900 text-[15px] sm:text-[16px] md:text-[18px]">
 
-  <!-- NAVBAR -->
-  <nav class="bg-[#800000] text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-      <!-- CENTERED LOGO -->
-<<<<<<< HEAD
-      <div class="w-full flex justify-center mb-2 sm:mb-3">
-        <div
-          class="text-2xl sm:text-3xl hover:text-yellow-600 font-extrabold cursor-pointer"
-          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-        >
-          NETWORK
-        </div>
-      </div>
-=======
-      <div class="w-full flex justify-center mb-3">
-  <div
-    class="text-3xl font-extrabold hover:text-yellow-600 cursor-pointer logo-container"
-    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
-  >
-    <!-- Left Logo -->
-    <img src="./pics/logo.png" alt="network logo" class="logo-round">
-
-    <!-- Text -->
-    <span class="mx-3">NETWORK</span>
-
-    <!-- Right Logo -->
-    <img src="./pics/lucena logo.jpg" alt="lucena logo" class="logo-round">
-  </div>
-</div>
-
->>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
-
-      <!-- LINE UNDER LOGO -->
-      <div class="w-full flex justify-center mb-3 sm:mb-4">
-        <div class="w-32 sm:w-40 h-[2px] bg-gray-300"></div>
-      </div>
-
-      <!-- NAVIGATION ROW -->
-      <div class="flex items-center justify-center relative">
-        <!-- CENTER NAV ITEMS -->
-        <div
-          class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8 font-semibold text-sm sm:text-base md:text-lg"
-        >
-          <!-- This page -->
-          <a href="index.html" class="hover:text-yellow-600">Home</a>
-
-          <!-- Other pages -->
-          <a href="about.html" class="hover:text-yellow-600">About</a>
-          <a href="news.html" class="hover:text-yellow-600">News</a>
-          <a href="administration.html" class="hover:text-yellow-600">
-            Administration
-          </a>
-        </div>
-
-        <!-- RIGHT: JOIN US BUTTON -->
-        <div class="absolute right-0 hidden sm:block group">
-          <a
-            href="#contact"
-<<<<<<< HEAD
-            class="inline-block font-semibold text-sm md:text-lg px-4 py-2 rounded-full border border-white-600 text-white-600 hover:bg-yellow-600 hover:text-white transition"
-          >
-=======
-            class="inline-block font-semibold text-lg md:text-xl px-4 py-2 rounded-full border border-white-700 text-white-600 hover:bg-yellow-700 hover:text-white transition">
->>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
-            Join Us
-          </a>
-
-          <!-- HOVER TOOLTIP -->
+  <!-- NAVBAR (maroon theme, white bar style like sample) -->
+  <nav class="sticky top-0 z-50 bg-[#800000]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <!-- white header bar -->
+      <div class="bg-white/95 rounded-b-3xl shadow-md border-b border-gray-100">
+        <div class="flex items-center justify-between h-16 sm:h-20 px-3 sm:px-6">
+          <!-- LEFT: LOGO -->
           <div
-            class="hidden group-hover:block absolute right-0 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-xs sm:text-sm text-gray-700 border border-gray-200"
+            class="logo-container text-2xl sm:text-3xl font-extrabold text-[#800000] cursor-pointer"
+            onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
           >
-            Be part of NETWORK! Click here to contact us or sign up as a
-            member.
+            <img src="./pics/logo.png" alt="NETWORK logo" class="logo-round" />
+            <span class="mx-2 sm:mx-3">NETWORK</span>
+            <img src="./pics/lucena logo.jpg" alt="Lucena logo" class="logo-round" />
           </div>
+
+          <!-- CENTER: NAV LINKS -->
+          <div
+            class="hidden md:flex items-center justify-center gap-6 lg:gap-8 font-semibold text-xs sm:text-sm lg:text-base tracking-wide text-gray-700"
+          >
+            <a href="index.html" class="hover:text-[#800000]">Home</a>
+            <a href="about.html" class="hover:text-[#800000]">About</a>
+            <a href="news.html" class="hover:text-[#800000]">News</a>
+            <a href="administration.html" class="hover:text-[#800000]">
+              Administration
+            </a>
+          </div>
+
+          <!-- RIGHT: JOIN BUTTON -->
+          <div class="hidden sm:block group">
+            <button
+              type="button"
+              onclick="openJoinModal()"
+              class="inline-flex items-center justify-center text-xs sm:text-sm md:text-base font-semibold px-4 sm:px-6 py-2 rounded-full bg-gradient-to-r from-[#b00000] to-[#700000] text-white shadow-md hover:shadow-lg hover:brightness-110 transition"
+            >
+              Join Us
+            </button>
+
+            <div
+              class="hidden group-hover:block absolute right-4 sm:right-10 mt-2 w-64 bg-white shadow-lg rounded-lg p-3 text-xs sm:text-sm text-gray-700 border border-gray-200"
+            >
+              Be part of NETWORK! Click here to send your membership request.
+            </div>
+          </div>
+        </div>
+
+        <!-- MOBILE NAV (under the main bar) -->
+        <div class="md:hidden border-t border-gray-100 px-4 pb-3 pt-2 flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-700">
+          <a href="index.html" class="hover:text-[#800000]">Home</a>
+          <a href="about.html" class="hover:text-[#800000]">About</a>
+          <a href="news.html" class="hover:text-[#800000]">News</a>
+          <a href="administration.html" class="hover:text-[#800000]">Administration</a>
+          <button
+            type="button"
+            onclick="openJoinModal()"
+            class="mt-1 inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-gradient-to-r from-[#b00000] to-[#700000] text-white shadow"
+          >
+            Join Us
+          </button>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- HEADER SLIDESHOW -->
-  <header id="top" class="relative w-full h-[75vh] md:h-screen">
+  <!-- HEADER SLIDESHOW (FULL SCREEN) -->
+  <header id="top" class="relative w-full h-screen bg-black">
     <div class="slide">
       <img
         src="./pics/headermain.png"
-        class="w-full h-[75vh] md:h-screen object-cover"
+        class="w-full h-full object-cover"
+        alt="NETWORK header"
       />
     </div>
 
     <div class="slide">
-<<<<<<< HEAD
-      <img src="pics/bg2.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
-=======
-      <img src="./pics/NETWORK.png" class="w-full h-screen object-cover" />
->>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
+      <img
+        src="./pics/bg2.jpg"
+        class="w-full h-full object-cover"
+        alt="Campus background"
+      />
     </div>
 
     <div class="slide">
-      <img src="./pics/ha.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
+      <img
+        src="./pics/ha.jpg"
+        class="w-full h-full object-cover"
+        alt="Event image"
+      />
     </div>
 
     <div class="slide">
-      <img src="pics/ha.jpg" class="w-full h-[75vh] md:h-screen object-cover" />
+      <img
+        src="./pics/ha.jpg"
+        class="w-full h-full object-cover"
+        alt="Event image"
+      />
     </div>
 
     <div class="slide">
-      <img src="header/members.jpg" class="w-full h-screen object-cover" />
+      <img
+        src="./header/members.jpg"
+        class="w-full h-full object-cover"
+        alt="Members"
+      />
     </div>
 
     <div class="absolute inset-0 bg-black/50"></div>
@@ -217,16 +212,13 @@
     <div
       class="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4"
     >
-<<<<<<< HEAD
       <img
-        src="pics/logo.png"
+        src="./pics/logo.png"
+        alt="NETWORK logo"
         class="w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full object-cover shadow-xl border-4 border-white mb-4"
       />
-=======
-     
->>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
 
-      <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold max-w-2xl">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold max-w-2xl">
         New Enhanced Team With Oriented Knowledge
       </h2>
     </div>
@@ -246,49 +238,43 @@
     </button>
   </header>
 
-  <!-- ABOUT SECTION -->
+  <!-- ABOUT SECTION: SOLID BACKGROUND -->
   <section
     id="about"
-    class="w-full py-0 mt-0 pt-0 min-h-screen flex items-stretch"
+    class="w-full min-h-screen bg-[#800000] flex items-stretch"
   >
     <div class="grid grid-cols-1 md:grid-cols-2 w-full">
-      <!-- LEFT SIDE: FULL IMAGE -->
-      <div class="w-full h-64 sm:h-80 md:h-auto m-0 p-0">
-        <img src="pics/intro.JPG" class="w-full h-full object-cover" />
+      <div class="w-full h-full m-0 p-0">
+        <img src="./pics/intro.JPG" class="w-full h-full object-cover" alt="NETWORK introduction" />
       </div>
 
-      <!-- RIGHT SIDE: CONTENT AREA -->
-      <div class="bg-white flex flex-col justify-center px-6 sm:px-10 md:px-20 py-10 sm:py-16 m-0">
-        <!-- LARGE TITLE -->
+      <div class="bg-white flex flex-col justify-center px-6 sm:px-10 md:px-20 py-12 sm:py-16 m-0">
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light mb-6">
           NEW ENHANCED TEAM WITH ORIENTED KNOWLEDGE
         </h1>
 
-        <!-- UNDERLINE -->
         <div class="w-24 sm:w-32 h-[2px] bg-gray-600 mb-8"></div>
 
-        <!-- PARAGRAPH TEXT -->
-        <p class="text-base sm:text-lg leading-relaxed mb-4 sm:mb-6 text-gray-700">
+        <p class="text-lg sm:text-xl leading-relaxed mb-4 sm:mb-6 text-gray-700">
           The New Enhanced Team With Oriented Knowledge (NETWORK) is a
           student-led organization committed to empowering future professionals
           through seminars, workshops, and collaborative activities focused on
           innovation and leadership.
         </p>
 
-        <p class="text-base sm:text-lg leading-relaxed mb-4 sm:mb-6 text-gray-700">
+        <p class="text-lg sm:text-xl leading-relaxed mb-4 sm:mb-6 text-gray-700">
           NETWORK builds a strong academic community by promoting teamwork,
           enhancing technical skills, and fostering growth among BIT students.
         </p>
 
-        <p class="text-base sm:text-lg leading-relaxed mb-6 sm:mb-10 text-gray-700">
+        <p class="text-lg sm:text-xl leading-relaxed mb-6 sm:mb-10 text-gray-700">
           Through its initiatives, the organization prepares members to adapt
           and thrive in a fast-changing technological environment.
         </p>
 
-        <!-- BUTTON -->
         <a
           href="about.html"
-          class="border border-gray-700 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-lg text-gray-800 hover:bg-gray-100 transition w-fit"
+          class="border border-gray-700 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-base sm:text-lg text-gray-800 hover:bg-gray-100 transition w-fit"
         >
           LEARN MORE
         </a>
@@ -296,33 +282,104 @@
     </div>
   </section>
 
-  <!-- NEWS SECTION -->
+  <!-- WHAT WE DO: GRADIENT + TRANSLUCENT BLUR CARD -->
+  <section class="w-full min-h-screen bg-gradient-to-r from-[#600000] via-[#800000] to-[#600000] flex items-center py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
+      <div class="w-full mx-auto bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10 flex flex-col gap-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 text-[#111827]">
+              What We Do in NETWORK
+            </h2>
+            <p class="text-base sm:text-lg text-gray-700 max-w-xl">
+              NETWORK is more than an organization – it’s a community of learners,
+              leaders, and innovators working together to make BIT truly future-ready.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 text-center text-sm sm:text-base md:text-lg">
+            <div class="bg-white shadow-sm rounded-xl px-4 py-4 flex flex-col justify-center">
+              <p class="font-bold text-[#800000] text-2xl sm:text-3xl">20+</p>
+              <p class="text-gray-600 mt-1">Activities Held</p>
+            </div>
+            <div class="bg-white shadow-sm rounded-xl px-4 py-4 flex flex-col justify-center">
+              <p id="memberCount" class="font-bold text-[#800000] text-2xl sm:text-3xl">0</p>
+              <p class="text-gray-600 mt-1">Active Members</p>
+            </div>
+            <div class="bg-white shadow-sm rounded-xl px-4 py-4 flex flex-col justify-center">
+              <p class="font-bold text-[#800000] text-2xl sm:text-3xl">5+</p>
+              <p class="text-gray-600 mt-1">Partner Programs</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-white rounded-2xl shadow-md p-6 sm:p-7 border border-gray-100">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-10 rounded-full bg-[#800000]/10 flex items-center justify-center">
+                <i class="fas fa-lightbulb text-[#800000]"></i>
+              </span>
+              <h3 class="font-bold text-xl">Leadership & Growth</h3>
+            </div>
+            <p class="text-base sm:text-lg text-gray-600">
+              We mold student leaders through project-based initiatives, events,
+              and opportunities to handle real responsibilities within the campus.
+            </p>
+          </div>
+          <div class="bg-white rounded-2xl shadow-md p-6 sm:p-7 border border-gray-100">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-10 rounded-full bg-[#800000]/10 flex items-center justify-center">
+                <i class="fas fa-microchip text-[#800000]"></i>
+              </span>
+              <h3 class="font-bold text-xl">Technology & Skills</h3>
+            </div>
+            <p class="text-base sm:text-lg text-gray-600">
+              NETWORK supports BIT students with seminars, workshops, and hands-on
+              experiences focusing on practical technical skills.
+            </p>
+          </div>
+          <div class="bg-white rounded-2xl shadow-md p-6 sm:p-7 border border-gray-100">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="w-10 h-10 rounded-full bg-[#800000]/10 flex items-center justify-center">
+                <i class="fas fa-users text-[#800000]"></i>
+              </span>
+              <h3 class="font-bold text-xl">Community & Service</h3>
+            </div>
+            <p class="text-base sm:text-lg text-gray-600">
+              We foster a supportive environment where students collaborate,
+              volunteer, and build meaningful connections inside and outside campus.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS: SOLID LIGHT BACKGROUND -->
   <section
     id="news"
-    class="w-full bg-gradient-to-br from-blue-50 to-indigo-50 py-16 sm:py-20 m-0 min-h-screen flex items-center"
+    class="w-full min-h-screen bg-slate-50 m-0 flex items-center py-10"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
-      <!-- TITLE -->
-      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-5">
         LATEST UPDATES & ANNOUNCEMENTS
       </h2>
-      <p class="text-gray-600 mb-8 sm:mb-12 text-sm sm:text-base">
+      <p class="text-base sm:text-lg text-gray-600 mb-8 sm:mb-12">
         Stay updated on the newest events, activities, and announcements from
         NETWORK.
       </p>
 
-      <!-- FLEX WRAPPER -->
-      <div class="flex flex-col md:flex-row gap-8 sm:gap-12 md:justify-between">
-        <!-- CARD 1 -->
+      <div class="flex flex-col md:flex-row gap-8 sm:gap-10 md:gap-12 md:justify-between">
         <div class="w-full md:w-1/3">
           <div class="rounded-xl overflow-hidden shadow-lg">
             <img
-              src="pics/assembly.jpg"
-              class="w-full h-44 sm:h-60 object-cover transition duration-300 hover:scale-105"
+              src="./pics/assembly.jpg"
+              class="w-full h-52 sm:h-64 object-cover transition duration-300 hover:scale-105"
+              alt="General Assembly 2025"
             />
           </div>
 
-          <p class="text-center mt-4 font-semibold text-green-700 text-sm sm:text-base">
+          <p class="text-center mt-4 font-semibold text-[#800000] text-base sm:text-lg">
             General Assembly 2025
           </p>
 
@@ -333,22 +390,22 @@
             Read More
           </button>
 
-          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-sm sm:text-base">
+          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-base sm:text-lg">
             A gathering of BIT students for announcements, orientation, and
             future programs.
           </div>
         </div>
 
-        <!-- CARD 2 -->
         <div class="w-full md:w-1/3">
           <div class="rounded-xl overflow-hidden shadow-lg">
             <img
               src="./pics/SEMINAR.jpg"
-              class="w-full h-44 sm:h-60 object-cover transition duration-300 hover:scale-105"
+              class="w-full h-52 sm:h-64 object-cover transition duration-300 hover:scale-105"
+              alt="Seminar Workshop"
             />
           </div>
 
-          <p class="text-center mt-4 font-semibold text-green-700 text-sm sm:text-base">
+          <p class="text-center mt-4 font-semibold text-[#800000] text-base sm:text-lg">
             Seminar Workshop
           </p>
 
@@ -359,22 +416,22 @@
             Read More
           </button>
 
-          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-sm sm:text-base">
+          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-base sm:text-lg">
             Students learned essential technical skills through a hands-on
             workshop.
           </div>
         </div>
 
-        <!-- CARD 3 -->
         <div class="w-full md:w-1/3">
           <div class="rounded-xl overflow-hidden shadow-lg">
             <img
               src="./pics/Sci.JPG"
-              class="w-full h-44 sm:h-60 object-cover transition duration-300 hover:scale-105"
+              class="w-full h-52 sm:h-64 object-cover transition duration-300 hover:scale-105"
+              alt="SciTech event"
             />
           </div>
 
-          <p class="text-center mt-4 font-semibold text-green-700 text-sm sm:text-base">
+          <p class="text-center mt-4 font-semibold text-[#800000] text-base sm:text-lg">
             SciTech
           </p>
 
@@ -385,7 +442,7 @@
             Read More
           </button>
 
-          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-sm sm:text-base">
+          <div class="hidden mt-4 text-gray-700 leading-relaxed text-center text-base sm:text-lg">
             NETWORK extends support through volunteer activities and community
             work.
           </div>
@@ -394,281 +451,415 @@
     </div>
   </section>
 
-  <!-- EVENTS SECTION (FIXED / MATCHES PHOTOS) -->
+  <!-- EVENTS: GRADIENT + TRANSLUCENT BLUR CARD -->
   <section
     id="events"
-    class="w-full bg-white py-16 sm:py-20 min-h-screen flex items-center"
+    class="w-full min-h-screen bg-gradient-to-br from-[#550000] via-[#800000] to-[#550000] flex items-center py-10"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
-      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-center">
-        UPCOMING EVENTS
-      </h2>
-      <p
-        class="text-gray-600 mb-8 sm:mb-12 text-center max-w-3xl mx-auto text-sm sm:text-base"
-      >
-        Discover our upcoming activities and mark your calendars. Join us for
-        these exciting events designed to enhance your skills and expand your
-        network.
-      </p>
+      <div class="w-full mx-auto bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10 flex flex-col gap-8">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 text-center text-slate-900">
+          UPCOMING EVENTS
+        </h2>
+        <p
+          class="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 text-center max-w-3xl mx-auto"
+        >
+          Discover our upcoming activities and mark your calendars. Join us for
+          these exciting events designed to enhance your skills and expand your
+          network.
+        </p>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 items-center">
-        <!-- LEFT SIDE: EVENT DETAILS -->
-        <div class="space-y-8">
-          <!-- EVENT 1 - VALENTINES -->
-          <div class="event-text-slide active" data-index="0">
-            <div
-              class="bg-gradient-to-r from-pink-50 to-red-50 p-5 sm:p-6 rounded-xl border-l-4 border-pink-500"
-            >
-              <span
-                class="inline-block bg-pink-500 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 items-center">
+          <div class="space-y-6">
+            <div class="event-text-slide active" data-index="0">
+              <div
+                class="bg-gradient-to-r from-red-50 to-rose-50 p-5 sm:p-6 rounded-xl border-l-4 border-[#800000]"
               >
-                SPECIAL EVENT
-              </span>
-              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
-                Valentine’s Day Celebration
-              </h3>
-              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                <i class="fas fa-calendar-alt mr-2"></i>
-                <span>February 14, 2025 | 4:00 PM - 9:00 PM</span>
-              </div>
-              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                <i class="fas fa-map-marker-alt mr-2"></i>
-                <span>SLSU Campus Grounds</span>
-              </div>
-              <p class="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
-                An evening of music, games, and activities to celebrate
-                friendship and love within the BIT community.
-              </p>
-              <ul class="space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Photo booths and mini-program</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Fun games and raffles</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Open to all BIT students</span>
-                </li>
-              </ul>
-              <div class="flex flex-wrap gap-3 sm:gap-4">
-                <!-- VIEW CALENDAR BUTTON FOR VALENTINES -->
-                <a
-                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Valentines+Day+Celebration&dates=20250214T160000/20250214T210000&details=An+evening+of+music%2C+games%2C+and+activities+to+celebrate+friendship+and+love+within+the+BIT+community.&location=SLSU+Campus+Grounds"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block bg-pink-600 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-pink-700 transition"
+                <span
+                  class="inline-block bg-[#800000] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
                 >
-                  View Calendar
-                </a>
-                <button
-                  class="border border-pink-600 text-pink-600 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-pink-50 transition"
-                >
-                  Add to Calendar
-                </button>
+                  SPECIAL EVENT
+                </span>
+                <h3 class="text-2xl sm:text-3xl font-bold mb-3">
+                  Valentine’s Day Celebration
+                </h3>
+                <div class="flex items-center text-gray-600 mb-2 sm:mb-3 text-base sm:text-lg">
+                  <i class="fas fa-calendar-alt mr-2"></i>
+                  <span>February 14, 2025 | 4:00 PM - 9:00 PM</span>
+                </div>
+                <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-base sm:text-lg">
+                  <i class="fas fa-map-marker-alt mr-2"></i>
+                  <span>SLSU Campus Grounds</span>
+                </div>
+                <p class="text-base sm:text-lg text-gray-700 mb-3 sm:mb-4">
+                  An evening of music, games, and activities to celebrate
+                  friendship and love within the BIT community.
+                </p>
+                <ul class="space-y-2 mb-4 sm:mb-6 text-base sm:text-lg">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Photo booths and mini-program</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Fun games and raffles</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Open to all BIT students</span>
+                  </li>
+                </ul>
+                <div class="flex flex-wrap gap-3 sm:gap-4">
+                  <a
+                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Valentines+Day+Celebration&dates=20250214T160000/20250214T210000&details=An+evening+of+music%2C+games%2C+and+activities+to+celebrate+friendship+and+love+within+the+BIT+community.&location=SLSU+Campus+Grounds"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-block bg-[#800000] text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-[#a00000] transition"
+                  >
+                    View Calendar
+                  </a>
+                  <button
+                    class="border border-[#800000] text-[#800000] px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-red-50 transition"
+                  >
+                    Add to Calendar
+                  </button>
+                </div>
               </div>
+            </div>
+
+            <div class="event-text-slide" data-index="1">
+              <div
+                class="bg-gradient-to-r from-rose-50 to-red-50 p-5 sm:p-6 rounded-xl border-l-4 border-[#800000]"
+              >
+                <span
+                  class="inline-block bg-[#800000] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
+                >
+                  SPORTS FEST
+                </span>
+                <h3 class="text-2xl sm:text-3xl font-bold mb-3">
+                  Intramurals 2025
+                </h3>
+                <div class="flex items-center text-gray-600 mb-2 sm:mb-3 text-base sm:text-lg">
+                  <i class="fas fa-calendar-alt mr-2"></i>
+                  <span>September 10–14, 2025 | Whole Day</span>
+                </div>
+                <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-base sm:text-lg">
+                  <i class="fas fa-map-marker-alt mr-2"></i>
+                  <span>SLSU Gymnasium &amp; Open Field</span>
+                </div>
+                <p class="text-base sm:text-lg text-gray-700 mb-3 sm:mb-4">
+                  A week-long celebration of sportsmanship, teamwork, and school
+                  spirit featuring different college teams.
+                </p>
+                <ul class="space-y-2 mb-4 sm:mb-6 text-base sm:text-lg">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Multiple sports and e-sports events</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Cheerdance and opening parade</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Awards and recognition for winning teams</span>
+                  </li>
+                </ul>
+                <div class="flex flex-wrap gap-3 sm:gap-4">
+                  <a
+                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Intramurals+2025&dates=20250910/20250915&details=A+week-long+celebration+of+sportsmanship%2C+teamwork%2C+and+school+spirit+featuring+different+college+teams.&location=SLSU+Gymnasium+%26+Open+Field"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-block bg-[#800000] text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-[#a00000] transition"
+                  >
+                    View Calendar
+                  </a>
+                  <button
+                    class="border border-[#800000] text-[#800000] px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-red-50 transition"
+                  >
+                    Join a Team
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="event-text-slide" data-index="2">
+              <div
+                class="bg-gradient-to-r from-rose-50 to-red-50 p-5 sm:p-6 rounded-xl border-l-4 border-[#800000]"
+              >
+                <span
+                  class="inline-block bg-[#800000] text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
+                >
+                  SOCIAL NIGHT
+                </span>
+                <h3 class="text-2xl sm:text-3xl font-bold mb-3">
+                  Acquaintance Night 2025
+                </h3>
+                <div class="flex items-center text-gray-600 mb-2 sm:mb-3 text-base sm:text-lg">
+                  <i class="fas fa-calendar-alt mr-2"></i>
+                  <span>December 5, 2025 | 6:00 PM - 11:00 PM</span>
+                </div>
+                <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-base sm:text-lg">
+                  <i class="fas fa-map-marker-alt mr-2"></i>
+                  <span>SLSU Auditorium</span>
+                </div>
+                <p class="text-base sm:text-lg text-gray-700 mb-3 sm:mb-4">
+                  A night of music, performances, and bonding to welcome new
+                  members and celebrate the NETWORK family.
+                </p>
+                <ul class="space-y-2 mb-4 sm:mb-6 text-base sm:text-lg">
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Live performances and program numbers</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Dress-to-impress and special awards</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check text-[#800000] mt-1 mr-2"></i>
+                    <span>Photo sessions and closing ceremony</span>
+                  </li>
+                </ul>
+                <div class="flex flex-wrap gap-3 sm:gap-4">
+                  <a
+                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Acquaintance+Night+2025&dates=20251205T180000/20251205T230000&details=A+night+of+music%2C+performances%2C+and+bonding+to+welcome+new+members+and+celebrate+the+NETWORK+family.&location=SLSU+Auditorium"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-block bg-[#800000] text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-[#a00000] transition"
+                  >
+                    View Calendar
+                  </a>
+                  <button
+                    class="border border-[#800000] text-[#800000] px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-red-50 transition"
+                  >
+                    Event Details
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-center gap-3 mt-4 sm:mt-6">
+              <div class="event-indicator active" data-target="0"></div>
+              <div class="event-indicator" data-target="1"></div>
+              <div class="event-indicator" data-target="2"></div>
             </div>
           </div>
 
-          <!-- EVENT 2 - INTRAMS -->
-          <div class="event-text-slide" data-index="1">
+          <div class="relative h-72 sm:h-80 md:h-[500px] rounded-xl overflow-hidden shadow-xl">
             <div
-              class="bg-gradient-to-r from-green-50 to-emerald-50 p-5 sm:p-6 rounded-xl border-l-4 border-green-500"
+              class="event-image-slide active absolute inset-0 w-full h-full"
+              data-index="0"
             >
-              <span
-                class="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
-              >
-                SPORTS FEST
-              </span>
-              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
-                Intramurals 2025
-              </h3>
-              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                <i class="fas fa-calendar-alt mr-2"></i>
-                <span>September 10–14, 2025 | Whole Day</span>
-              </div>
-              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                <i class="fas fa-map-marker-alt mr-2"></i>
-                <span>SLSU Gymnasium & Open Field</span>
-              </div>
-              <p class="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
-                A week-long celebration of sportsmanship, teamwork, and school
-                spirit featuring different college teams.
-              </p>
-              <ul class="space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Multiple sports and e-sports events</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Cheerdance and opening parade</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Awards and recognition for winning teams</span>
-                </li>
-              </ul>
-              <div class="flex flex-wrap gap-3 sm:gap-4">
-                <!-- VIEW CALENDAR BUTTON FOR INTRAMS -->
-                <a
-                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Intramurals+2025&dates=20250910/20250915&details=A+week-long+celebration+of+sportsmanship%2C+teamwork%2C+and+school+spirit+featuring+different+college+teams.&location=SLSU+Gymnasium+%26+Open+Field"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-700 transition"
-                >
-                  View Calendar
-                </a>
-                <button
-                  class="border border-green-600 text-green-600 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-green-50 transition"
-                >
-                  Join a Team
-                </button>
-              </div>
+              <img
+                src="./pics/VALENTINES.jpg"
+                class="w-full h-full object-cover"
+                alt="Valentine's Day Celebration"
+              />
             </div>
-          </div>
 
-          <!-- EVENT 3 - NIGHT -->
-          <div class="event-text-slide" data-index="2">
             <div
-              class="bg-gradient-to-r from-purple-50 to-violet-50 p-5 sm:p-6 rounded-xl border-l-4 border-purple-500"
+              class="event-image-slide absolute inset-0 w-full h-full"
+              data-index="1"
             >
-              <span
-                class="inline-block bg-purple-500 text-white px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-3"
-              >
-                SOCIAL NIGHT
-              </span>
-              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
-                Acquaintance Night 2025
-              </h3>
-              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                <i class="fas fa-calendar-alt mr-2"></i>
-                <span>December 5, 2025 | 6:00 PM - 11:00 PM</span>
-              </div>
-              <div class="flex items-center text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                <i class="fas fa-map-marker-alt mr-2"></i>
-                <span>SLSU Auditorium</span>
-              </div>
-              <p class="text-gray-700 mb-3 sm:mb-4 text-sm sm:text-base">
-                A night of music, performances, and bonding to welcome new
-                members and celebrate the NETWORK family.
-              </p>
-              <ul class="space-y-2 mb-4 sm:mb-6 text-sm sm:text-base">
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Live performances and program numbers</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Dress-to-impress and special awards</span>
-                </li>
-                <li class="flex items-start">
-                  <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-                  <span>Photo sessions and closing ceremony</span>
-                </li>
-              </ul>
-              <div class="flex flex-wrap gap-3 sm:gap-4">
-                <!-- VIEW CALENDAR BUTTON FOR ACQUAINTANCE NIGHT -->
-                <a
-                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Acquaintance+Night+2025&dates=20251205T180000/20251205T230000&details=A+night+of+music%2C+performances%2C+and+bonding+to+welcome+new+members+and+celebrate+the+NETWORK+family.&location=SLSU+Auditorium"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-purple-700 transition"
-                >
-                  View Calendar
-                </a>
-                <button
-                  class="border border-purple-600 text-purple-600 px-4 sm:px-6 py-2 rounded-lg text-sm sm:text-base font-semibold hover:bg-purple-50 transition"
-                >
-                  Event Details
-                </button>
-              </div>
+              <img
+                src="./pics/INTRAMS.jpg"
+                class="w-full h-full object-cover"
+                alt="Intramurals 2025"
+              />
             </div>
-          </div>
 
-          <!-- EVENT INDICATORS -->
-          <div class="flex justify-center gap-3 mt-4 sm:mt-6">
-            <div class="event-indicator active" data-target="0"></div>
-            <div class="event-indicator" data-target="1"></div>
-            <div class="event-indicator" data-target="2"></div>
-          </div>
-        </div>
+            <div
+              class="event-image-slide absolute inset-0 w-full h-full"
+              data-index="2"
+            >
+              <img
+                src="./pics/NIGHT.JPG"
+                class="w-full h-full object-cover"
+                alt="Acquaintance Night 2025"
+              />
+            </div>
 
-        <!-- RIGHT SIDE: EVENT SLIDESHOW IMAGES -->
-        <div class="relative h-72 sm:h-80 md:h-[500px] rounded-xl overflow-hidden shadow-xl">
-          <!-- EVENT 1 IMAGE -->
-          <div
-            class="event-image-slide active absolute inset-0 w-full h-full"
-            data-index="0"
-          >
-            <img
-              src="./pics/VALENTINES.jpg"
-              class="w-full h-full object-cover"
-              alt="Valentine's Day Celebration"
-            />
+            <button
+              class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white transition"
+              onclick="changeEventSlide(-1)"
+            >
+              <i class="fas fa-chevron-left text-xs sm:text-sm"></i>
+            </button>
+            <button
+              class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white transition"
+              onclick="changeEventSlide(1)"
+            >
+              <i class="fas fa-chevron-right text-xs sm:text-sm"></i>
+            </button>
           </div>
-
-          <!-- EVENT 2 IMAGE -->
-          <div
-            class="event-image-slide absolute inset-0 w-full h-full"
-            data-index="1"
-          >
-            <img
-              src="./pics/INTRAMS.jpg"
-              class="w-full h-full object-cover"
-              alt="Intramurals 2025"
-            />
-          </div>
-
-          <!-- EVENT 3 IMAGE -->
-          <div
-            class="event-image-slide absolute inset-0 w-full h-full"
-            data-index="2"
-          >
-            <img
-              src="./pics/NIGHT.JPG"
-              class="w-full h-full object-cover"
-              alt="Acquaintance Night 2025"
-            />
-          </div>
-
-          <!-- SLIDE NAVIGATION -->
-          <button
-            class="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white transition"
-            onclick="changeEventSlide(-1)"
-          >
-            <i class="fas fa-chevron-left text-xs sm:text-sm"></i>
-          </button>
-          <button
-            class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 bg-white/80 text-gray-800 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-white transition"
-            onclick="changeEventSlide(1)"
-          >
-            <i class="fas fa-chevron-right text-xs sm:text-sm"></i>
-          </button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- HOW TO JOIN: SOLID BACKGROUND -->
+  <section class="w-full min-h-screen bg-[#111827] flex items-center py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 text-white">
+          How to Join the Webpage
+        </h2>
+        <p class="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
+          Want to be part of the NETWORK community through this site? Follow these
+          steps to use the webpage, stay updated, and send your membership request online.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-2xl shadow-md p-6 relative">
+          <span class="absolute -top-3 left-4 bg-[#800000] text-white text-xs px-3 py-1 rounded-full">
+            Step 1
+          </span>
+          <h3 class="font-bold text-xl mb-3 flex items-center gap-2 mt-2">
+            <i class="fas fa-globe text-[#800000]"></i>
+            Explore the Webpage
+          </h3>
+          <p class="text-base sm:text-lg text-gray-600">
+            Browse the Home, About, and News sections to learn more about NETWORK,
+            activities, and upcoming events.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 relative">
+          <span class="absolute -top-3 left-4 bg-[#800000] text-white text-xs px-3 py-1 rounded-full">
+            Step 2
+          </span>
+          <h3 class="font-bold text-xl mb-3 flex items-center gap-2 mt-2">
+            <i class="fas fa-user-plus text-[#800000]"></i>
+            Click “Join Us”
+          </h3>
+          <p class="text-base sm:text-lg text-gray-600">
+            Use the Join Us button at the top navigation to open the online form and
+            provide your basic details as a member or interested student.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 relative">
+          <span class="absolute -top-3 left-4 bg-[#800000] text-white text-xs px-3 py-1 rounded-full">
+            Step 3
+          </span>
+          <h3 class="font-bold text-xl mb-3 flex items-center gap-2 mt-2">
+            <i class="fas fa-envelope-open-text text-[#800000]"></i>
+            Wait for Confirmation
+          </h3>
+          <p class="text-base sm:text-lg text-gray-600">
+            Your request is stored in our database. Officers can review it and reach
+            out to you through your email or contact details.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN US MODAL -->
+  <div
+    id="joinModal"
+    class="fixed inset-0 bg-black/60 flex items-center justify-center px-4 z-50 hidden"
+  >
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative">
+      <button
+        type="button"
+        onclick="closeJoinModal()"
+        class="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+
+      <h3 class="text-xl sm:text-2xl font-bold mb-2 text-[#800000]">
+        Join NETWORK
+      </h3>
+      <p class="text-sm sm:text-base text-gray-600 mb-4">
+        Fill out this form to send your details to NETWORK. Your information will be
+        saved in our database for review.
+      </p>
+
+      <form id="joinForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
+          <input
+            type="text"
+            name="fullName"
+            required
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#800000]"
+            placeholder="Juan Dela Cruz"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            required
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#800000]"
+            placeholder="example@student.com"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1"
+            >Course / Year Level</label
+          >
+          <input
+            type="text"
+            name="course"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#800000]"
+            placeholder="e.g. BIT 2nd Year"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1"
+            >Why do you want to join?</label
+          >
+          <textarea
+            name="reason"
+            rows="3"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#800000]"
+            placeholder="Share your interest or goals..."
+          ></textarea>
+        </div>
+
+        <p
+          id="joinError"
+          class="hidden text-xs text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2"
+        ></p>
+
+        <p
+          id="joinSuccess"
+          class="hidden text-xs text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2"
+        >
+          Your request has been submitted successfully! Thank you for joining.
+        </p>
+
+        <button
+          type="submit"
+          id="joinSubmitBtn"
+          class="w-full bg-[#800000] text-white font-semibold py-2.5 rounded-lg text-sm sm:text-base hover:bg-[#a00000] transition"
+        >
+          Submit Request
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- FOOTER -->
-  <footer id="contact" class="bg-[#800000] text-white mt-10 sm:mt-16">
+  <footer id="contact" class="bg-[#800000] text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid md:grid-cols-3 gap-8">
-      <!-- CONTACT WITH ANIMATED TEXT + VERTICAL LINES -->
       <div>
         <h3 class="text-lg sm:text-xl font-bold mb-4">
           Empowering Students, Powering Technology.
         </h3>
 
-        <!-- EMAIL ROW -->
         <div class="flex items-center gap-3 mb-3 group">
           <i class="fas fa-envelope text-base sm:text-lg cursor-pointer"></i>
-
-          <!-- Vertical line between icon and text -->
           <div class="w-[2px] h-5 bg-gray-400"></div>
-
-          <!-- Animated text -->
           <span
             class="text-xs sm:text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
           >
@@ -676,14 +867,9 @@
           </span>
         </div>
 
-        <!-- PHONE ROW -->
         <div class="flex items-center gap-3 group">
           <i class="fas fa-phone text-base sm:text-lg cursor-pointer"></i>
-
-          <!-- Vertical line between icon and text -->
           <div class="w-[2px] h-5 bg-gray-400"></div>
-
-          <!-- Animated text -->
           <span
             class="text-xs sm:text-sm opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
           >
@@ -698,9 +884,6 @@
           <ul class="space-y-1 text-xs sm:text-sm">
             <li>
               <a href="#about" class="hover:text-yellow-400">About Us</a>
-            </li>
-            <li>
-              <a href="#officers" class="hover:text-yellow-400">Officers</a>
             </li>
             <li>
               <a href="#events" class="hover:text-yellow-400">Activities</a>
@@ -730,11 +913,10 @@
             placeholder="Enter your email"
             class="px-3 py-2 w-full rounded-l-lg text-black text-sm sm:text-base"
           />
-<<<<<<< HEAD
-          <button class="bg-blue-600 px-3 sm:px-4 py-2 rounded-r-lg text-sm sm:text-base">
-=======
-          <button class="bg-yellow-600 px-4 py-2 rounded-r-lg">
->>>>>>> d8cc15e047cc8efe93dd663caf5974853be36af3
+          <button
+            type="submit"
+            class="bg-[#a00000] px-4 py-2 rounded-r-lg text-sm sm:text-base hover:bg-[#c00000] transition"
+          >
             Subscribe
           </button>
         </form>
@@ -752,6 +934,15 @@
     </div>
   </footer>
 
+  <!-- BACK TO TOP BUTTON -->
+  <button
+    id="backToTop"
+    class="hidden fixed bottom-6 right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#800000] text-white shadow-lg flex items-center justify-center hover:bg-yellow-500 hover:text-[#800000] transition"
+    aria-label="Back to top"
+  >
+    <i class="fas fa-arrow-up text-sm sm:text-base"></i>
+  </button>
+
   <!-- MAIN INTERACTION SCRIPT -->
   <script>
     function toggleDetails(btn) {
@@ -765,7 +956,6 @@
       }
     }
 
-    // EVENTS SLIDESHOW FUNCTIONALITY (TEXT + IMAGES SYNCED)
     let currentEventSlide = 0;
     const textSlides = document.querySelectorAll(".event-text-slide");
     const imageSlides = document.querySelectorAll(".event-image-slide");
@@ -779,9 +969,9 @@
       imageSlides.forEach((slide) => slide.classList.remove("active"));
       eventIndicators.forEach((dot) => dot.classList.remove("active"));
 
-      textSlides[index].classList.add("active");
-      imageSlides[index].classList.add("active");
-      eventIndicators[index].classList.add("active");
+      if (textSlides[index]) textSlides[index].classList.add("active");
+      if (imageSlides[index]) imageSlides[index].classList.add("active");
+      if (eventIndicators[index]) eventIndicators[index].classList.add("active");
 
       currentEventSlide = index;
     }
@@ -790,7 +980,6 @@
       showEventSlide(currentEventSlide + step);
     }
 
-    // Click on indicators
     eventIndicators.forEach((indicator) => {
       indicator.addEventListener("click", function () {
         const targetIndex = parseInt(this.getAttribute("data-target"));
@@ -798,10 +987,129 @@
       });
     });
 
-    // Auto-advance events slideshow
     setInterval(() => {
       changeEventSlide(1);
     }, 5000);
+
+    const backToTopBtn = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 400) {
+        backToTopBtn.classList.remove("hidden");
+      } else {
+        backToTopBtn.classList.add("hidden");
+      }
+    });
+
+    backToTopBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    const joinModal = document.getElementById("joinModal");
+
+    function openJoinModal() {
+      if (joinModal) joinModal.classList.remove("hidden");
+    }
+
+    function closeJoinModal() {
+      if (joinModal) joinModal.classList.add("hidden");
+    }
+
+    window.openJoinModal = openJoinModal;
+    window.closeJoinModal = closeJoinModal;
+  </script>
+
+  <!-- FIREBASE REALTIME MEMBER COUNT + JOIN FORM SUBMIT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      onSnapshot,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const memberCountEl = document.getElementById("memberCount");
+
+    if (memberCountEl) {
+      const membersRef = collection(db, "members");
+      onSnapshot(membersRef, (snapshot) => {
+        const count = snapshot.size;
+        memberCountEl.textContent = count;
+      });
+    }
+
+    const joinForm = document.getElementById("joinForm");
+    const joinSuccess = document.getElementById("joinSuccess");
+    const joinError = document.getElementById("joinError");
+    const joinSubmitBtn = document.getElementById("joinSubmitBtn");
+
+    if (joinForm) {
+      joinForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(joinForm);
+        const fullName = formData.get("fullName")?.toString().trim();
+        const email = formData.get("email")?.toString().trim();
+        const course = formData.get("course")?.toString().trim();
+        const reason = formData.get("reason")?.toString().trim();
+
+        if (!fullName || !email) {
+          if (joinError) {
+            joinError.textContent = "Please provide at least your full name and email.";
+            joinError.classList.remove("hidden");
+          }
+          if (joinSuccess) joinSuccess.classList.add("hidden");
+          return;
+        }
+
+        if (joinSubmitBtn) {
+          joinSubmitBtn.disabled = true;
+          joinSubmitBtn.textContent = "Submitting...";
+        }
+
+        try {
+          const joinRef = collection(db, "joinRequests");
+
+          await addDoc(joinRef, {
+            fullName,
+            email,
+            course: course || null,
+            reason: reason || null,
+            createdAt: serverTimestamp(),
+          });
+
+          joinForm.reset();
+
+          if (joinSuccess) joinSuccess.classList.remove("hidden");
+          if (joinError) joinError.classList.add("hidden");
+        } catch (err) {
+          console.error("Error submitting join request:", err);
+          if (joinError) {
+            joinError.textContent = "Something went wrong. Please try again later.";
+            joinError.classList.remove("hidden");
+          }
+          if (joinSuccess) joinSuccess.classList.add("hidden");
+        } finally {
+          if (joinSubmitBtn) {
+            joinSubmitBtn.disabled = false;
+            joinSubmitBtn.textContent = "Submit Request";
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
