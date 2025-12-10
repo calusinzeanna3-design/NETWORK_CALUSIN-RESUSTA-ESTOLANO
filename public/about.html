@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NETWORK</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* Palette imported from index: maroon + beige (exact variables + mappings for compatibility) */
+    :root{
+      /* exact variables used by index.html */
+      --accent-blue: #800020;           /* maroon (index naming) */
+      --accent-blue-light: #F5E9D6;     /* beige (lighter) */
+      --navy: #4a0f15;                  /* deep maroon */
+      --deep-blue: #2b0a0f;             /* darker maroon */
+
+      /* logo glow -> use beige tones (RGB) */
+      --logo-gold: 245,233,214; /* beige RGB */
+      --logo-gold-rgba-strong: rgba(245,233,214,0.95);
+      --logo-gold-rgba-medium: rgba(245,233,214,0.65);
+      --logo-gold-rgba-soft: rgba(245,233,214,0.25);
+
+      /* nav heights (kept for parity with index) */
+      --nav-height: 76px;
+      --nav-height-mobile: 96px;
+
+      /* old about.html variable names mapped to the index palette for compatibility */
+      --accent-maroon: var(--accent-blue);
+      --accent-beige: var(--accent-blue-light);
+      --accent-maroon-strong: rgba(128,0,32,0.95);
+      --accent-maroon-medium: rgba(128,0,32,0.65);
+      --accent-maroon-soft: rgba(128,0,32,0.18);
+
+      /* other semantic colors kept */
+      --bg-dark: #050308;
+      --muted: #94a3b8;
+      --muted-strong: #cbd5e1;
+    }
+
+    /* keep smooth scrolling */
+    html { scroll-behavior: smooth;
+   overflow-x: hidden;
+      overscroll-behavior: none; }
+    body {
+      margin: 0;
+      color: #f9fafb;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding:0;
+       overflow-x: hidden;
+       overscroll-behavior-y: contain;
+       
+
+      /* === MATCH INDEX BACKGROUND: deep maroon gradient + soft glow === */
+      background:
+        radial-gradient(circle at 20% 20%, rgba(128,0,32,0.20), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(128,0,32,0.28), transparent 50%),
+        linear-gradient(180deg, #2b0004 0%, #0a0001 70%);
+    }
+
+    /* NAV */
+    .logo-dot { width:42px; height:42px; border-radius:999px; border:2px solid var(--accent-maroon); display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--bg-dark); }
+
+    /* **APPLIED INDEX NAV STYLE**: maroon radial + linear (matches index.html) */
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; }
+    .nav-inner {
+      /* Use the supplied maroon style: dark maroon base with warm right glow + fallback image */
+      background:
+        radial-gradient(1000px 420px at 88% 50%, rgba(245,160,110,0.06) 0%, rgba(128,0,20,0.12) 6%, rgba(54,0,0,0.95) 18%),
+        linear-gradient(180deg, rgba(20,3,3,0.98), rgba(30,6,6,0.98));
+      /* If you prefer to use the image you uploaded, uncomment the next line and ensure file exists at --maroon-bg-image */
+      /* background-image: var(--maroon-bg-image); background-size: cover; background-position: center right; */
+      color: #fff;
+      backdrop-filter: blur(4px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    }
+
+    .nav-divider {
+      height: 6px;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,200,160,0.06) 12%, rgba(245,170,110,0.12) 28%, rgba(245,170,110,0.08) 52%, rgba(0,0,0,0) 100%);
+      filter: blur(10px) saturate(1.1);
+      box-shadow: 0 6px 24px rgba(128,0,32,0.10), 0 2px 8px rgba(128,0,32,0.06) inset;
+      opacity: .95;
+    }
+
+    .logo-dot{ width:48px;height:48px;border-radius:999px;border:2px solid rgba(255,255,255,0.06); display:flex;align-items:center;justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); overflow:hidden; box-shadow: var(--elevation-1); }
+    .logo-dot img{ width:100%;height:100%;object-fit:cover;border-radius:999px;display:block; filter: saturate(0.9) contrast(0.95); }
+
+    /* NAV link styles optimized for dark maroon background */
+    .nav-inner .max-w-7xl a { color: rgba(255,235,220,0.95); text-decoration: none; }
+    .nav-inner .max-w-7xl a:hover { color: #fff; text-shadow: 0 8px 28px rgba(245,160,110,0.08); }
+
+
+    /* Sections */
+    section { box-sizing: border-box; }
+    .section-full { height: 100vh; min-height: 600px; display:flex; align-items:stretch; }
+
+    /* ---------------------------
+       MISSION & VISION: side-by-side panels
+       --------------------------- */
+    .mv-wrap { display:flex; width:100%; height:100%; gap:0; align-items:stretch; }
+
+    /* each panel takes 50% */
+    .mv-panel { position:relative; flex:1; min-height:0; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .mv-panel .bg-layer {
+      position:absolute; inset:0; background-size:cover; background-position:center center; transform:scale(1.03);
+      filter: blur(8px) brightness(0.55); transition: transform 600ms ease, filter 400ms ease;
+      will-change: transform, filter;
+    }
+    /* alternate overlays to get dark/light fades */
+    .mv-panel::after {
+      content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+    }
+    /* Mission (left) overlay: gentle light-beige to dark */
+    .mv-panel.mission::after {
+      background: linear-gradient(180deg, rgba(245,233,214,0.12), rgba(2,6,23,0.55));
+      mix-blend-mode: multiply;
+    }
+    /* Vision (right) overlay: gentle dark to light */
+    .mv-panel.vision::after {
+      background: linear-gradient(180deg, rgba(2,6,23,0.64), rgba(245,233,214,0.06));
+      mix-blend-mode: multiply;
+    }
+
+    /* subtle parallax on hover */
+    .mv-panel:hover .bg-layer { transform: scale(1.06); filter: blur(9px) brightness(0.5); }
+
+    /* content box (above overlays) */
+    .mv-content { position:relative; z-index:3; max-width:900px; padding:28px; text-align:left; }
+    .mv-content .card {
+      background: rgba(2,6,23,0.46); /* semi-opaque to ensure text legibility */
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 18px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+    .mv-content h1 { margin:0 0 14px 0; color:var(--accent-maroon); text-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+    .mv-content p { margin:0; color: #e8eef6; line-height:1.6; text-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+
+    /* small screen: stack vertically */
+    @media (max-width: 920px) {
+      .mv-wrap { flex-direction:column; }
+      .mv-panel { min-height:50vh; }
+      .mv-content { padding:18px; text-align:center; }
+      .mv-content p { font-size: 0.96rem; }
+    }
+
+    /* Mission/Vision headings */
+    .mission-title, .vision-title { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .mission-accent { width:6px; height:28px; background: var(--accent-beige); border-radius:3px; display:inline-block; }
+    .mission-title .label, .vision-title .label { font-weight:700; color:var(--accent-beige); letter-spacing:0.14em; font-size:0.82rem; text-transform:uppercase; }
+
+    /* OFFICER SLIDES, GALLERY, FOOTER kept same as previous file */
+    .officer-wrap { position:relative; width:100%; height:100%; overflow:hidden; }
+    .officer-slide { position:absolute; inset:0; opacity:0; transition:opacity .7s ease; }
+    .officer-slide.visible { opacity:1; pointer-events:auto; }
+
+    #gallery { background: var(--bg-dark); color:#fff; display:flex; align-items:stretch; }
+    .gallery-inner { width:100%; max-width:1200px; margin:0 auto; padding:28px; display:flex; flex-direction:column; gap:12px; height:100%; box-sizing:border-box; }
+    #galleryGrid { flex:1; display:grid; gap:12px; grid-auto-rows: 1fr; grid-template-columns: repeat(2,1fr); height:100%; }
+    @media (min-width: 640px) { #galleryGrid { grid-template-columns: repeat(3,1fr); } }
+
+    .gallery-item { border-radius:12px; overflow:hidden; position:relative; background:#0b0910; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .gallery-caption { position:absolute; left:12px; bottom:12px; background: rgba(0,0,0,0.45); padding:6px 10px; border-radius:999px; color:var(--accent-beige); font-weight:600; font-size:13px; }
+
+    .cat-btn { padding:6px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--muted-strong); font-weight:600; cursor:pointer; }
+    .cat-btn.active { background: rgba(245,233,214,0.12); color:var(--accent-beige); border-color: rgba(245,233,214,0.35); }
+
+    .gallery-fade-wrapper { transition: opacity .45s ease; width:100%; height:100%; }
+
+    .gallery-arrow { position:absolute; top:50%; transform:translateY(-50%); background: rgba(0,0,0,0.55); width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:50; }
+    .gallery-arrow.left { left: 10px; } .gallery-arrow.right { right: 10px; }
+
+    .lightbox-overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.88); z-index:9999; padding:20px; }
+    .lightbox-img { width:100%; max-width:1100px; max-height:80vh; object-fit:contain; border-radius:10px; }
+
+    /* **APPLIED INDEX FOOTER STYLE**: maroon radial + linear same as index.html */
+    footer {
+      background:
+        radial-gradient(1000px 420px at 88% 60%, rgba(245,160,110,0.06) 0%, rgba(128,0,20,0.12) 6%, rgba(54,0,0,0.98) 18%),
+        linear-gradient(180deg, rgba(30,6,6,0.98), rgba(20,3,3,0.98));
+      color:#fff;
+      border-top:1px solid rgba(255,255,255,0.04);
+    }
+
+    .sr-only { position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    :focus-visible { outline: 2px solid var(--accent-beige); outline-offset: 2px; }
+
+    .accent-maroon-bg { background: linear-gradient(90deg, rgba(128,0,32,0.12), rgba(128,0,32,0.04)); }
+    .accent-maroon-text { color: var(--accent-maroon); }
+    .accent-beige-text { color: var(--accent-beige); }
+
+    /* helper spacer class that always matches --nav-height (used below) */
+    .nav-spacer { height: var(--nav-height); }
+    @media (max-width: 640px) { .nav-spacer { height: var(--nav-height-mobile); } }
+
+    /* Ensure nav links & Join Us match index colors/spacing */
+    .nav-inner .max-w-7xl a { color: rgba(255,235,220,0.95); text-decoration:none; }
+    .nav-inner .max-w-7xl .accent-beige-text { color: var(--accent-beige); font-weight:700; }
+    .join-btn { background: var(--accent-maroon); color:#031027; padding:8px 14px; border-radius:999px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+          <div class="logo-dot">
+            <img src="./pics/logo.png" alt="NETWORK Logo" />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="text-sm tracking-wide" style="color:rgba(255,235,220,0.95)">NETWORK</span>
+            <span class="text-[10px] uppercase tracking-[0.18em]" style="color:rgba(255,235,220,0.85)">SLSU LUCENA</span>
+          </div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <a href="index.html" class="relative" style="color:rgba(255,235,220,0.95)">Home</a>
+          <a href="about.html" class="relative hover:text-white transition">About</a>
+          <a href="news.html" class="relative hover:text-white transition">News</a>
+          <a href="administration.html" class="relative hover:text-white transition">Administration</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="joinus.html" class="hidden sm:inline-flex items-center justify-center text-xs sm:text-sm font-semibold px-5 py-2 rounded-full" style="background:var(--accent-maroon); color: #fff; box-shadow: 0 8px 18px rgba(128,0,32,0.12)">Join Us</a>
+
+          <!-- Admin button removed per request -->
+        </div>
+      </div>
+
+      <!-- glowing divider between navbar and header -->
+      <div class="nav-divider" aria-hidden="true"></div>
+    </div>
+
+    <!-- MOBILE NAV -->
+    <div class="md:hidden bg-transparent border-t border-[#0000000b] px-4 pb-3 pt-2 flex flex-wrap justify-center gap-4 text-xs font-semibold">
+      <a href="index.html" style="color:rgba(255,235,220,0.95)">Home</a>
+      <a href="about.html" class="hover:text-white">About</a>
+      <a href="news.html" class="hover:text-white">News</a>
+      <a href="administration.html" class="hover:text-white">Administration</a>
+      <a href="joinus.html" class="mt-1 inline-flex items-center justify-center px-4 py-1.5 rounded-full" style="background:var(--accent-maroon); color:#fff">Join Us</a>
+    </div>
+  </nav>
+
+
+  <!-- responsive spacer - prevents overlap, now explicitly matches index nav height -->
+  <div class="nav-spacer" aria-hidden="true"></div>
+
+  <!-- ---------------------------
+       MISSION & VISION (side-by-side)
+       --------------------------- -->
+  <section id="mission" class="section-full" aria-label="Mission and Vision">
+    <div class="mv-wrap">
+      <!-- LEFT: MISSION (kept using Vision.JPG as you had it previously) -->
+      <div class="mv-panel mission" aria-labelledby="mission-heading">
+        <!-- background layer uses exact image kept unchanged -->
+        <div class="bg-layer" style="background-image: url('pics/Vision.JPG');"></div>
+
+        <!-- content sits above -->
+        <div class="mv-content">
+          <div class="card">
+            <div class="mission-title">
+              <span class="mission-accent" aria-hidden="true"></span>
+              <span class="label mission-label">Mission</span>
+            </div>
+            <h1 id="mission-heading" class="text-3xl md:text-4xl font-extrabold">To empower students through collaboration &amp; technology</h1>
+            <p class="mt-4">
+              Our mission is to equip BIT students with hands-on skills, leadership opportunities,
+              and community-focused initiatives that foster innovation and personal growth. We encourage collaboration,
+              real-project learning, and mentorship so every member can actively contribute to a technology-driven future.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: VISION (kept same pexels photo used earlier) -->
+      <div class="mv-panel vision" aria-labelledby="vision-heading">
+        <!-- background layer uses the same pexels photo you used previously -->
+        <div class="bg-layer" style="background-image: url('https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg');"></div>
+
+        <div class="mv-content">
+          <div class="card">
+            <div class="vision-title">
+              <span class="mission-accent" aria-hidden="true"></span>
+              <span class="label vision-label">Vision</span>
+            </div>
+            <h1 id="vision-heading" class="text-3xl md:text-4xl font-extrabold accent-maroon-text">Create a future-ready network of leaders</h1>
+            <p class="mt-4">
+              We envision a vibrant community of student-leaders who use technology to uplift their campus and local communities,
+              driving impactful projects, ethical innovation, and lifelong learning that transcends classrooms.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFICER MOTTOS (exact to screen) -->
+  <section id="officers" class="section-full" aria-label="Officers">
+    <div class="officer-wrap">
+      <div class="officer-slide visible">
+        <img src="https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg" style="width:100%;height:100%;object-fit:cover;filter:blur(4px);"/>
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fff">
+          <p class="accent-beige-text tracking-[0.3em] mb-3 uppercase">President</p>
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-4 accent-maroon-text">"Lead with vision, serve with passion."</h2>
+          <p class="text-xl font-semibold">— Zeanna Calusin</p>
+        </div>
+      </div>
+
+      <div class="officer-slide" style="display:none;">
+        <img src="https://images.pexels.com/photos/3861958/pexels-photo-3861958.jpeg" style="width:100%;height:100%;object-fit:cover;filter:blur(4px);"/>
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fff">
+          <p class="accent-beige-text tracking-[0.3em] mb-3 uppercase">Vice President</p>
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-4 accent-maroon-text">"Always be the bigger person."</h2>
+          <p class="text-xl font-semibold">— Paulo Manuel</p>
+        </div>
+      </div>
+
+      <div class="officer-slide" style="display:none;">
+        <img src="https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg" style="width:100%;height:100%;object-fit:cover;filter:blur(4px);"/>
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.6)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fff">
+          <p class="accent-beige-text tracking-[0.3em] mb-3 uppercase">Secretary</p>
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-4 accent-maroon-text">"Details create the bigger picture."</h2>
+          <p class="text-xl font-semibold">— Jessa Mae Pines</p>
+        </div>
+      </div>
+
+      <!-- arrows -->
+      <button onclick="changeOfficerSlide(-1)" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);z-index:40;background:rgba(0,0,0,0.5);width:44px;height:44px;border-radius:999px;border:none;color:#fff;cursor:pointer;"><i class="fas fa-chevron-left"></i></button>
+      <button onclick="changeOfficerSlide(1)" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);z-index:40;background:rgba(0,0,0,0.5);width:44px;height:44px;border-radius:999px;border:none;color:#fff;cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <!-- GALLERY (exact to screen + auto-cycle categories) -->
+  <section id="gallery" class="section-full" aria-label="Gallery">
+    <div class="gallery-inner">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <h2 class="text-2xl md:text-3xl font-extrabold accent-maroon-text">Gallery</h2>
+        <p class="text-sm" style="color:var(--muted-strong)">Auto-cycles categories every 5s — click to pause or open image</p>
+      </div>
+
+      <!-- categories -->
+      <div id="categoryRow" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;"></div>
+
+      <!-- grid area (fills remaining height) -->
+      <div style="position:relative; flex:1; margin-top:12px;">
+        <div id="galleryFadeWrap" class="gallery-fade-wrapper" style="width:100%;height:100%;">
+          <div id="galleryGrid"></div>
+        </div>
+
+        <div id="galleryPrev" class="gallery-arrow left" title="Previous category"><i class="fas fa-chevron-left" style="color:#fff"></i></div>
+        <div id="galleryNext" class="gallery-arrow right" title="Next category"><i class="fas fa-chevron-right" style="color:#fff"></i></div>
+      </div>
+
+      <div id="galleryDots" style="display:flex;justify-content:center;gap:8px;margin-top:12px;"></div>
+    </div>
+  </section>
+
+<!-- FOOTER -->
+  <footer id="contact" class="bg-transparent text-white" style="border-top:1px solid rgba(0,0,0,0.04);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-4" style="color:rgba(255,235,220,0.95)">Empowering Students, Powering Technology.</h3>
+
+        <div class="flex items-center gap-3 mb-3 group">
+          <i class="fas fa-envelope text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">support@bitcourse.com</span>
+        </div>
+
+        <div class="flex items-center gap-3 group">
+          <i class="fas fa-phone text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">1800-1234-5678</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Company</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="about.html" class="footer-link">About Us</a></li>
+            <li><a href="administration.html" class="footer-link">Officers</a></li>
+            <li><a href="news.html" class="footer-link">Activities</a></li>
+            <li><a href="joinus.html" class="footer-link">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Help</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="javascript:void(0)" onclick="openFAQ()" class="footer-link cursor-pointer">FAQ</a></li>
+            <li><a href="https://slsubit.web.app/" class="footer-link">Support</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 text-lg sm:text-xl">
+        <h4 class="font-bold mb-3 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Get In Touch!</h4>
+        <div class="flex gap-4 mb-4">
+          <a href="https://www.facebook.com/profile.php?id=61551892495218" aria-label="Facebook" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.linkedin.com/in/zeanna-patricia-calusin-139249393/?trk=public-profile-join-page" aria-label="LinkedIn" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-3 sm:py-4 w-full" style="border-top:1px solid rgba(255,255,255,0.04);">
+      <div class="max-w-[95%] sm:max-w-[90%] lg:max-w-[85%] mx-auto px-2 sm:px-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] sm:text-[12px] leading-tight">
+        <p class="opacity-90 text-center sm:text-left" style="color:rgba(255,235,220,0.95)">© <span id="currentYear"></span> NETWORK Organization — SLSU Lucena. All rights reserved. This website is developed by BIT-Computer Technology students. Images and trademarks belong to their respective owners.</p>
+        <p class="inline-flex items-center gap-2 opacity-90 text-center sm:text-right whitespace-nowrap footer-shield-text" style="color:rgba(255,235,220,0.95)"><i class="fas fa-shield-alt" style="color:rgba(255,200,160,0.95)"></i><span>Secure &amp; Quality Education at SLSU Lucena</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox (created dynamically) -->
+
+  <!-- Scripts -->
+  <script>
+    // Officer slideshow
+    (function(){
+      const slides = Array.from(document.getElementsByClassName('officer-slide'));
+      let idx = 0;
+      function show(i){
+        slides.forEach((s, j) => {
+          if (j===i) { s.style.display = ''; s.classList.add('visible'); }
+          else { s.style.display = 'none'; s.classList.remove('visible'); }
+        });
+      }
+      window.changeOfficerSlide = function(step) { idx = (idx + step + slides.length) % slides.length; show(idx); };
+      setInterval(() => { idx = (idx + 1) % slides.length; show(idx); }, 5000);
+      show(0);
+    })();
+  </script>
+
+  <script>
+    (function(){
+      /* ===== Gallery Data - each category has 6 images ===== */
+      const galleryData = {
+        'SEMINAR': [
+          'pics/SEMINAR/group.jpg','pics/SEMINAR/heh.jpg','pics/SEMINAR/hg.jpg',
+          'pics/SEMINAR/mam.jpg','pics/SEMINAR/me.jpg','pics/SEMINAR/prompt.jpg'
+        ],
+        'WORKSHOP': [
+          'pics/WORKSHOP/HAHA.jpg','pics/WORKSHOP/HIHI.jpg','pics/WORKSHOP/HOHO.JPG',
+          'pics/WORKSHOP/HSHS.JPG','pics/WORKSHOP/HUHU.JPG','pics/WORKSHOP/intro.JPG'
+        ],
+        'BIT DAY': [
+          'pics/BITDAY/bb.jpg','pics/BITDAY/INTRAMS.jpg','pics/BITDAY/play.jpg',
+          'pics/BITDAY/hghg.jpg','pics/BITDAY/ha.jpg','pics/BITDAY/VALENTINES.jpg'
+        ],
+        'BIT NIGHT': [
+          'pics/BITNIGHT/BIT NIGHT.jpg','pics/BITNIGHT/haha.JPG','pics/BITNIGHT/model.JPG',
+          'pics/BITNIGHT/NIGHT.JPG','pics/BITNIGHT/trophy.JPG','pics/BITNIGHT/turn.JPG'
+        ],
+        'SCITECH': [
+          'pics/SCITECH/award.JPG','pics/SCITECH/food.JPG','pics/SCITECH/huh.JPG',
+          'pics/SCITECH/Sci.JPG','pics/SCITECH/SCITECH.jpg','pics/SCITECH/sir.JPG'
+        ],
+      };
+
+      // DOM refs
+      const categoryRow = document.getElementById('categoryRow');
+      const grid = document.getElementById('galleryGrid');
+      const wrapper = document.getElementById('galleryFadeWrap');
+      const prevBtn = document.getElementById('galleryPrev');
+      const nextBtn = document.getElementById('galleryNext');
+      const dots = document.getElementById('galleryDots');
+
+      const categories = Object.keys(galleryData);
+      let currentCategoryIndex = 0;
+      const AUTO_DELAY = 5000; // 5 seconds
+      let autoTimer = null;
+      let userInteracting = false; // true while hovering or after clicking
+
+      // Build category buttons
+      function buildCategoryButtons(){
+        categoryRow.innerHTML = '';
+        categories.forEach((cat, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'cat-btn' + (idx === currentCategoryIndex ? ' active' : '');
+          btn.textContent = cat;
+          btn.addEventListener('click', () => {
+            currentCategoryIndex = idx;
+            renderGrid(true);
+            resetAutoCycle();
+          });
+          categoryRow.appendChild(btn);
+        });
+      }
+
+      // Ensure exactly 6 images
+      function itemsForCategory(index){
+        const arr = (galleryData[categories[index]] || []).slice(0,6);
+        const placeholder = 'pics/gallery/placeholder.png';
+        while (arr.length < 6) arr.push(placeholder);
+        return arr;
+      }
+
+      function renderGrid(fade = true){
+        const items = itemsForCategory(currentCategoryIndex);
+        if (fade){
+          wrapper.style.opacity = 0;
+          setTimeout(() => {
+            grid.innerHTML = '';
+            items.forEach((src, i) => addGridItem(src, i));
+            wrapper.style.opacity = 1;
+          }, 280);
+        } else {
+          grid.innerHTML = '';
+          items.forEach((src, i) => addGridItem(src, i));
+        }
+        renderDots();
+        updateCategoryButtons();
+      }
+
+      function addGridItem(src, i){
+        const cell = document.createElement('div');
+        cell.className = 'gallery-item';
+        cell.innerHTML = `<img src="${src}" alt="" loading="lazy" onerror="this.src='pics/gallery/placeholder.png'"><div class="gallery-caption">${categories[currentCategoryIndex]}</div>`;
+        cell.addEventListener('click', (e) => {
+          openLightbox(i);
+          pauseAutoCycle(); // pause when user opens image
+        });
+        grid.appendChild(cell);
+      }
+
+      function renderDots(){
+        dots.innerHTML = '';
+        const dot = document.createElement('div');
+        dot.style.width = '10px';
+        dot.style.height = '10px';
+        dot.style.borderRadius = '999px';
+        dot.style.background = 'var(--accent-beige)';
+        dots.appendChild(dot);
+      }
+
+      function updateCategoryButtons(){
+        Array.from(categoryRow.children).forEach((b, idx) => {
+          b.classList.toggle('active', idx === currentCategoryIndex);
+        });
+      }
+
+      // Prev/Next category handlers
+      prevBtn.addEventListener('click', () => {
+        currentCategoryIndex = (currentCategoryIndex - 1 + categories.length) % categories.length;
+        renderGrid(true);
+        resetAutoCycle();
+      });
+      nextBtn.addEventListener('click', () => {
+        currentCategoryIndex = (currentCategoryIndex + 1) % categories.length;
+        renderGrid(true);
+        resetAutoCycle();
+      });
+
+      // Auto cycle categories
+      function startAutoCycle(){
+        stopAutoCycle();
+        autoTimer = setInterval(() => {
+          if (!userInteracting) {
+            currentCategoryIndex = (currentCategoryIndex + 1) % categories.length;
+            renderGrid(true);
+          }
+        }, AUTO_DELAY);
+      }
+      function stopAutoCycle(){ if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+      function resetAutoCycle(){ stopAutoCycle(); startAutoCycle(); }
+      function pauseAutoCycle(){ userInteracting = true; }
+      function resumeAutoCycle(){ userInteracting = false; }
+
+      // Pause while hover or on controls
+      wrapper.addEventListener('mouseenter', () => { userInteracting = true; });
+      wrapper.addEventListener('mouseleave', () => { userInteracting = false; });
+      prevBtn.addEventListener('mouseenter', () => { userInteracting = true; });
+      prevBtn.addEventListener('mouseleave', () => { userInteracting = false; });
+      nextBtn.addEventListener('mouseenter', () => { userInteracting = true; });
+      nextBtn.addEventListener('mouseleave', () => { userInteracting = false; });
+
+      // Lightbox
+      let lightbox = null;
+      function openLightbox(startIndex){
+        const items = itemsForCategory(currentCategoryIndex);
+        let idx = startIndex;
+        if (lightbox) return;
+        lightbox = document.createElement('div');
+        lightbox.className = 'lightbox-overlay';
+        lightbox.innerHTML = `
+          <div style="position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;">
+            <button id="lb-close" style="position:absolute;right:8px;top:8px;background:rgba(0,0,0,0.45);width:44px;height:44px;border-radius:999px;border:none;color:#fff;cursor:pointer;"><i class="fas fa-times"></i></button>
+            <div style="position:relative;width:100%;max-width:1100px;">
+              <button id="lb-prev" style="position:absolute;left:-56px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);width:44px;height:44px;border-radius:999px;border:none;color:#fff;cursor:pointer;"><i class="fas fa-chevron-left"></i></button>
+              <img id="lb-img" class="lightbox-img" src="${items[idx]}" alt="">
+              <button id="lb-next" style="position:absolute;right:-56px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);width:44px;height:44px;border-radius:999px;border:none;color:#fff;cursor:pointer;"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <p id="lb-caption" style="color:#ccc;margin-top:6px;">${categories[currentCategoryIndex]} — ${idx+1} / ${items.length}</p>
+          </div>
+        `;
+        document.body.appendChild(lightbox);
+
+        document.getElementById('lb-close').addEventListener('click', () => { closeLightbox(); resumeAutoCycle(); });
+        document.getElementById('lb-prev').addEventListener('click', () => { idx = (idx - 1 + items.length) % items.length; updateLB(); });
+        document.getElementById('lb-next').addEventListener('click', () => { idx = (idx + 1) % items.length; updateLB(); });
+        lightbox.addEventListener('click', (e) => { if (e.target === lightbox) { closeLightbox(); resumeAutoCycle(); } });
+        document.addEventListener('keydown', lbKey);
+
+        pauseAutoCycle();
+        function updateLB() {
+          const img = document.getElementById('lb-img');
+          const cap = document.getElementById('lb-caption');
+          img.src = items[idx];
+          cap.textContent = `${categories[currentCategoryIndex]} — ${idx+1} / ${items.length}`;
+        }
+        function lbKey(e){
+          if (!lightbox) return;
+          if (e.key === 'Escape') { closeLightbox(); resumeAutoCycle(); }
+          if (e.key === 'ArrowLeft') { idx = (idx - 1 + items.length) % items.length; updateLB(); }
+          if (e.key === 'ArrowRight') { idx = (idx + 1) % items.length; updateLB(); }
+        }
+
+        function closeLightbox(){
+          if (!lightbox) return;
+          document.removeEventListener('keydown', lbKey);
+          document.body.removeChild(lightbox);
+          lightbox = null;
+        }
+      }
+
+      // Init
+      buildCategoryButtons();
+      renderGrid(false);
+      startAutoCycle();
+      // expose for debug
+      window.__galleryData = galleryData;
+    })();
+  </script>
+
+  <!-- Scroll clamp: prevents scrolling past the footer bottom (locks extra whitespace after footer) -->
+  <script>
+    (function(){
+      // clamp scroll so user can't scroll past document bottom (and reveal extra whitespace)
+      let ticking = false;
+      function clampScroll() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        if (window.scrollY > max) window.scrollTo({ top: max });
+        if (window.scrollY < 0) window.scrollTo({ top: 0 });
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(clampScroll);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      // Ensure nav spacer height is correct (so footer 'lock' position calculation is accurate)
+      function updateNavSpacer() {
+        const nav = document.querySelector('nav');
+        const spacer = document.querySelector('.nav-spacer');
+        if (nav && spacer) {
+          const rect = nav.getBoundingClientRect();
+          const h = (rect && rect.height) ? rect.height : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 76;
+          spacer.style.height = h + 'px';
+          document.documentElement.style.setProperty('--nav-height', h + 'px');
+        }
+      }
+      window.addEventListener('load', updateNavSpacer);
+      window.addEventListener('resize', updateNavSpacer);
+      updateNavSpacer();
+    })();
+  </script>
+</body>
+</html>

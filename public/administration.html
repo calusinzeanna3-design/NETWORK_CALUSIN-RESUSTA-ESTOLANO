@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK | Administration</title>
+
+  <!-- TAILWIND CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ICONS -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <style>
+    /* Unified palette: maroon (primary dark) + beige (contrast) */
+    :root {
+      --accent-maroon: #800020;      /* primary maroon (used for fonts/accents) */
+      --accent-maroon-dark: #5c0016; /* darker maroon for hovers */
+      --accent-beige: #F5E9D6;       /* beige used for text on maroon buttons */
+      --bg-dark: #050308;
+      --muted-strong: #cbd5e1;
+    }
+
+    html { scroll-behavior: smooth; 
+     height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    body {
+      overscroll-behavior-y: contain;
+      background-color: var(--bg-dark);
+      color: var(--muted-strong);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+       height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+     nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; }
+    .nav-inner {
+      /* Use the supplied maroon style: dark maroon base with warm right glow + fallback image */
+      background:
+        radial-gradient(1000px 420px at 88% 50%, rgba(245,160,110,0.06) 0%, rgba(128,0,20,0.12) 6%, rgba(54,0,0,0.95) 18%),
+        linear-gradient(180deg, rgba(20,3,3,0.98), rgba(30,6,6,0.98));
+      /* If you prefer to use the image you uploaded, uncomment the next line and ensure file exists at --maroon-bg-image */
+      /* background-image: var(--maroon-bg-image); background-size: cover; background-position: center right; */
+      color: #fff;
+      backdrop-filter: blur(4px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    }
+
+    .nav-divider {
+      height: 6px;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,200,160,0.06) 12%, rgba(245,170,110,0.12) 28%, rgba(245,170,110,0.08) 52%, rgba(0,0,0,0) 100%);
+      filter: blur(10px) saturate(1.1);
+      box-shadow: 0 6px 24px rgba(128,0,32,0.10), 0 2px 8px rgba(128,0,32,0.06) inset;
+      opacity: .95;
+    }
+
+    .logo-dot{ width:48px;height:48px;border-radius:999px;border:2px solid rgba(255,255,255,0.06); display:flex;align-items:center;justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); overflow:hidden; box-shadow: var(--elevation-1); }
+    .logo-dot img{ width:100%;height:100%;object-fit:cover;border-radius:999px;display:block; filter: saturate(0.9) contrast(0.95); }
+
+    /* NAV link styles optimized for dark maroon background */
+    .nav-inner .max-w-7xl a { color: rgba(255,235,220,0.95); text-decoration: none; }
+    .nav-inner .max-w-7xl a:hover { color: #fff; text-shadow: 0 8px 28px rgba(245,160,110,0.08); }
+
+    /* NAV small round logo (same shape) */
+    .logo-dot {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 2px solid var(--accent-maroon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-dark);
+      overflow: hidden;
+    }
+
+    /* Modal animation */
+    .modal-content {
+      animation: fadeIn 0.28s ease-out;
+      z-index: 1000;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* 3D feel for center officer card (subtle beige radial + maroon depth) */
+    .officer-3d {
+      box-shadow:
+        0 24px 50px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background:
+        radial-gradient(circle at top, rgba(245,233,214,0.04), transparent 50%),
+        #020617;
+      backdrop-filter: blur(10px);
+    }
+
+    .officer-3d img { display:block; }
+
+    /* Buttons and accent text switched to dark maroon (user preference) */
+    .accent-maroon { color: var(--accent-maroon); }
+    .bg-accent-maroon { background: var(--accent-maroon); color: var(--accent-beige); }
+    .bg-accent-maroon-dark { background: var(--accent-maroon-dark); color: var(--accent-beige); }
+    .btn-maroon {
+      background: var(--accent-maroon);
+      color: var(--accent-beige);
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 0.5rem 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-maroon:hover {
+      background: var(--accent-maroon-dark);
+    }
+
+    /* Replace previous beige accent usage by dark maroon for headings/labels */
+    .accent-label {
+      color: var(--accent-maroon);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+
+    /* small helpers */
+    :focus { outline: 3px solid rgba(128,0,32,0.14); outline-offset: 2px; }
+    .muted { color: #94a3b8; }
+
+    /* Responsive tweaks */
+    @media (max-width: 640px) {
+      /* no extra rules needed */
+    }
+  </style>
+
+  <script>
+    /* ===============================
+       TOP LEADERS CAROUSEL
+       =============================== */
+    const leaders = [
+      {
+        name: "Dr. Jess Mark L. Alinea",
+        position: "Campus Director – Lucena",
+        image: "./pics/Officer/Director.png",
+        facebook: "https://www.facebook.com/jessmark.alinea"
+      },
+      {
+        name: "Sir Joriel Flynn V. Mazo",
+        position: "Chairperson – BIT / BINDTECH",
+        image: "./pics/Officer/chairperson.jpg",
+        facebook: "https://www.facebook.com/jorielflynn.mazo"
+      },
+      {
+        name: "Prof. Jerome A. Yanga",
+        position: "Organization Adviser",
+        image: "./pics/Officer/adviser.jpg",
+        facebook: "https://www.facebook.com/jerome.yanga.18"
+      }
+    ];
+
+    let leaderIndex = 0;
+
+    function setCard(slot, data) {
+      const img = document.getElementById(slot + "Img");
+      const name = document.getElementById(slot + "Name");
+      const pos = document.getElementById(slot + "Pos");
+
+      if (img) img.src = data.image;
+      if (name) name.textContent = data.name;
+      if (pos) pos.textContent = data.position;
+
+      if (slot === "center") {
+        const fb = document.getElementById("centerFb");
+        if (fb) fb.href = data.facebook;
+      }
+    }
+
+    function updateLeaders() {
+      const total = leaders.length;
+      const center = leaders[leaderIndex];
+      const left = leaders[(leaderIndex - 1 + total) % total];
+      const right = leaders[(leaderIndex + 1) % total];
+
+      setCard("left", left);
+      setCard("center", center);
+      setCard("right", right);
+
+      const dots = document.querySelectorAll(".leader-dot");
+      dots.forEach((dot, i) => {
+        dot.classList.remove("bg-[var(--accent-beige)]");
+        dot.classList.add("bg-slate-500");
+        if (i === leaderIndex) {
+          dot.classList.remove("bg-slate-500");
+          dot.style.backgroundColor = "var(--accent-maroon)";
+        }
+      });
+    }
+
+    function changeLeader(step) {
+      leaderIndex = (leaderIndex + step + leaders.length) % leaders.length;
+      updateLeaders();
+    }
+
+    function goToLeader(index) {
+      leaderIndex = index;
+      updateLeaders();
+    }
+
+    /* ===============================
+       OFFICERS – DATA
+       =============================== */
+
+    const officersData = {
+      president: {
+        name: "ZEANNA PATRICIA D. CALUSIN",
+        position: "President",
+        age: 21,
+        yearLevel: "3rd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 3,
+        image: "./pics/Officer/president.jpg",
+        facebook: "https://www.facebook.com/zeannapat.15"
+      },
+      vice_president: {
+        name: "JOHN PAULO L. MANUEL",
+        position: "Vice President",
+        age: 20,
+        yearLevel: "2Nd Year – BIT CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/vice pres.jpg",
+        facebook: "https://www.facebook.com/johnpaulo.manuel.94"
+      },
+      secretary: {
+        name: "JESSA MAE R. PINES",
+        position: "Secretary",
+        age: 21,
+        yearLevel: "2nd Year – BIT CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/secretary.jpg",
+        facebook: "https://www.facebook.com/jessa.mae.pines.2024"
+      },
+      treasurer: {
+        name: "ARRONE B. CAAGBAY",
+        position: "Treasurer",
+        age: 21,
+        yearLevel: "3rd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 2,
+        image: "./pics/Officer/treasurer.jpg",
+        facebook: "https://www.facebook.com/arrone11"
+      },
+      auditor: {
+        name: "ANGELICA S. AGUILA",
+        position: "Auditor",
+        age: 20,
+        yearLevel: "2nd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 1,
+        image: "./pics/Officer/auditor.jpg",
+        facebook: "https://www.facebook.com/acilegna.aguila.9"
+      },
+      layout_artist: {
+        name: "JONA M. TAN",
+        position: "Layout Artist",
+        age: 22,
+        yearLevel: "3rd Year – BIT CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/layout.jpg",
+        facebook: "https://www.facebook.com/tan77777777777777777"
+      },
+      layout_artist_2: {
+        name: "PRINCESS NICOLE MARTINEZ",
+        position: "Layout Artist 2",
+        age: 19,
+        yearLevel: "1st Year – BINDTECH CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/Ly2.png",
+        facebook: "https://www.facebook.com/dagu.chi.ji"
+      },
+      project_manager: {
+        name: "DEN MARK R. LADEZA",
+        position: "Project Manager",
+        age: 20,
+        yearLevel: "3rd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 3,
+        image: "./pics/Officer/project manager.jpg",
+        facebook: "https://www.facebook.com/denmark.ladeza5"
+      },
+      gad: {
+        name: "ARIEL JAKE MARAYA",
+        position: "Gender and Development",
+        age: 22,
+        yearLevel: "2nd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 1,
+        image: "./pics/Officer/GAD.jpg",
+        facebook: "https://www.facebook.com/arieljake.aguilar"
+      },
+      legal_matters: {
+        name: "PRICESS NICOLE V. QUEJANO",
+        position: "Legal Matters",
+        age: 20,
+        yearLevel: "3rd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 3,
+        image: "./pics/Officer/legal matters.jpg",
+        facebook: "https://www.facebook.com/princessnicole.quejano"
+      },
+      culture_arts: {
+        name: "AYO BRACERO",
+        position: "Culture and Arts Committee",
+        age: 21,
+        yearLevel: "1st Year – BINDTECH  CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/CAA.png",
+        facebook: "https://www.facebook.com/johnlord.b"
+      },
+      sports: {
+        name: "JOHN RICK R. VILLENA",
+        position: "Sports Committee",
+        age: 19,
+        yearLevel: "2nd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 2,
+        image: "./pics/Officer/sports.jpg",
+        facebook: "https://www.facebook.com/johnrickrey.villena"
+      },
+      rep_1st: {
+        name: "JAZZMINE MAGABO",
+        position: "1st Year Representative",
+        age: 19,
+        yearLevel: "1st Year – BINDTECH CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/1st.png",
+        facebook: "https://www.facebook.com/jazzmine.magabo"
+      },
+      rep_2nd: {
+        name: "ASHLEY NICOLE G. YUBION",
+        position: "2nd Year Representative",
+        age: 20,
+        yearLevel: "2nd Year – BIT CPT",
+        status: "Elected",
+        yearsInOrg: 1,
+        image: "./pics/Officer/2nd.jpg",
+        facebook: "https://www.facebook.com/ashley.yubion"
+      },
+      rep_3rd: {
+        name: "MARISSA M. FAMADULAN",
+        position: "3rd Year Representative",
+        age: 24,
+        yearLevel: "3rd Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 2,
+        image: "./pics/Officer/3rd.jpg",
+        facebook: "https://www.facebook.com/mariss.famadulan"
+      },
+      rep_4th: {
+        name: "RUSSEL KEN D. RUEDAS",
+        position: "4th Year Representative",
+        age: 21,
+        yearLevel: "4th Year – BIT CPT",
+        status: "Appointed",
+        yearsInOrg: 3,
+        image: "./pics/Officer/4th.jpg",
+        facebook: "https://www.facebook.com/rasiruedas"
+      }
+    };
+
+    let activeOfficerKey = "president";
+
+    function setActiveOfficer(key) {
+      const data = officersData[key];
+      if (!data) return;
+
+      activeOfficerKey = key;
+
+      const img = document.getElementById("activeOfficerImg");
+      const name = document.getElementById("activeOfficerName");
+      const pos = document.getElementById("activeOfficerPosition");
+      const fbBtn = document.getElementById("activeOfficerFb");
+
+      if (img) img.src = data.image;
+      if (name) name.textContent = data.name;
+      if (pos) pos.textContent = data.position;
+      if (fbBtn) fbBtn.href = data.facebook;
+
+      // highlight active pill
+      const pills = document.querySelectorAll("[data-officer-key]");
+      pills.forEach(p => {
+        if (p.dataset.officerKey === key) {
+          p.classList.add("bg-[var(--accent-maroon)]", "text-[var(--accent-beige)]", "shadow-md", "border-transparent");
+          p.classList.remove("bg-slate-900", "text-slate-200", "border-slate-700");
+        } else {
+          p.classList.remove("bg-[var(--accent-maroon)]", "text-[var(--accent-beige)]", "shadow-md", "border-transparent");
+          p.classList.add("bg-slate-900", "text-slate-200", "border-slate-700");
+        }
+      });
+    }
+
+    // Modal refs
+    let officerModal,
+        officerModalImg,
+        officerModalName,
+        officerModalPosition,
+        officerModalYear,
+        officerModalStatus,
+        officerModalAge,
+        officerModalYears,
+        officerModalFacebook;
+
+    function openOfficerModal() {
+      const data = officersData[activeOfficerKey];
+      if (!data || !officerModal) return;
+
+      officerModalImg.src = data.image;
+      officerModalName.textContent = data.name;
+      officerModalPosition.textContent = data.position;
+      officerModalYear.textContent = "Year level: " + data.yearLevel;
+      officerModalStatus.textContent = "Position status: " + data.status;
+      officerModalAge.textContent = "Age: " + data.age + " years old";
+      officerModalYears.textContent = "Years in organization: " + data.yearsInOrg + " year(s)";
+      officerModalFacebook.href = data.facebook;
+
+      officerModal.classList.remove("hidden");
+    }
+
+    function closeOfficerModal() {
+      if (officerModal) {
+        officerModal.classList.add("hidden");
+      }
+    }
+
+    window.addEventListener("load", () => {
+      // leaders carousel
+      updateLeaders();
+
+      // officer center + pills
+      setActiveOfficer(activeOfficerKey);
+
+      document
+        .querySelectorAll("[data-officer-key]")
+        .forEach(btn => {
+          btn.addEventListener("click", () => {
+            setActiveOfficer(btn.dataset.officerKey);
+          });
+        });
+
+      const viewBtn = document.getElementById("viewDetailsBtn");
+      if (viewBtn) {
+        viewBtn.addEventListener("click", openOfficerModal);
+      }
+
+      // modal refs
+      officerModal = document.getElementById("officerModal");
+      officerModalImg = document.getElementById("officerModalImg");
+      officerModalName = document.getElementById("officerModalName");
+      officerModalPosition = document.getElementById("officerModalPosition");
+      officerModalYear = document.getElementById("officerModalYear");
+      officerModalStatus = document.getElementById("officerModalStatus");
+      officerModalAge = document.getElementById("officerModalAge");
+      officerModalYears = document.getElementById("officerModalYears");
+      officerModalFacebook = document.getElementById("officerModalFacebook");
+
+      window.closeOfficerModal = closeOfficerModal;
+    });
+  </script>
+</head>
+
+<body class="text-gray-100 text-[17px] md:text-[18px]">
+
+  <!-- NAVIGATION -->
+ <nav>
+    <div class="nav-inner">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+          <div class="logo-dot">
+            <img src="./pics/logo.png" alt="NETWORK Logo" />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="text-sm tracking-wide" style="color:rgba(255,235,220,0.95)">NETWORK</span>
+            <span class="text-[10px] uppercase tracking-[0.18em]" style="color:rgba(255,235,220,0.85)">SLSU LUCENA</span>
+          </div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <a href="index.html" class="relative" style="color:rgba(255,235,220,0.95)">Home</a>
+          <a href="about.html" class="relative hover:text-white transition">About</a>
+          <a href="news.html" class="relative hover:text-white transition">News</a>
+          <a href="administration.html" class="relative hover:text-white transition">Administration</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="joinus.html" class="hidden sm:inline-flex items-center justify-center text-xs sm:text-sm font-semibold px-5 py-2 rounded-full" style="background:var(--accent-maroon); color: #fff; box-shadow: 0 8px 18px rgba(128,0,32,0.12)">Join Us</a>
+
+          <!-- Admin button removed per request -->
+        </div>
+      </div>
+
+      <!-- glowing divider between navbar and header -->
+      <div class="nav-divider" aria-hidden="true"></div>
+    </div>
+
+    <!-- MOBILE NAV -->
+    <div class="md:hidden bg-transparent border-t border-[#0000000b] px-4 pb-3 pt-2 flex flex-wrap justify-center gap-4 text-xs font-semibold">
+      <a href="index.html" style="color:rgba(255,235,220,0.95)">Home</a>
+      <a href="about.html" class="hover:text-white">About</a>
+      <a href="news.html" class="hover:text-white">News</a>
+      <a href="administration.html" class="hover:text-white">Administration</a>
+      <a href="joinus.html" class="mt-1 inline-flex items-center justify-center px-4 py-1.5 rounded-full" style="background:var(--accent-maroon); color:#fff">Join Us</a>
+    </div>
+  </nav>
+
+
+  <!-- spacer for fixed nav -->
+  <div class="h-20 sm:h-24"></div>
+
+  <!-- TOP LEADERS CAROUSEL -->
+  <section class="bg-gradient-to-br from-[#12010a] via[#3b0000] to[#050308] py-16 min-h-[80vh] flex items-center">
+    <div class="max-w-7xl mx-auto px-6 w-full">
+      <div class="text-center mb-10">
+        <p class="text-xs sm:text-sm tracking-[0.25em] uppercase" style="color:var(--accent-maroon); margin-bottom:0.5rem;">
+          Administration
+        </p>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+          NETWORK Administration
+        </h2>
+        <p class="text-gray-200 text-sm md:text-base mt-2">
+          Core leaders of the organization and academic unit.
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center gap-10">
+        <div class="flex items-center justify-center gap-4 md:gap-8">
+
+          <!-- LEFT -->
+          <div
+            class="relative rounded-2xl overflow-hidden shadow-md w-40 h-52 md:w-48 md:h-64 opacity-40 scale-90 md:scale-95 bg-[#020617] border border-slate-800 transition-all duration-300">
+            <img id="leftImg" src="" alt="" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <p id="leftPos" class="text-xs font-semibold uppercase tracking-wide mb-1 muted"></p>
+              <p id="leftName" class="text-sm font-bold leading-tight"></p>
+            </div>
+          </div>
+
+          <!-- CENTER -->
+          <div
+            class="relative rounded-3xl overflow-hidden shadow-2xl w-56 h-72 md:w-80 md:h-96 bg-[#020617] border border-slate-700 transition-all duration-300 officer-3d">
+            <img id="centerImg" src="" alt="" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+
+            <div class="absolute bottom-6 left-6 right-6 text-white">
+              <p
+                id="centerPos"
+                class="text-xs md:text-sm font-semibold uppercase tracking-[0.18em] mb-2"
+                style="color:var(--accent-maroon)">
+              </p>
+              <p
+                id="centerName"
+                class="text-xl md:text-2xl font-bold leading-snug mb-3">
+              </p>
+              <a
+                id="centerFb"
+                href="#"
+                target="_blank"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full"
+                style="background:var(--accent-maroon); color:var(--accent-beige); font-weight:600;">
+                <i class="fab fa-facebook-f text-sm"></i>
+                <span>View Profile</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- RIGHT -->
+          <div
+            class="relative rounded-2xl overflow-hidden shadow-md w-40 h-52 md:w-48 md:h-64 opacity-40 scale-90 md:scale-95 bg-[#020617] border border-slate-800 transition-all duration-300">
+            <img id="rightImg" src="" alt="" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 text-white">
+              <p id="rightPos" class="text-xs font-semibold uppercase tracking-wide mb-1 muted"></p>
+              <p id="rightName" class="text-sm font-bold leading-tight"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- controls -->
+        <div class="flex items-center justify-center gap-4 mt-2">
+          <button
+            onclick="changeLeader(-1)"
+            class="w-9 h-9 flex items-center justify-center rounded-full border border-slate-500 hover:bg-[var(--accent-maroon)] hover:text-[var(--accent-beige)] transition">
+            <i class="fas fa-chevron-left text-sm"></i>
+          </button>
+
+          <div class="flex items-center gap-2">
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-slate-500" onclick="goToLeader(0)"></button>
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-slate-500" onclick="goToLeader(1)"></button>
+            <button class="leader-dot w-2.5 h-2.5 rounded-full bg-slate-500" onclick="goToLeader(2)"></button>
+          </div>
+
+          <button
+            onclick="changeLeader(1)"
+            class="w-9 h-9 flex items-center justify-center rounded-full border border-slate-500 hover:bg-[var(--accent-maroon)] hover:text-[var(--accent-beige)] transition">
+            <i class="fas fa-chevron-right text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEET OUR OFFICERS – CATEGORIES LEFT & RIGHT, BIG VIEWER CENTER -->
+  <section id="officers" class="bg-gradient-to-b from-[#050308] via-[#3b0000] to-[#050308] text-white py-20 border-t border-[#111827]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <p class="text-xs sm:text-sm tracking-[0.25em] uppercase" style="color:var(--accent-maroon); margin-bottom:0.5rem;">
+          Student leaders
+        </p>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Meet Our Officers</h2>
+        <p class="text-slate-200 text-sm md:text-base mt-2 max-w-2xl mx-auto">
+          Student leaders who serve the NETWORK organization and the BIT / BINDTECH community.
+        </p>
+      </div>
+
+      <!-- GRID: LEFT CATEGORY LIST – BIG CENTER VIEWER – RIGHT CATEGORY LIST -->
+      <div class="w-full grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,2fr)_1fr] gap-8 lg:gap-10 items-stretch">
+
+        <!-- LEFT CATEGORY COLUMN -->
+        <div class="flex flex-col gap-3 lg:items-start lg:pr-2">
+          <button type="button" data-officer-key="president"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            President
+          </button>
+
+          <button type="button" data-officer-key="vice_president"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Vice President
+          </button>
+
+          <button type="button" data-officer-key="secretary"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Secretary
+          </button>
+
+          <button type="button" data-officer-key="treasurer"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Treasurer
+          </button>
+
+          <button type="button" data-officer-key="auditor"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Auditor
+          </button>
+
+          <button type="button" data-officer-key="layout_artist"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Layout Artist
+          </button>
+
+          <button type="button" data-officer-key="layout_artist_2"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Layout Artist 2
+          </button>
+        </div>
+
+        <!-- BIG CENTER VIEWER CARD -->
+        <div class="officer-3d rounded-3xl px-6 md:px-10 py-8 md:py-10 w-full flex flex-col items-center gap-6 text-center min-h-[320px]">
+          <div class="w-40 h-40 md:w-60 md:h-60 mx-auto rounded-full overflow-hidden bg-[#020617]">
+            <img id="activeOfficerImg" src="" alt="Officer photo" class="w-full h-full object-cover rounded-full" />
+          </div>
+
+          <div class="max-w-md mx-auto">
+            <p class="text-[10px] sm:text-xs uppercase tracking-[0.25em]" style="color:var(--accent-maroon); margin-bottom:0.4rem;">
+              Selected Officer
+            </p>
+            <h3 id="activeOfficerName" class="text-2xl md:text-3xl font-bold mb-1"></h3>
+            <p id="activeOfficerPosition" class="text-sm sm:text-base md:text-lg text-slate-200 mb-4"></p>
+
+            <div class="flex flex-wrap justify-center gap-3">
+              <a
+                id="activeOfficerFb"
+                href="#"
+                target="_blank"
+                class="inline-flex items-center gap-2 px-5 py-2 rounded-full"
+                style="background:var(--accent-maroon); color:var(--accent-beige); font-weight:600;">
+                <i class="fab fa-facebook-f text-sm"></i>
+                <span>View Facebook</span>
+              </a>
+              <button
+                id="viewDetailsBtn"
+                type="button"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border"
+                style="border-color: rgba(245,233,214,0.06); color:var(--accent-maroon); background:transparent;">
+                <i class="fas fa-user text-xs"></i>
+                <span>View Details</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT CATEGORY COLUMN -->
+        <div class="flex flex-col gap-3 lg:items-end lg:pl-2">
+          <button type="button" data-officer-key="project_manager"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Project Manager
+          </button>
+
+          <button type="button" data-officer-key="gad"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            GAD
+          </button>
+
+          <button type="button" data-officer-key="legal_matters"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Legal Matters
+          </button>
+
+          <button type="button" data-officer-key="culture_arts"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Culture &amp; Arts
+          </button>
+
+          <button type="button" data-officer-key="sports"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            Sports
+          </button>
+
+          <button type="button" data-officer-key="rep_1st"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            1st Year Rep.
+          </button>
+
+          <button type="button" data-officer-key="rep_2nd"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            2nd Year Rep.
+          </button>
+
+          <button type="button" data-officer-key="rep_3rd"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            3rd Year Rep.
+          </button>
+
+          <button type="button" data-officer-key="rep_4th"
+            class="w-full text-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-slate-900 text-slate-200 border border-slate-700 hover:border-[var(--accent-maroon)]">
+            4th Year Rep.
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFICER MODAL -->
+  <div
+    id="officerModal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] hidden"
+    onclick="if(event.target === this) closeOfficerModal()">
+    <div class="modal-content bg-slate-900 rounded-2xl px-6 py-6 max-w-sm w-[100%] text-center relative border border-slate-700">
+      <button class="absolute right-4 top-4 text-slate-400 hover:text-white cursor-pointer" onclick="closeOfficerModal()">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-32 h-40 rounded-3xl overflow-hidden bg-slate-800 shadow-lg">
+          <img id="officerModalImg" src="" class="w-full h-full object-cover" alt="Officer photo" />
+        </div>
+        <div>
+          <h3 id="officerModalName" class="text-xl font-bold mb-1"></h3>
+          <p id="officerModalPosition" class="text-slate-300 text-sm mb-3"></p>
+
+          <div class="text-left text-sm text-slate-300 space-y-1">
+            <p id="officerModalYear"></p>
+            <p id="officerModalStatus"></p>
+            <p id="officerModalAge"></p>
+            <p id="officerModalYears"></p>
+          </div>
+        </div>
+        <a
+          id="officerModalFacebook"
+          href="#"
+          target="_blank"
+          class="inline-flex items-center gap-2 px-5 py-2 rounded-full"
+          style="background:var(--accent-maroon); color:var(--accent-beige); font-weight:600;">
+          <i class="fab fa-facebook-f text-sm"></i>
+          <span>View Facebook</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+ <!-- FOOTER -->
+  <footer id="contact" class="bg-transparent text-white" style="border-top:1px solid rgba(0,0,0,0.04);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-4" style="color:rgba(255,235,220,0.95)">Empowering Students, Powering Technology.</h3>
+
+        <div class="flex items-center gap-3 mb-3 group">
+          <i class="fas fa-envelope text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">support@bitcourse.com</span>
+        </div>
+
+        <div class="flex items-center gap-3 group">
+          <i class="fas fa-phone text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">1800-1234-5678</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Company</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="about.html" class="footer-link">About Us</a></li>
+            <li><a href="administration.html" class="footer-link">Officers</a></li>
+            <li><a href="news.html" class="footer-link">Activities</a></li>
+            <li><a href="joinus.html" class="footer-link">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Help</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="javascript:void(0)" onclick="openFAQ()" class="footer-link cursor-pointer">FAQ</a></li>
+            <li><a href="https://slsubit.web.app/" class="footer-link">Support</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 text-lg sm:text-xl">
+        <h4 class="font-bold mb-3 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Get In Touch!</h4>
+        <div class="flex gap-4 mb-4">
+          <a href="https://www.facebook.com/profile.php?id=61551892495218" aria-label="Facebook" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.linkedin.com/in/zeanna-patricia-calusin-139249393/?trk=public-profile-join-page" aria-label="LinkedIn" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-3 sm:py-4 w-full" style="border-top:1px solid rgba(255,255,255,0.04);">
+      <div class="max-w-[95%] sm:max-w-[90%] lg:max-w-[85%] mx-auto px-2 sm:px-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] sm:text-[12px] leading-tight">
+        <p class="opacity-90 text-center sm:text-left" style="color:rgba(255,235,220,0.95)">© <span id="currentYear"></span> NETWORK Organization — SLSU Lucena. All rights reserved. This website is developed by BIT-Computer Technology students. Images and trademarks belong to their respective owners.</p>
+        <p class="inline-flex items-center gap-2 opacity-90 text-center sm:text-right whitespace-nowrap footer-shield-text" style="color:rgba(255,235,220,0.95)"><i class="fas fa-shield-alt" style="color:rgba(255,200,160,0.95)"></i><span>Secure &amp; Quality Education at SLSU Lucena</span></p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

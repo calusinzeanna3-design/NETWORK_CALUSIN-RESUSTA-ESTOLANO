@@ -1,0 +1,203 @@
+<!-- admin-login.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NETWORK — Admin Login / Signup</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    body { background:#050308; color:#e6eefc; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;padding:24px; }
+    .card { background:#0e0a14; border-radius:12px; padding:20px; border:1px solid rgba(255,255,255,0.04); max-width:920px; margin:24px auto; }
+    input, textarea { background:#05050a; border:1px solid rgba(255,255,255,0.04); color:#e6eefc; padding:8px 10px; border-radius:8px; width:100%; }
+    .muted { color:#94a3b8; font-size:13px; }
+    button { cursor:pointer; }
+    .hidden { display:none; }
+    .error { color:#ff7b7b; font-size:13px; margin-top:6px; }
+    .success { color:#9ff7c8; font-size:13px; margin-top:6px; }
+    .btn { padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit; }
+    .primary { background:#800020;color:#fff;border:none; padding:8px 12px; border-radius:8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 class="text-2xl font-bold" style="color:#F5E9D6">NETWORK — Admin</h1>
+    <p class="muted">Sign in or request admin access. New signups require manual approval by an existing admin.</p>
+
+    <div class="mt-6 grid md:grid-cols-2 gap-6">
+      <!-- LOGIN -->
+      <div>
+        <h2 class="font-semibold mb-2">Sign in</h2>
+        <form id="loginForm" class="space-y-3">
+          <label class="muted small">Email</label>
+          <input id="loginEmail" type="email" required placeholder="admin@example.com" />
+          <label class="muted small">Password</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="loginPass" type="password" required placeholder="Password" />
+            <button id="loginToggle" type="button" class="btn" title="Show/hide password" style="padding:8px 10px"><i class="fas fa-eye"></i></button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <button class="primary" type="submit">Sign in</button>
+            <button id="goToSignupBtn" type="button" class="btn">Create account</button>
+          </div>
+          <div id="loginMsg" class="error hidden"></div>
+        </form>
+      </div>
+
+      <!-- SIGNUP -->
+      <div>
+        <h2 class="font-semibold mb-2">Sign up (request admin access)</h2>
+        <form id="signupForm" class="space-y-3">
+          <label class="muted small">Full name</label>
+          <input id="signupName" type="text" placeholder="Your name" required />
+          <label class="muted small">Email</label>
+          <input id="signupEmail" type="email" placeholder="you@example.com" required />
+          <label class="muted small">Password</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="signupPass" type="password" placeholder="Create a password" required />
+            <button id="signupToggle" type="button" class="btn" title="Show/hide password" style="padding:8px 10px"><i class="fas fa-eye"></i></button>
+          </div>
+
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="primary" type="submit">Create account</button>
+            <button id="goToLoginBtn" type="button" class="btn">Back to sign in</button>
+          </div>
+          <div id="signupMsg" class="muted small"></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mt-6 muted small">
+      <strong>Approval flow:</strong> After signup you'll receive a verification email.
+    </div>
+  </div>
+
+  <!-- Firebase (module v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+      sendEmailVerification, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, doc, setDoc, getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyZ14QkIWTOKDpHWBbAPFpJzN_-P0dQ3I",
+      authDomain: "network-organization-6adce.firebaseapp.com",
+      projectId: "network-organization-6adce",
+      storageBucket: "network-organization-6adce.firebasestorage.app",
+      messagingSenderId: "529881698138",
+      appId: "1:529881698138:web:776fbbdf07af31c113ad63",
+      measurementId: "G-98VS64MPEB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const loginForm = document.getElementById('loginForm');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPass = document.getElementById('loginPass');
+    const loginMsg = document.getElementById('loginMsg');
+    const loginToggle = document.getElementById('loginToggle');
+
+    const signupForm = document.getElementById('signupForm');
+    const signupName = document.getElementById('signupName');
+    const signupEmail = document.getElementById('signupEmail');
+    const signupPass = document.getElementById('signupPass');
+    const signupMsg = document.getElementById('signupMsg');
+    const signupToggle = document.getElementById('signupToggle');
+
+    const goToSignupBtn = document.getElementById('goToSignupBtn');
+    const goToLoginBtn = document.getElementById('goToLoginBtn');
+
+    // Password show/hide toggles
+    loginToggle.addEventListener('click', () => {
+      loginPass.type = loginPass.type === 'password' ? 'text' : 'password';
+      loginToggle.innerHTML = loginPass.type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+    signupToggle.addEventListener('click', () => {
+      signupPass.type = signupPass.type === 'password' ? 'text' : 'password';
+      signupToggle.innerHTML = signupPass.type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Simple UI: switching panes (scroll into view)
+    goToSignupBtn.addEventListener('click', () => { signupForm.scrollIntoView({behavior:'smooth'}); });
+    goToLoginBtn.addEventListener('click', () => { loginForm.scrollIntoView({behavior:'smooth'}); });
+
+    // LOGIN
+    loginForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      loginMsg.classList.add('hidden'); loginMsg.textContent = '';
+      try {
+        const email = loginEmail.value.trim();
+        const pass = loginPass.value;
+        if (!email || !pass) throw new Error('Enter email and password');
+        const res = await signInWithEmailAndPassword(auth, email, pass);
+        const uid = res.user.uid;
+        const adminDoc = await getDoc(doc(db, 'admins', uid));
+        if (!adminDoc.exists() || adminDoc.data().approved !== true) {
+          await signOut(auth);
+          loginMsg.classList.remove('hidden'); loginMsg.classList.add('error');
+          loginMsg.textContent = 'Signed in but account not approved for admin access. Please wait for an existing admin to approve your request.';
+          return;
+        }
+        // passed approval -> go to admin dashboard
+        window.location.href = 'admin.html';
+      } catch (err) {
+        loginMsg.classList.remove('hidden'); loginMsg.classList.add('error');
+        loginMsg.textContent = 'Sign in failed: ' + (err.message || err);
+        console.error(err);
+      }
+    });
+
+    // SIGNUP
+    signupForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      signupMsg.textContent = '';
+      try {
+        const name = signupName.value.trim();
+        const email = signupEmail.value.trim();
+        const pass = signupPass.value;
+        if (!name || !email || !pass) throw new Error('Fill name, email and password');
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        const uid = cred.user.uid;
+        await sendEmailVerification(cred.user);
+        await setDoc(doc(db, 'admins', uid), {
+          requestedAt: new Date().toISOString(),
+          approved: false,
+          role: 'pending',
+          name: name,
+          email: email
+        });
+        signupMsg.classList.remove('error'); signupMsg.classList.add('success');
+        signupMsg.textContent = 'Account created. Please verify your email. Your admin access is pending approval by an existing admin.';
+        await signOut(auth);
+      } catch (err) {
+        signupMsg.classList.remove('hidden'); signupMsg.classList.add('error');
+        signupMsg.textContent = 'Signup failed: ' + (err.message || err);
+        console.error(err);
+      }
+    });
+
+    // If already signed in and approved, redirect to admin dashboard
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) return;
+      try {
+        const meta = await getDoc(doc(db, 'admins', user.uid));
+        if (meta.exists() && meta.data().approved === true) {
+          window.location.href = 'admin.html';
+        } else {
+          await signOut(auth);
+        }
+      } catch (err) { console.error(err); }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NETWORK — Admin Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    body{background:#050308;color:#e6eefc;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;padding:0}
+    header{background:#0e0a14;border-bottom:1px solid rgba(255,255,255,0.04);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
+    .container {max-width:1200px;margin:20px auto;padding:0 20px;}
+    .card{background:#0b0a10;border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.03)}
+    .muted{color:#94a3b8}
+    .btn{padding:8px 12px;border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit; cursor:pointer}
+    .primary{background:#800020;color:#fff;border:none}
+    .danger{background:#7f1d1d;color:#fff;border:none}
+    input,textarea,select{background:#05050a;border:1px solid rgba(255,255,255,0.04);color:#e6eefc;padding:8px;border-radius:8px;width:100%}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left}
+    .small{font-size:13px}
+    .muted-small{color:#94a3b8;font-size:13px}
+    .img-preview { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+    .img-preview .thumb { width:72px; height:54px; overflow:hidden; border-radius:6px; background:#0b0a10; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.02); }
+    .img-preview .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .invalid-note { color:#ff8a8a; font-size:13px; margin-top:6px; }
+
+    /* Calendar modal */
+    .calendar-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 999; background: rgba(0,0,0,0.6); padding: 20px; }
+    .calendar-modal.open { display:flex; }
+    .calendar-panel { width:100%; max-width:1000px; background:#0b0a10; border-radius:12px; color:#e6eefc; padding:18px; border:1px solid rgba(255,255,255,0.04); }
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+    .cal-cell { min-height:72px; background:#05050a; border-radius:8px; padding:8px; border:1px solid rgba(255,255,255,0.02); display:flex; flex-direction:column; gap:6px; cursor:pointer; }
+    .cal-cell .day { font-weight:700; font-size:13px; color:#cbd5e1; }
+    .cal-dot { width:8px; height:8px; border-radius:999px; background:#800020; display:inline-block; margin-left:6px; vertical-align:middle; }
+    .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px; }
+    .cal-list { margin-top:12px; max-height:220px; overflow:auto; border-top:1px dashed rgba(255,255,255,0.02); padding-top:12px; }
+    .cal-event { padding:8px; border-radius:8px; background:#0e0a14; border:1px solid rgba(255,255,255,0.02); margin-bottom:8px; }
+    .calendar-controls button { padding:6px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.04); color:inherit; cursor:pointer; }
+    .small-muted { color:#94a3b8; font-size:13px; }
+
+    /* Login required modal (prevents automatic redirect to a missing login page) */
+    .login-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 1100; background: rgba(0,0,0,0.6); padding:20px;}
+    .login-modal.open { display:flex; }
+    .login-panel { width:100%; max-width:520px; background:#0b0a10; border-radius:12px; color:#e6eefc; padding:18px; border:1px solid rgba(255,255,255,0.04); text-align:center;}
+    .login-panel h3 { margin:0 0 8px 0; color:#f5e9d6; }
+    .login-panel p { margin:0 0 12px 0; color:#cbd5e1; }
+    .login-actions { display:flex; gap:8px; justify-content:center; margin-top:10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:42px;height:42px;border-radius:999px;background:#050308;border:2px solid #4a0f15;display:flex;align-items:center;justify-content:center"><img src="./pics/logo.png" alt="logo" style="width:32px;height:32px;object-fit:cover;border-radius:999px"></div>
+      <div>
+        <div style="font-weight:700">NETWORK — Admin Dashboard</div>
+        <div class="muted small">Manage news, events & admin approvals</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="userEmail" class="muted small"></div>
+      <button id="signOutBtn" class="btn">Sign out</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:16px">
+      <!-- LEFT: News list & create -->
+      <div>
+        <div class="card mb-4">
+          <h3 style="margin:0 0 12px 0">Create / Edit News</h3>
+          <form id="newsForm" class="space-y-3">
+            <input type="hidden" id="newsId" />
+            <label class="muted small">Title</label>
+            <input id="newsTitle" type="text" maxlength="200" required />
+            <label class="muted small">Description</label>
+            <textarea id="newsDesc" rows="6" maxlength="2000" required></textarea>
+            <label class="muted small">Image URLs (comma separated)</label>
+            <input id="newsImages" placeholder="https://..., https://..." />
+            <div id="newsImagesPreview" class="img-preview" aria-live="polite"></div>
+            <div id="newsImagesInvalid" class="invalid-note" style="display:none">Some URLs couldn't be loaded — broken links will use a placeholder on the site.</div>
+
+            <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+              <label class="muted small"><input id="newsIsEvent" type="checkbox" /> Mark as event</label>
+
+              <div id="eventDateWrapper" style="display:none;width:220px">
+                <label class="muted small">Event date</label>
+                <input id="eventDate" type="date" />
+              </div>
+
+              <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+                <label class="muted small"><input id="newsPublished" type="checkbox" checked /> Published</label>
+                <label class="muted small">Order <input id="newsOrder" type="number" value="0" style="width:80px;margin-left:6px" /></label>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="saveNewsBtn" class="primary" type="submit">Save</button>
+              <button id="cancelNewsBtn" class="btn" type="button">Cancel</button>
+            </div>
+            <div id="newsFormMsg" class="muted small"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 style="margin:0">News posts</h3>
+            <div>
+              <label class="muted small">Filter</label>
+              <select id="newsFilter" style="margin-left:8px;padding:6px;border-radius:6px">
+                <option value="all">All</option>
+                <option value="published">Published</option>
+                <option value="draft">Drafts</option>
+              </select>
+            </div>
+          </div>
+          <div id="newsList" style="max-height:480px;overflow:auto"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Admin requests & events -->
+      <aside>
+        <div class="card mb-4">
+          <h3 style="margin:0 0 8px 0">Pending admin requests</h3>
+          <div id="requestsList" style="max-height:300px;overflow:auto"></div>
+        </div>
+
+        <div class="card mb-4">
+          <h3 style="margin:0 0 8px 0">Events (standalone)</h3>
+          <form id="eventForm" class="space-y-3">
+            <label class="muted small">Title</label>
+            <input id="eventTitle" type="text" />
+            <label class="muted small">Date</label>
+            <input id="eventDateStandalone" type="date" />
+            <label class="muted small">Time / Location</label>
+            <input id="eventMeta" placeholder="Time • Location" />
+            <label class="muted small">Description</label>
+            <textarea id="eventDesc" rows="3"></textarea>
+            <div style="display:flex;gap:8px">
+              <button id="saveEventBtn" class="btn">Save event</button>
+              <button id="clearEventBtn" class="btn">Clear</button>
+            </div>
+            <div id="eventsList" class="muted small" style="max-height:180px;overflow:auto;margin-top:8px"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 8px 0">Quick actions</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <button id="refreshBtn" class="btn">Refresh data</button>
+            <button id="openCalendarBtn" class="btn"><i class="fa-regular fa-calendar"></i> Manage Calendar</button>
+            <button id="openSiteBtn" class="btn">Open public site</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Calendar Modal -->
+  <div id="calendarModal" class="calendar-modal" aria-hidden="true">
+    <div class="calendar-panel" role="dialog" aria-modal="true" aria-labelledby="calTitle">
+      <div class="cal-header">
+        <div>
+          <h3 id="calTitle" style="margin:0;font-size:18px">Events Calendar</h3>
+          <div class="small-muted">Click a date to view or create events (changes save directly to Firestore).</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="calendar-controls">
+            <button id="calPrev" title="Previous month">←</button>
+            <button id="calNext" title="Next month">→</button>
+          </div>
+          <button id="closeCalendar" class="btn">Close</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;color:#94a3b8;font-size:13px;margin-bottom:6px">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+
+        <div id="calGrid" class="calendar-grid" aria-live="polite"></div>
+
+        <div id="calList" class="cal-list" aria-live="polite">
+          <!-- event list for selected date -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login-required modal (instead of auto redirect) -->
+  <div id="loginModal" class="login-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="login-panel">
+      <h3 id="loginTitle">Admin login required</h3>
+      <p>To access the admin dashboard you must be signed in as an approved admin. If you already have an admin account, use the login page. If you don't have the login page yet, contact an admin or create one in Firebase Auth + Admins collection.</p>
+      <div class="login-actions">
+        <a id="loginLink" class="btn primary" href="admin-login.html" target="_blank" rel="noopener">Open Login Page</a>
+        <button id="loginCloseBtn" class="btn">Close</button>
+      </div>
+      <p style="margin-top:10px;color:#9aa7bf;font-size:13px">(No automatic redirect — this prevents 404s if the login file is not present.)</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, collection, query, orderBy, onSnapshot, addDoc, doc, setDoc, deleteDoc, getDoc, where
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyZ14QkIWTOKDpHWBbAPFpJzN_-P0dQ3I",
+      authDomain: "network-organization-6adce.firebaseapp.com",
+      projectId: "network-organization-6adce",
+      storageBucket: "network-organization-6adce.firebasestorage.app",
+      messagingSenderId: "529881698138",
+      appId: "1:529881698138:web:776fbbdf07af31c113ad63",
+      measurementId: "G-98VS64MPEB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const userEmail = document.getElementById('userEmail');
+    const signOutBtn = document.getElementById('signOutBtn');
+
+    const newsForm = document.getElementById('newsForm');
+    const newsId = document.getElementById('newsId');
+    const newsTitle = document.getElementById('newsTitle');
+    const newsDesc = document.getElementById('newsDesc');
+    const newsImages = document.getElementById('newsImages');
+    const newsImagesPreview = document.getElementById('newsImagesPreview');
+    const newsImagesInvalid = document.getElementById('newsImagesInvalid');
+    const newsPublished = document.getElementById('newsPublished');
+    const newsOrder = document.getElementById('newsOrder');
+    const newsFilter = document.getElementById('newsFilter');
+    const newsList = document.getElementById('newsList');
+    const newsFormMsg = document.getElementById('newsFormMsg');
+
+    const newsIsEvent = document.getElementById('newsIsEvent');
+    const eventDateWrapper = document.getElementById('eventDateWrapper');
+    const eventDate = document.getElementById('eventDate');
+
+    const requestsList = document.getElementById('requestsList');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const openSiteBtn = document.getElementById('openSiteBtn');
+
+    // events area
+    const eventForm = document.getElementById('eventForm');
+    const eventTitle = document.getElementById('eventTitle');
+    const eventDateStandalone = document.getElementById('eventDateStandalone');
+    const eventMeta = document.getElementById('eventMeta');
+    const eventDesc = document.getElementById('eventDesc');
+    const eventsList = document.getElementById('eventsList');
+    const saveEventBtn = document.getElementById('saveEventBtn');
+    const clearEventBtn = document.getElementById('clearEventBtn');
+
+    // calendar modal refs
+    const openCalendarBtn = document.getElementById('openCalendarBtn');
+    const calendarModal = document.getElementById('calendarModal');
+    const closeCalendar = document.getElementById('closeCalendar');
+    const calGrid = document.getElementById('calGrid');
+    const calList = document.getElementById('calList');
+    const calPrev = document.getElementById('calPrev');
+    const calNext = document.getElementById('calNext');
+
+    // login modal refs (prevents auto-redirect)
+    const loginModal = document.getElementById('loginModal');
+    const loginCloseBtn = document.getElementById('loginCloseBtn');
+    const loginLink = document.getElementById('loginLink');
+
+    // queries
+    const newsCol = collection(db,'news');
+    const eventsCol = collection(db,'events');
+    const adminsCol = collection(db,'admins');
+
+    // Helper functions (same as before)
+    function formatDateDisplay(isoDate) {
+      if (!isoDate) return '';
+      const d = new Date(isoDate);
+      if (!isFinite(d)) {
+        const parts = String(isoDate).split('-');
+        if (parts.length >= 3) return `${parts[2].padStart(2,'0')}/${parts[1].padStart(2,'0')}/${parts[0]}`;
+        return isoDate;
+      }
+      const dd = String(d.getDate()).padStart(2,'0');
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+    function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // Show the inline login modal (instead of redirect)
+    function showLoginRequired(message) {
+      loginModal.classList.add('open');
+      loginModal.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      // optionally change message lines inside modal if you want; kept simple for now
+    }
+    function hideLoginRequired() {
+      loginModal.classList.remove('open');
+      loginModal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+    loginCloseBtn.addEventListener('click', hideLoginRequired);
+
+    // Safe auth check: if user is not signed in or not approved, show the login modal instead of redirecting
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // don't auto-redirect — show login modal (prevents 404 when admin-login.html missing)
+        showLoginRequired('Please sign in to access admin features.');
+        return;
+      }
+      try {
+        const adminRef = doc(db,'admins',user.uid);
+        const snap = await getDoc(adminRef);
+        if (!snap.exists() || snap.data().approved !== true) {
+          alert('Your account is not approved as admin. You will be signed out.');
+          await signOut(auth);
+          // show inline login prompt (no redirect)
+          showLoginRequired('Account not approved. Contact an admin.');
+          return;
+        }
+        // user is approved admin — initialize listeners
+        document.getElementById('userEmail').textContent = user.email || '';
+        hideLoginRequired();
+        startNewsListener();
+        startRequestsListener();
+        startEventsListener();
+        startCalendarListener();
+      } catch (err) {
+        console.error('Auth/admin check error', err);
+        showLoginRequired('Authentication error. Check console.');
+      }
+    });
+
+    signOutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (err) { console.error(err); }
+      // show inline login prompt rather than redirecting
+      showLoginRequired('Signed out. Sign in to continue.');
+    });
+
+    // -------------------
+    // News logic (unchanged)
+    // -------------------
+    function startNewsListener(){
+      onSnapshot(query(newsCol, orderBy('order','asc')), (snap) => {
+        const docs = [];
+        snap.forEach(d => docs.push({ id: d.id, data: d.data() }));
+        renderNewsList(docs);
+      }, err => console.error('news listen err', err));
+    }
+
+    function renderNewsList(docs) {
+      newsList.innerHTML = '';
+      const filter = newsFilter.value;
+      const filtered = docs.filter(n => {
+        if (filter === 'all') return true;
+        if (filter === 'published') return n.data.published !== false;
+        if (filter === 'draft') return n.data.published === false;
+        return true;
+      });
+      if (!filtered.length) { newsList.innerHTML = '<div class="muted small">No posts</div>'; return; }
+
+      const table = document.createElement('table');
+      table.innerHTML = `<thead><tr><th>Thumb</th><th>Title</th><th>Desc</th><th>Event</th><th>Published</th><th>Order</th><th>Actions</th></tr></thead>`;
+      const tbody = document.createElement('tbody');
+
+      filtered.forEach(n => {
+        const tr = document.createElement('tr');
+        const thumb = (Array.isArray(n.data.images) && n.data.images[0]) ? n.data.images[0] : './pics/placeholder.png';
+        tr.innerHTML = `
+          <td style="width:70px"><img src="${escapeHtml(thumb)}" style="width:64px;height:48px;object-fit:cover;border-radius:6px" onerror="this.src='./pics/placeholder.png'"></td>
+          <td>${escapeHtml(n.data.title || '')}</td>
+          <td class="small">${escapeHtml((n.data.desc||'').slice(0,80))}${(n.data.desc && n.data.desc.length>80)?'…':''}</td>
+          <td>${n.data.eventDate ? escapeHtml(formatDateDisplay(n.data.eventDate)) : '-'}</td>
+          <td>${n.data.published ? 'Yes' : 'No'}</td>
+          <td>${n.data.order||0}</td>
+          <td>
+            <button data-id="${n.id}" class="btn editBtn">Edit</button>
+            <button data-id="${n.id}" class="btn" style="margin-left:6px" onclick="togglePublish('${n.id}', ${!n.data.published})">${n.data.published ? 'Unpublish' : 'Publish'}</button>
+            <button data-id="${n.id}" class="btn danger" style="margin-left:6px" onclick="deletePost('${n.id}')">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      newsList.appendChild(table);
+
+      newsList.querySelectorAll('.editBtn').forEach(b => {
+        b.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          const docSnap = await getDoc(doc(db, 'news', id));
+          if (!docSnap.exists()) return alert('Not found');
+          const data = docSnap.data();
+          newsId.value = id;
+          newsTitle.value = data.title || '';
+          newsDesc.value = data.desc || '';
+          newsImages.value = Array.isArray(data.images) ? data.images.join(', ') : '';
+          updateImagePreviews();
+          newsPublished.checked = !!data.published;
+          newsOrder.value = (data.order !== undefined ? data.order : 0);
+          if (data.eventDate) {
+            newsIsEvent.checked = true;
+            eventDateWrapper.style.display = '';
+            eventDate.value = data.eventDate;
+          } else {
+            newsIsEvent.checked = false;
+            eventDateWrapper.style.display = 'none';
+            eventDate.value = '';
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    }
+
+    newsForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      newsFormMsg.textContent = '';
+      const id = newsId.value;
+      const imagesArr = newsImages.value.split(',').map(s=>s.trim()).filter(Boolean);
+      const payload = {
+        title: newsTitle.value.trim(),
+        desc: newsDesc.value.trim(),
+        images: imagesArr,
+        published: !!newsPublished.checked,
+        order: Number(newsOrder.value) || 0
+      };
+      if (newsIsEvent.checked && eventDate.value) payload.eventDate = eventDate.value; else payload.eventDate = null;
+      try {
+        if (id) {
+          await setDoc(doc(db, 'news', id), { ...payload, updatedAt: new Date().toISOString() }, { merge: true });
+          newsFormMsg.textContent = 'Updated';
+        } else {
+          await addDoc(collection(db,'news'), { ...payload, createdAt: new Date().toISOString() });
+          newsFormMsg.textContent = 'Created';
+        }
+        newsId.value = ''; newsForm.reset(); eventDateWrapper.style.display='none';
+        newsImagesPreview.innerHTML = ''; newsImagesInvalid.style.display = 'none';
+      } catch (err) {
+        console.error(err); newsFormMsg.textContent = 'Save failed: '+err.message;
+      }
+    });
+
+    document.getElementById('cancelNewsBtn').addEventListener('click', () => {
+      newsId.value = ''; newsForm.reset(); eventDateWrapper.style.display='none'; newsFormMsg.textContent='';
+      newsImagesPreview.innerHTML = ''; newsImagesInvalid.style.display = 'none';
+    });
+
+    newsIsEvent.addEventListener('change', () => {
+      eventDateWrapper.style.display = newsIsEvent.checked ? '' : 'none';
+      if (!newsIsEvent.checked) eventDate.value = '';
+    });
+
+    window.togglePublish = async (id, newState) => {
+      try {
+        await setDoc(doc(db,'news',id), { published: !!newState, updatedAt: new Date().toISOString() }, { merge: true });
+      } catch (err) { console.error(err); alert('Operation failed: '+err.message); }
+    };
+
+    window.deletePost = async (id) => {
+      if (!confirm('Delete this post permanently?')) return;
+      try {
+        await deleteDoc(doc(db,'news',id));
+      } catch (err) { console.error(err); alert('Delete failed: '+err.message); }
+    };
+
+    // -------------------
+    // Admin requests
+    // -------------------
+    function startRequestsListener() {
+      onSnapshot(query(adminsCol, where('approved','==',false)), (snap) => {
+        const pending = [];
+        snap.forEach(d => pending.push({ id: d.id, data: d.data() }));
+        renderRequests(pending);
+      }, err => console.error('req listen err', err));
+    }
+
+    function renderRequests(pending) {
+      requestsList.innerHTML = '';
+      if (!pending.length) { requestsList.innerHTML = '<div class="muted small">No pending requests</div>'; return; }
+      const table = document.createElement('table');
+      table.innerHTML = `<thead><tr><th>Name</th><th>Email</th><th>Requested</th><th>Actions</th></tr></thead>`;
+      const tbody = document.createElement('tbody');
+      pending.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(p.data.name||'')}</td>
+          <td class="small">${escapeHtml(p.data.email||'')}</td>
+          <td class="small">${escapeHtml(p.data.requestedAt?.slice(0,19) || '')}</td>
+          <td>
+            <button class="btn approveBtn" data-id="${p.id}">Approve</button>
+            <button class="btn" style="margin-left:6px" onclick="rejectRequest('${p.id}')">Reject</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      requestsList.appendChild(table);
+
+      requestsList.querySelectorAll('.approveBtn').forEach(b => {
+        b.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          if (!confirm('Approve this admin?')) return;
+          try {
+            await setDoc(doc(db,'admins',id), { approved: true, role: 'admin', approvedAt: new Date().toISOString() }, { merge: true });
+            alert('Approved');
+          } catch (err) { console.error(err); alert('Approve failed: '+err.message); }
+        });
+      });
+    }
+
+    window.rejectRequest = async (id) => {
+      if (!confirm('Reject (delete) this request?')) return;
+      try {
+        await deleteDoc(doc(db,'admins',id));
+        alert('Request removed');
+      } catch (err) { console.error(err); alert('Remove failed: '+err.message); }
+    };
+
+    // -------------------
+    // Events listener and CRUD (wired so the calendar uses same data)
+    // -------------------
+    let calendarRawEvents = [];
+
+    function startEventsListener() {
+      onSnapshot(query(eventsCol, orderBy('date','asc')), (snap) => {
+        const docs = [];
+        snap.forEach(d => docs.push({ id: d.id, data: d.data() }));
+        renderEventsList(docs);
+        calendarRawEvents = docs.map(x => ({ id: x.id, date: x.data.date || null, title: x.data.title || '', time: x.data.time || '', location: x.data.location || x.data.description || '' }));
+        renderCalendarGrid();
+      }, err => console.error('events listen err', err));
+    }
+
+    function renderEventsList(docs) {
+      eventsList.innerHTML = '';
+      if (!docs.length) { eventsList.innerHTML = '<div class="muted small">No events</div>'; return; }
+      const table = document.createElement('table');
+      table.innerHTML = `<thead><tr><th>Date</th><th>Title</th><th>Meta</th><th>Actions</th></tr></thead>`;
+      const tbody = document.createElement('tbody');
+      docs.forEach(ev => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(formatDateDisplay(ev.data.date || ''))}</td>
+          <td>${escapeHtml(ev.data.title || '')}</td>
+          <td class="small">${escapeHtml(ev.data.time || '')}</td>
+          <td>
+            <button class="btn editEventBtn" data-id="${ev.id}">Edit</button>
+            <button class="btn danger" onclick="deleteEvent('${ev.id}')">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      eventsList.appendChild(table);
+
+      eventsList.querySelectorAll('.editEventBtn').forEach(b => {
+        b.addEventListener('click', async (e) => {
+          const id = e.currentTarget.getAttribute('data-id');
+          const d = await getDoc(doc(db, 'events', id));
+          if (!d.exists()) return alert('Not found');
+          const data = d.data();
+          eventTitle.value = data.title || '';
+          eventDateStandalone.value = data.date || '';
+          eventMeta.value = data.time || '';
+          eventDesc.value = data.description || '';
+          saveEventBtn.dataset.editId = id;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+    }
+
+    saveEventBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      const payload = {
+        title: eventTitle.value.trim(),
+        date: eventDateStandalone.value || null,
+        time: eventMeta.value.trim(),
+        description: eventDesc.value.trim()
+      };
+      try {
+        if (saveEventBtn.dataset.editId) {
+          await setDoc(doc(db,'events', saveEventBtn.dataset.editId), {...payload, updatedAt: new Date().toISOString()}, { merge:true });
+          delete saveEventBtn.dataset.editId;
+        } else {
+          await addDoc(collection(db,'events'), {...payload, createdAt: new Date().toISOString()});
+        }
+        eventForm.reset();
+        eventDateStandalone.value = '';
+      } catch (err) { console.error(err); alert('Save event failed: '+err.message); }
+    });
+
+    clearEventBtn.addEventListener('click', (e) => { e.preventDefault(); eventForm.reset(); delete saveEventBtn.dataset.editId; eventDateStandalone.value=''; });
+
+    window.deleteEvent = async (id) => {
+      if (!confirm('Delete this event?')) return;
+      try { await deleteDoc(doc(db,'events',id)); } catch(err){ console.error(err); alert('Delete failed: '+err.message); }
+    };
+
+    refreshBtn.addEventListener('click', () => location.reload());
+    openSiteBtn.addEventListener('click', () => window.open('index.html','_blank'));
+
+    // -------------------
+    // Image preview
+    // -------------------
+    function updateImagePreviews() {
+      const raw = (newsImages.value || '').split(',').map(s=>s.trim()).filter(Boolean);
+      newsImagesPreview.innerHTML = '';
+      newsImagesInvalid.style.display = 'none';
+      if (!raw.length) return;
+      let anyInvalid = false;
+      raw.forEach(url => {
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        const img = document.createElement('img');
+        let finalUrl = url;
+        if (!/^https?:\/\//i.test(url) && !url.startsWith('/')) {
+          if (/^\.\//.test(url) || /^\/?pics\//i.test(url)) finalUrl = url;
+          else finalUrl = 'https://' + url.replace(/^\/+/, '');
+        }
+        img.src = finalUrl;
+        img.onload = () => {};
+        img.onerror = () => { img.src = './pics/placeholder.png'; anyInvalid = true; };
+        thumb.appendChild(img);
+        newsImagesPreview.appendChild(thumb);
+      });
+      if (anyInvalid) newsImagesInvalid.style.display = '';
+    }
+    newsImages.addEventListener('input', () => {
+      if (newsImages._previewTimeout) clearTimeout(newsImages._previewTimeout);
+      newsImages._previewTimeout = setTimeout(updateImagePreviews, 250);
+    });
+
+    // -------------------
+    // Calendar implementation (realtime)
+    // -------------------
+    function datesWithEventsSet() {
+      const s = new Set();
+      calendarRawEvents.forEach(e => { if (e.date) s.add(e.date); });
+      return s;
+    }
+
+    // calendar month state
+    let calYear, calMonth, calSelectedDate = null;
+
+    function startCalendarListener() {
+      if (!calYear && !calMonth) {
+        const now = new Date();
+        calYear = now.getFullYear();
+        calMonth = now.getMonth();
+      }
+      renderCalendarGrid();
+    }
+
+    function renderCalendarGrid() {
+      calGrid.innerHTML = '';
+      const now = new Date();
+      if (typeof calMonth === 'undefined') { calYear = now.getFullYear(); calMonth = now.getMonth(); }
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const datesSet = datesWithEventsSet();
+
+      for (let i=0;i<firstDay;i++){
+        const empty = document.createElement('div');
+        empty.className = 'cal-cell';
+        empty.style.opacity = '0.12';
+        calGrid.appendChild(empty);
+      }
+
+      for (let d=1; d<=daysInMonth; d++){
+        const iso = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell';
+        const daySpan = document.createElement('div');
+        daySpan.className = 'day';
+        daySpan.textContent = d;
+        cell.appendChild(daySpan);
+
+        if (datesSet.has(iso)) {
+          const dot = document.createElement('span');
+          dot.className = 'cal-dot';
+          daySpan.appendChild(dot);
+        }
+
+        cell.addEventListener('click', () => {
+          calSelectedDate = iso;
+          highlightSelectedCell(iso);
+          renderCalendarListForDate(iso);
+        });
+
+        calGrid.appendChild(cell);
+      }
+    }
+
+    function highlightSelectedCell(iso) {
+      Array.from(calGrid.children).forEach(c => {
+        c.style.boxShadow = '';
+      });
+      const day = parseInt(iso.split('-')[2], 10);
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const targetIndex = firstDay + (day - 1);
+      const target = calGrid.children[targetIndex];
+      if (target) target.style.boxShadow = '0 6px 18px rgba(128,0,32,0.12)';
+    }
+
+    function renderCalendarListForDate(iso) {
+      calList.innerHTML = '';
+      const heading = document.createElement('div');
+      heading.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:14px">${formatDateDisplay(iso)}</strong>
+        <div><button id="createOnDateBtn" class="btn">Create event on this date</button></div></div>`;
+      calList.appendChild(heading);
+
+      const items = calendarRawEvents.filter(e => e.date === iso);
+      if (!items.length) {
+        const p = document.createElement('p'); p.className='small-muted'; p.textContent = 'No events. Click "Create event on this date" to add one.';
+        calList.appendChild(p);
+      } else {
+        items.forEach(it => {
+          const ev = document.createElement('div');
+          ev.className = 'cal-event';
+          ev.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:700">${escapeHtml(it.title || '(Untitled)')}</div>
+              <div class="small-muted">${escapeHtml(it.time || '')} ${it.location ? '• ' + escapeHtml(it.location) : ''}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <button class="btn editCalEventBtn" data-id="${it.id}">Edit</button>
+              <button class="btn danger deleteCalEventBtn" data-id="${it.id}">Delete</button>
+            </div>
+          </div>`;
+          calList.appendChild(ev);
+        });
+      }
+
+      const createBtn = document.getElementById('createOnDateBtn');
+      if (createBtn) createBtn.addEventListener('click', () => {
+        eventTitle.value = '';
+        eventDateStandalone.value = iso;
+        eventMeta.value = '';
+        eventDesc.value = '';
+        delete saveEventBtn.dataset.editId;
+        closeCalendarModal();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      Array.from(calList.querySelectorAll('.editCalEventBtn')).forEach(b => {
+        b.addEventListener('click', async (e) => {
+          const id = e.currentTarget.dataset.id;
+          const d = await getDoc(doc(db, 'events', id));
+          if (!d.exists()) return alert('Event not found');
+          const data = d.data();
+          eventTitle.value = data.title || '';
+          eventDateStandalone.value = data.date || '';
+          eventMeta.value = data.time || '';
+          eventDesc.value = data.description || '';
+          saveEventBtn.dataset.editId = id;
+          closeCalendarModal();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      Array.from(calList.querySelectorAll('.deleteCalEventBtn')).forEach(b => {
+        b.addEventListener('click', async (e) => {
+          const id = e.currentTarget.dataset.id;
+          if (!confirm('Delete this event?')) return;
+          try {
+            await deleteDoc(doc(db, 'events', id));
+          } catch (err) {
+            console.error(err); alert('Delete failed: ' + err.message);
+          }
+        });
+      });
+    }
+
+    // calendar navigation
+    calPrev.addEventListener('click', () => {
+      calMonth--;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      renderCalendarGrid();
+    });
+    calNext.addEventListener('click', () => {
+      calMonth++;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendarGrid();
+    });
+
+    // open/close calendar modal
+    openCalendarBtn.addEventListener('click', () => {
+      openCalendarModal();
+    });
+    closeCalendar.addEventListener('click', () => closeCalendarModal());
+    calendarModal.addEventListener('click', (ev) => { if (ev.target === calendarModal) closeCalendarModal(); });
+
+    function openCalendarModal() {
+      calendarModal.classList.add('open');
+      calendarModal.setAttribute('aria-hidden', 'false');
+      renderCalendarGrid();
+      calList.innerHTML = '<div class="small-muted">Select a date to view events</div>';
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCalendarModal() {
+      calendarModal.classList.remove('open');
+      calendarModal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    // set year/month initially
+    window.addEventListener('load', () => {
+      document.getElementById('userEmail').textContent = '';
+      const now = new Date();
+      calYear = now.getFullYear();
+      calMonth = now.getMonth();
+      renderCalendarGrid();
+    });
+
+  </script>
+</body>
+</html>

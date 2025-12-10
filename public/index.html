@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK</title>
+
+  <!-- TAILWIND CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ICONS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root{
+      /* beige theme */
+      --bg-beige: #F5E9D6;
+      --card-bg: rgba(255,255,255,0.98);
+      --accent-maroon: #800020;
+      --accent-blue: #800020;
+      --accent-blue-light: #2b0a0f;
+      --navy: #3a2226;
+      --deep-blue: #2b0a0f;
+      --accent-maroon-rgb: 128,0,32;
+      --logo-gold: 245,233,214;
+      --nav-height: 76px;
+      --nav-height-mobile: 96px;
+
+      /* elevation presets */
+      --elevation-1: 0 6px 18px rgba(17,17,17,0.06);
+      --elevation-2: 0 18px 40px rgba(17,17,17,0.09);
+      --elevation-3: 0 28px 80px rgba(17,17,17,0.12);
+
+      /* maroon nav/footer background fallback image (replace file if you have it) */
+      --maroon-bg-image: url('./pics/nav-maroon.jpg');
+    }
+
+    /* ---------------------------
+       Layout + Scroll Lock Fix
+       --------------------------- */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    /* make body a vertical flex container so footer can be locked at bottom */
+    body {
+      display: flex;
+      flex-direction: column;
+      overscroll-behavior-y: contain;
+      background-color: var(--bg-beige);
+      color: var(--deep-blue);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.45;
+      padding-bottom: 0; /* removed extra bottom padding to avoid extra scroll */
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    main { flex: 1 0 auto; } /* content area grows but doesn't create extra whitespace */
+    footer { flex-shrink: 0; margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
+    /* base typography colors */
+    h1,h2,h3,h4,.font-bold{ color:var(--deep-blue) }
+    p,a,li,.text-gray-300,.text-gray-200{ color: #453233 }
+    .muted-dark{ color:#6b5a57 }
+
+    /* NAV (maroon background using gradient + optional image) */
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; }
+    .nav-inner {
+      /* Use the supplied maroon style: dark maroon base with warm right glow + fallback image */
+      background:
+        radial-gradient(1000px 420px at 88% 50%, rgba(245,160,110,0.06) 0%, rgba(128,0,20,0.12) 6%, rgba(54,0,0,0.95) 18%),
+        linear-gradient(180deg, rgba(20,3,3,0.98), rgba(30,6,6,0.98));
+      /* If you prefer to use the image you uploaded, uncomment the next line and ensure file exists at --maroon-bg-image */
+      /* background-image: var(--maroon-bg-image); background-size: cover; background-position: center right; */
+      color: #fff;
+      backdrop-filter: blur(4px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    }
+
+    .nav-divider {
+      height: 6px;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,200,160,0.06) 12%, rgba(245,170,110,0.12) 28%, rgba(245,170,110,0.08) 52%, rgba(0,0,0,0) 100%);
+      filter: blur(10px) saturate(1.1);
+      box-shadow: 0 6px 24px rgba(128,0,32,0.10), 0 2px 8px rgba(128,0,32,0.06) inset;
+      opacity: .95;
+    }
+
+    .logo-dot{ width:48px;height:48px;border-radius:999px;border:2px solid rgba(255,255,255,0.06); display:flex;align-items:center;justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); overflow:hidden; box-shadow: var(--elevation-1); }
+    .logo-dot img{ width:100%;height:100%;object-fit:cover;border-radius:999px;display:block; filter: saturate(0.9) contrast(0.95); }
+
+    /* NAV link styles optimized for dark maroon background */
+    .nav-inner .max-w-7xl a { color: rgba(255,235,220,0.95); text-decoration: none; }
+    .nav-inner .max-w-7xl a:hover { color: #fff; text-shadow: 0 8px 28px rgba(245,160,110,0.08); }
+
+    /* HERO avatar - reduced max size to avoid overflow */
+    .hero-avatar-circle{
+      width: clamp(200px, 30vw, 420px);
+      height: clamp(200px, 30vw, 420px);
+      border-radius:999px;
+      position:relative;
+      display:inline-block;
+      border:6px solid rgba(0,0,0,0.06);
+      box-shadow: var(--elevation-3);
+      z-index:30;
+      animation:heroGlow 2.8s ease-in-out infinite;
+      flex-shrink:0;
+      overflow: hidden;
+      background: radial-gradient(circle at 30% 20%, rgba(128,0,32,0.08) 0%, rgba(43,10,15,0.03) 60%);
+    }
+    .hero-avatar-circle::before{ content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(128,0,32,0.18), rgba(128,0,32,0.08)); mix-blend-mode: multiply; pointer-events: none; transition: opacity .25s ease; }
+    .hero-avatar-circle::after{ content: ""; position:absolute; left: -10%; top: -20%; width: 60%; height: 60%; background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), rgba(255,255,255,0) 40%); transform: rotate(-18deg); pointer-events: none; }
+
+    .hero-avatar-inner{ width:100%; height:100%; border-radius:999px; overflow:hidden; display:block; position:relative; }
+    .hero-avatar-inner img{ width:100%; height:100%; object-fit:cover; display:block; filter: contrast(0.98) saturate(0.95); }
+
+    @keyframes heroGlow { 0%,100%{ transform:scale(1)} 50%{ transform:scale(1.02)} }
+
+    /* card surfaces */
+    .glass-card{ background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,0.96)); border:1px solid rgba(43,10,15,0.06); box-shadow: var(--elevation-2); backdrop-filter: blur(6px); border-radius:1rem; padding: 20px; }
+
+    /* news grid card */
+    .news-grid { display:grid; gap:1rem; grid-template-columns:repeat(1,1fr); }
+    @media(min-width:640px){ .news-grid { grid-template-columns: repeat(3,1fr); } }
+    .news-card { background: linear-gradient(180deg, rgba(255,255,255,0.98), #fff); border-radius:12px; overflow:hidden; border:1px solid rgba(10,10,10,0.04); display:flex; flex-direction:column; box-shadow: var(--elevation-1); transition: transform .22s ease, box-shadow .22s ease; padding: 12px; }
+    .news-card:hover{ transform: translateY(-6px); box-shadow: var(--elevation-3); }
+    .news-card .thumb { width:100%; height:160px; overflow:hidden; background: #f2ede3; display:block; border-radius:8px; }
+    .news-card .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .news-card .body{ padding:12px; display:flex; flex-direction:column; gap:8px; }
+
+    /* admin modal styles (panel kept, admin button removed) */
+    .admin-overlay { position:fixed; inset:0; background: rgba(0,0,0,0.45); z-index:1200; display:none; align-items:stretch; justify-content:flex-end; }
+    .admin-panel { width:min(980px,100%); background: #fff; padding:22px; box-shadow: -30px 0 80px rgba(0,0,0,0.12); overflow:auto; border-left: 1px solid rgba(0,0,0,0.06); }
+    .admin-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+    .admin-grid { display:grid; grid-template-columns: 1fr 360px; gap:12px; }
+    @media(max-width:1000px){ .admin-grid { grid-template-columns:1fr; } .admin-panel{ width:100%; } }
+
+    input[type="text"], input[type="email"], input[type="number"], textarea{ width:100%; padding:12px 14px; background: #fff; border:1px solid rgba(0,0,0,0.06); color:var(--deep-blue); border-radius:10px; box-shadow: var(--elevation-1); }
+
+    /* buttons */
+    button.btn { padding: 10px 14px; border-radius:10px; font-weight:600; box-shadow: var(--elevation-1); border: none; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; background: transparent; color: var(--deep-blue); }
+    button.btn:active{ transform: translateY(1px); }
+    button.primary { background: linear-gradient(180deg, var(--accent-maroon) 0%, rgba(128,0,32,0.92) 100%); color: #fff; padding: 12px 18px; border-radius: 12px; box-shadow: 0 8px 24px rgba(128,0,32,0.12), 0 2px 6px rgba(0,0,0,0.08); }
+    button.primary:hover{ transform: translateY(-3px); box-shadow: 0 18px 40px rgba(128,0,32,0.14); }
+    .ghost { background: #fff; border:1px solid rgba(43,10,15,0.06); color: var(--deep-blue); padding: 10px 12px; border-radius: 10px; box-shadow: var(--elevation-1); }
+    .ghost:hover { transform: translateY(-2px); box-shadow: var(--elevation-2); }
+
+    /* small helpers */
+    .muted { color:#6b5a57; font-size:13px; }
+    .small { font-size:13px; }
+    :focus { outline: 3px solid rgba(128,0,32,0.12); outline-offset: 3px; }
+
+    /* make hero layout align items center */
+    .hero-right { display:flex; align-items:center; justify-content:center; }
+
+    /* ABOUT column equal-height handling */
+    .about-grid { align-items: stretch; }
+    .about-grid .glass-card { height:100%; display:flex; flex-direction:column; justify-content:space-between; min-height:420px; }
+    .about-image-wrapper { display:flex; align-items:stretch; }
+
+    .about-image { width:100%; height:100%; position:relative; overflow:hidden; border-radius:12px; min-height:420px; display:block; box-shadow: var(--elevation-1); }
+    .about-image::before { content: ""; position:absolute; inset:0; background: var(--about-bg) center/cover no-repeat; transform: translateZ(0); opacity: 0.95; mix-blend-mode: multiply; border-radius:12px; }
+    .about-image::after { content: ""; position:absolute; inset:0; background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(0,0,0,0.02)); pointer-events: none; border-radius:12px; }
+
+    /* WHAT WE DO: slightly reduced so it fits comfortably */
+    .what-section {
+      position: relative;
+      overflow: visible;
+      padding-top: 2.0rem;
+      padding-bottom: 2.0rem;
+      min-height: calc(80vh - var(--nav-height)); /* lowered so it doesn't exceed screen */
+      display: flex;
+      align-items: center;
+    }
+
+    .what-content {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 2rem; /* reduced padding */
+      box-shadow: var(--elevation-2);
+      width: 100%;
+    }
+
+    .what-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: var(--what-bg, url('./pics/what-bg.jpg')) center/cover no-repeat;
+      filter: blur(4px) brightness(0.9) saturate(0.9) contrast(0.98);
+      transform: scale(1.01);
+      border-radius: 16px;
+      pointer-events: none;
+      opacity: 0.45;
+    }
+
+    .what-content-inner { position: relative; z-index: 3; }
+
+    .what-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 1rem;
+    }
+    @media(min-width:900px){
+      .what-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    }
+
+    .what-card {
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+      align-items:flex-start;
+      justify-content:flex-start;
+      padding: 20px;
+      border-radius: 14px;
+      min-height: 420px;           /* reduced from 520 -> 420 */
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(17,17,17,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .what-card:hover{ transform: translateY(-6px); box-shadow: 0 20px 48px rgba(17,17,17,0.08); }
+
+    .what-card .icon {
+      width:64px; height:64px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center; font-size:26px;
+      background: linear-gradient(180deg, rgba(128,0,32,0.06), rgba(128,0,32,0.03));
+      border: 1px solid rgba(128,0,32,0.06);
+      box-shadow: 0 8px 20px rgba(128,0,32,0.06);
+    }
+
+    .what-card h3 { font-size:1.4rem; margin:0; color:var(--deep-blue); }
+    .what-card p { font-size:1rem; color:#6b5a57; margin:0; line-height:1.6; }
+
+    @media(min-width:1200px){
+      .what-card { padding: 26px; min-height: 480px; }
+      .what-card .icon{ width:72px; height:72px; font-size:30px; border-radius:14px; }
+      .what-card h3{ font-size:1.6rem; }
+    }
+
+    @media(max-width:899px){
+      .what-content { padding: 1.2rem; }
+      .what-card { min-height: auto; padding: 14px; }
+      .what-card .icon{ width:56px; height:56px; font-size:20px; }
+      .what-card h3{ font-size:1.15rem; }
+    }
+
+    .glass-card.small { background: #fff; border:1px solid rgba(0,0,0,0.04); box-shadow: var(--elevation-1); padding:16px; border-radius:14px; }
+
+    /* FOOTER: use same maroon style as nav (dark maroon base with warm right glow) */
+    footer#contact {
+      background:
+        radial-gradient(1000px 420px at 88% 60%, rgba(245,160,110,0.06) 0%, rgba(128,0,20,0.12) 6%, rgba(54,0,0,0.98) 18%),
+        linear-gradient(180deg, rgba(30,6,6,0.98), rgba(20,3,3,0.98));
+      color: #fff;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    footer#contact a { color: rgba(255,235,220,0.95); }
+    footer#contact a:hover { color: #fff; text-shadow: 0 8px 28px rgba(245,160,110,0.08); }
+
+    /* remove hover effect from shield text area: keep it static */
+    .footer-shield-text { color: rgba(255,235,220,0.95); text-decoration: none; }
+
+    /* responsive */
+    @media(max-width:800px){
+      .nav-inner .hidden.md\\:flex { display:none !important; } /* ensure nav links hide on small screens */
+    }
+  </style>
+</head>
+<body class="text-[15px] sm:text-[16px] md:text-[18px]">
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-inner">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+          <div class="logo-dot">
+            <img src="./pics/logo.png" alt="NETWORK Logo" />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="text-sm tracking-wide" style="color:rgba(255,235,220,0.95)">NETWORK</span>
+            <span class="text-[10px] uppercase tracking-[0.18em]" style="color:rgba(255,235,220,0.85)">SLSU LUCENA</span>
+          </div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <a href="index.html" class="relative" style="color:rgba(255,235,220,0.95)">Home</a>
+          <a href="about.html" class="relative hover:text-white transition">About</a>
+          <a href="news.html" class="relative hover:text-white transition">News</a>
+          <a href="administration.html" class="relative hover:text-white transition">Administration</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="joinus.html" class="hidden sm:inline-flex items-center justify-center text-xs sm:text-sm font-semibold px-5 py-2 rounded-full" style="background:var(--accent-maroon); color: #fff; box-shadow: 0 8px 18px rgba(128,0,32,0.12)">Join Us</a>
+
+          <!-- Admin button removed per request -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE NAV -->
+    <div class="md:hidden bg-transparent border-t border-[#0000000b] px-4 pb-3 pt-2 flex flex-wrap justify-center gap-4 text-xs font-semibold">
+      <a href="index.html" style="color:rgba(255,235,220,0.95)">Home</a>
+      <a href="about.html" class="hover:text-white">About</a>
+      <a href="news.html" class="hover:text-white">News</a>
+      <a href="administration.html" class="hover:text-white">Administration</a>
+      <a href="joinus.html" class="mt-1 inline-flex items-center justify-center px-4 py-1.5 rounded-full" style="background:var(--accent-maroon); color:#fff">Join Us</a>
+    </div>
+  </nav>
+
+  <!-- spacer for fixed nav -->
+  <div style="height: calc(var(--nav-height));"></div>
+
+  <!-- START main content wrapper (keeps footer locked at bottom) -->
+  <main>
+    <!-- HERO HEADER -->
+    <header id="top" class="relative min-h-screen flex items-center pt-8 pb-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <!-- LEFT: text -->
+          <div class="space-y-5">
+            <p class="text-sm sm:text-base tracking-[0.25em] uppercase" style="color:var(--accent-maroon)">Hello, it's us</p>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight hero-heading">
+              <span class="block">New Enhanced Team</span>
+              <span class="block" style="color:var(--deep-blue)">With Oriented Knowledge</span>
+            </h1>
+            <p class="text-sm sm:text-base max-w-xl" style="color:#453233">A student-led organization empowering BIT students through leadership, technology, and community service at SLSU Lucena.</p>
+            <div class="flex flex-wrap items-center gap-4 mt-3">
+              <a href="#about" class="px-6 py-2.5 rounded-full accent-blue-outline font-semibold text-sm sm:text-base transition" style="background: transparent; color: var(--deep-blue); border:2px solid var(--accent-maroon);">Learn More</a>
+            </div>
+            <div class="flex items-center gap-3 mt-4">
+              <a href="https://www.facebook.com/profile.php?id=61551892495218" class="w-9 h-9 rounded-full border flex items-center justify-center text-xs" style="border-color:var(--accent-maroon); color:var(--deep-blue); background:#fff;"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="w-9 h-9 rounded-full border flex items-center justify-center text-xs" style="border-color:var(--accent-maroon); color:var(--deep-blue); background:#fff;"><i class="fab fa-instagram"></i></a>
+              <a href="https://www.linkedin.com/in/zeanna-patricia-calusin-139249393/?trk=public-profile-join-page" class="w-9 h-9 rounded-full border flex items-center justify-center text-xs" style="border-color:var(--accent-maroon); color:var(--deep-blue); background:#fff;"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+
+          <!-- RIGHT: big circular logo centered and sized to match headline -->
+          <div class="hero-right" aria-hidden="true">
+            <div class="hero-avatar-circle" aria-hidden="true">
+              <div class="hero-avatar-inner">
+                <img src="./pics/logo.png" alt="NETWORK Logo / Avatar" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ABOUT -->
+    <section id="about" class="relative w-full min-h-screen flex items-center py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12 items-stretch about-grid">
+          <div class="glass-card rounded-3xl p-7 sm:p-10 flex flex-col justify-between">
+            <div>
+              <p class="text-xs sm:text-sm tracking-[0.25em] uppercase" style="color:var(--accent-maroon)">Introduction</p>
+              <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4" style="color:var(--deep-blue)">NEW ENHANCED TEAM WITH ORIENTED KNOWLEDGE</h2>
+              <p class="text-sm sm:text-base muted-dark mb-4">The New Enhanced Team With Oriented Knowledge (NETWORK) is a student-led organization committed to empowering future professionals through seminars, workshops, and collaborative activities focused on innovation and leadership.</p>
+              <p class="text-sm sm:text-base muted-dark mb-4">NETWORK builds a strong academic community by promoting teamwork, enhancing technical skills, and fostering growth among BIT students.</p>
+              <p class="text-sm sm:text-base muted-dark mb-6">Through its initiatives, the organization prepares members to adapt and thrive in a fast-changing technological environment.</p>
+            </div>
+            <div>
+              <div class="flex flex-wrap gap-4 mb-6">
+                <div class="rounded-2xl border px-5 py-3" style="border-color: rgba(128,0,32,0.08); background: #fff;">
+                  <p class="text-2xl font-bold" style="color:var(--deep-blue)">20+</p>
+                  <p class="text-xs uppercase tracking-wide muted-dark">Activities</p>
+                </div>
+                <div class="rounded-2xl border px-5 py-3" style="border-color: rgba(128,0,32,0.08); background:#fff;">
+                  <p id="memberCount" class="text-2xl font-bold" style="color:var(--deep-blue)">0</p>
+                  <p class="text-xs uppercase tracking-wide muted-dark">Active Members</p>
+                </div>
+                <div class="rounded-2xl border px-5 py-3" style="border-color: rgba(128,0,32,0.08); background:#fff;">
+                  <p class="text-2xl font-bold" style="color:var(--deep-blue)">5+</p>
+                  <p class="text-xs uppercase tracking-wide muted-dark">Partner Programs</p>
+                </div>
+              </div>
+              <a href="about.html" class="inline-flex items-center gap-2 mt-2 text-sm sm:text-base font-semibold" style="color:var(--accent-maroon)">Learn more about NETWORK <i class="fas fa-arrow-right text-xs" style="color:var(--accent-maroon)"></i></a>
+            </div>
+          </div>
+
+          <div class="about-image-wrapper">
+            <div class="about-image" style="--about-bg: url('./pics/headermain.png');"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT WE DO (expanded but slightly reduced to fit) -->
+    <section class="what-we-do w-full flex items-center what-section" style="--what-bg: url('./pics/what-bg.jpg');">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 w-full">
+        <div class="what-content">
+          <div class="what-content-inner text-center">
+            <p class="text-xs sm:text-sm tracking-[0.25em] uppercase" style="color:var(--accent-maroon)">What we do</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold" style="color:var(--deep-blue)">Growing leaders inside BIT</h2>
+            <p class="text-sm sm:text-base muted-dark max-w-3xl mx-auto mt-3">NETWORK is more than an organization – it’s a community of learners, leaders, and innovators working together to make BIT truly future-ready. Below are our core pillars and how we deliver value to students.</p>
+
+            <!-- Adjusted grid -->
+            <div class="what-grid mt-6">
+              <div class="what-card">
+                <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <h3>Leadership &amp; Growth</h3>
+                <p>We develop leadership through hands-on projects, student-led events, and mentorship programs that allow members to take real responsibilities — from planning to execution and reflection.</p>
+                <ul class="muted mt-3" style="list-style:disc; padding-left:20px;">
+                  <li>Project leadership opportunities</li>
+                  <li>Workshops on public speaking & team ops</li>
+                  <li>Mentorship & peer coaching</li>
+                </ul>
+              </div>
+
+              <div class="what-card">
+                <div class="icon"><i class="fas fa-microchip"></i></div>
+                <h3>Technology &amp; Skills</h3>
+                <p>Practical tech sessions, code labs, and tool-based workshops (web, mobile, databases, cloud) that turn theory into usable skills for internships and projects.</p>
+                <ul class="muted mt-3" style="list-style:disc; padding-left:20px;">
+                  <li>Hands-on workshops & hackathons</li>
+                  <li>Guided projects with deliverables</li>
+                  <li>Guest speakers from industry</li>
+                </ul>
+              </div>
+
+              <div class="what-card">
+                <div class="icon"><i class="fas fa-hands-helping"></i></div>
+                <h3>Community &amp; Service</h3>
+                <p>We build a supportive campus culture through volunteer activities, outreach programs, and collaborations that let students apply skills for social good.</p>
+                <ul class="muted mt-3" style="list-style:disc; padding-left:20px;">
+                  <li>Community outreach & service projects</li>
+                  <li>Inter-organization collaborations</li>
+                  <li>Volunteer-driven initiatives</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWS: dynamic area that will be populated from Firestore in real time -->
+    <section id="news" class="w-full py-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-8 w-full">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4" style="color:var(--deep-blue)">LATEST UPDATES &amp; ANNOUNCEMENTS</h2>
+        <p class="muted-dark mb-8 sm:mb-12">Stay updated on the newest events, activities, and announcements from NETWORK.</p>
+
+        <!-- real-time news grid -->
+        <div id="newsGrid" class="news-grid"></div>
+
+        <div id="noNews" class="text-center text-gray-600 mt-8 hidden">No posts yet. Use the Admin panel to add news.</div>
+      </div>
+    </section>
+
+    <!-- NEWS MODAL -->
+    <div id="newsModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-[1000] p-4">
+      <div class="w-full max-w-3xl bg-white rounded-2xl border overflow-hidden shadow-xl">
+        <div class="flex justify-between items-center p-4 sm:p-6 border-b" style="border-color: rgba(0,0,0,0.06);">
+          <div class="text-sm sm:text-base font-semibold" style="color:var(--accent-maroon)">NEWS</div>
+          <div class="flex items-center gap-3">
+            <button id="newsPrevBtn" class="px-3 py-1 rounded-md text-sm" title="Previous">Prev</button>
+            <button id="newsNextBtn" class="px-3 py-1 rounded-md text-sm" title="Next">Next</button>
+            <button onclick="closeNewsModal()" class="text-gray-600 hover:text-black" aria-label="Close"><i class="fas fa-times text-lg"></i></button>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-6">
+          <div class="relative">
+            <div id="newsCarousel" class="w-full h-64 sm:h-80 overflow-hidden rounded-lg bg-[#f2ede3]/50 flex items-center justify-center"></div>
+            <button id="carouselPrev" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 px-2 py-1 rounded-md hidden">‹</button>
+            <button id="carouselNext" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 px-2 py-1 rounded-md hidden">›</button>
+          </div>
+
+          <h3 id="newsModalTitle" class="mt-4 text-2xl font-bold" style="color:var(--deep-blue)"></h3>
+
+          <div id="newsModalDescWrapper" class="mt-3 text-sm sm:text-base text-gray-700 leading-relaxed">
+            <p id="newsModalDesc" class=""></p>
+            <button id="descToggleBtn" class="mt-3 text-sm font-semibold hidden" style="color:var(--accent-maroon)">Read more</button>
+          </div>
+
+          <div class="mt-6 flex justify-end gap-3">
+            <button id="openOtherNewsBtn" class="px-4 py-2 rounded-full font-semibold" style="background:transparent; border:1px solid rgba(128,0,32,0.08); color:var(--accent-maroon)">Other News →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL (modal drawer) - panel preserved but admin open button removed -->
+    <div id="adminOverlay" class="admin-overlay" role="dialog" aria-hidden="true">
+      <div class="admin-panel">
+        <div class="admin-header">
+          <div>
+            <h2 class="text-xl font-bold">Admin Dashboard — News</h2>
+            <div class="muted small">Sign in to manage posts (Email/Password auth)</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div id="adminUserInfo" class="muted small"></div>
+            <button id="closeAdminBtn" class="btn ghost"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+
+        <div id="adminBody" class="admin-grid">
+          <!-- LEFT: posts list -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div style="display:flex;gap:8px;align-items:center">
+                <label class="muted small">Filter:</label>
+                <select id="adminFilter" class="small" style="padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);">
+                  <option value="all">All</option>
+                  <option value="published">Published</option>
+                  <option value="draft">Drafts</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button id="btnCreateNew" class="btn primary">+ New Post</button>
+                <button id="adminSignOutBtn" class="btn ghost" style="display:none">Sign out</button>
+              </div>
+            </div>
+
+            <div id="adminPosts" style="display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow:auto"></div>
+          </div>
+
+          <!-- RIGHT: create/edit form -->
+          <aside>
+            <div style="background:#fff;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.04)">
+              <h3 id="adminFormTitle" class="font-semibold">Create a post</h3>
+
+              <form id="adminForm" style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+                <input id="adminPostId" type="hidden" />
+
+                <label class="muted small">Title</label>
+                <input id="adminTitle" type="text" required maxlength="200" placeholder="Post title" />
+
+                <label class="muted small">Description</label>
+                <textarea id="adminDesc" rows="6" maxlength="2000" required placeholder="Write the description..."></textarea>
+
+                <label class="muted small">Image URLs (comma separated)</label>
+                <input id="adminImages" placeholder="https://... , https://..." />
+
+                <div style="display:flex;gap:8px;align-items:center">
+                  <label class="muted small"><input id="adminPublished" type="checkbox" checked /> Published</label>
+                  <label class="muted small">Order <input id="adminOrder" type="number" value="0" style="width:80px;margin-left:6px" /></label>
+                </div>
+
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button id="adminSaveBtn" class="btn primary" type="submit">Save</button>
+                  <button id="adminCancelBtn" type="button" class="btn ghost">Cancel</button>
+                </div>
+                <div class="muted small">Images are URL-only for now. I can add storage uploads next.</div>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- END main content wrapper -->
+
+  <!-- FOOTER -->
+  <footer id="contact" class="bg-transparent text-white" style="border-top:1px solid rgba(0,0,0,0.04);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-4" style="color:rgba(255,235,220,0.95)">Empowering Students, Powering Technology.</h3>
+
+        <div class="flex items-center gap-3 mb-3 group">
+          <i class="fas fa-envelope text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">support@bitcourse.com</span>
+        </div>
+
+        <div class="flex items-center gap-3 group">
+          <i class="fas fa-phone text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">1800-1234-5678</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Company</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="about.html" class="footer-link">About Us</a></li>
+            <li><a href="administration.html" class="footer-link">Officers</a></li>
+            <li><a href="news.html" class="footer-link">Activities</a></li>
+            <li><a href="joinus.html" class="footer-link">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Help</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="javascript:void(0)" onclick="openFAQ()" class="footer-link cursor-pointer">FAQ</a></li>
+            <li><a href="https://slsubit.web.app/" class="footer-link">Support</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 text-lg sm:text-xl">
+        <h4 class="font-bold mb-3 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Get In Touch!</h4>
+        <div class="flex gap-4 mb-4">
+          <a href="https://www.facebook.com/profile.php?id=61551892495218" aria-label="Facebook" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.linkedin.com/in/zeanna-patricia-calusin-139249393/?trk=public-profile-join-page" aria-label="LinkedIn" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-3 sm:py-4 w-full" style="border-top:1px solid rgba(255,255,220,0.04);">
+      <div class="max-w-[95%] sm:max-w-[90%] lg:max-w-[85%] mx-auto px-2 sm:px-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] sm:text-[12px] leading-tight">
+        <p class="opacity-90 text-center sm:text-left" style="color:rgba(255,235,220,0.95)">© <span id="currentYear"></span> NETWORK Organization — SLSU Lucena. All rights reserved. This website is developed by BIT-Computer Technology students. Images and trademarks belong to their respective owners.</p>
+        <p class="inline-flex items-center gap-2 opacity-90 text-center sm:text-right whitespace-nowrap footer-shield-text" style="color:rgba(255,235,220,0.95)"><i class="fas fa-shield-alt" style="color:rgba(255,200,160,0.95)"></i><span>Secure &amp; Quality Education at SLSU Lucena</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- UPDATED FAQ modal (REPLACED) -->
+  <div id="faqModal" class="fixed inset-0 bg-black/30 hidden items-center justify-center z-[999]" role="dialog" aria-modal="true" aria-labelledby="faqTitle">
+    <div class="bg-white border rounded-2xl w-[90%] max-w-2xl p-6 sm:p-8 shadow-xl relative text-gray-800">
+      <button onclick="closeFAQ()" aria-label="Close FAQ" class="absolute top-3 right-3 text-gray-600 hover:text-black"><i class="fas fa-times text-xl"></i></button>
+
+      <h2 id="faqTitle" class="text-2xl sm:text-3xl font-bold text-center mb-3" style="color:#b57a45">Frequently Asked Questions</h2>
+
+      <!-- Search -->
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <input id="faqSearch" type="search" placeholder="Search FAQs (e.g. join, events, membership)" class="w-full p-3 rounded-lg border" />
+        <button onclick="clearFAQSearch()" class="btn" title="Clear search"><i class="fas fa-eraser"></i></button>
+      </div>
+
+      <div id="faqList" class="space-y-3 text-sm sm:text-base max-h-[56vh] overflow-auto pr-2">
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">What is NETWORK?</summary>
+          <p class="mt-2 text-gray-700">NETWORK stands for <b>New Enhanced Team With Oriented Knowledge</b>, a student-led BIT organization focused on leadership, technology, and community service.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">How do I join NETWORK?</summary>
+          <p class="mt-2 text-gray-700">Visit the <a href="joinus.html" class="font-semibold underline">Join Us</a> page and fill out the membership form. Selected applicants may be invited to an orientation or short interview.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">What are the membership requirements?</summary>
+          <p class="mt-2 text-gray-700">Open to current BIT students. We expect active participation in at least one project or committee and attendance at core meetings. A positive attitude and willingness to learn are more important than prior experience.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">How can I propose an event or project?</summary>
+          <p class="mt-2 text-gray-700">Send a short proposal to the officers via the contact email or present it during the Projects meeting. Include objectives, estimated resources, and a proposed timeline.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">When and where are NETWORK activities held?</summary>
+          <p class="mt-2 text-gray-700">Activities are posted on the <a href="news.html" class="font-semibold underline">News</a> page and our social channels. Events happen on campus or online—check each event's details for date, time, and venue.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">Who can I contact for sponsorship or partnership?</summary>
+          <p class="mt-2 text-gray-700">Email our partnerships officer at <b>support@bitcourse.com</b> (subject: Sponsorship). Include a brief description of your organization, proposed partnership, and benefit to students.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">Is there a code of conduct?</summary>
+          <p class="mt-2 text-gray-700">Yes — all members must follow our code of conduct: respect others, act professionally, be inclusive, and avoid harassment. Violations may lead to suspension or removal from the organization.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">How do I report issues (e.g., content problems, abuse, technical issues)?</summary>
+          <p class="mt-2 text-gray-700">Report to <b>support@bitcourse.com</b> or contact an officer directly. For sensitive issues, request a confidential meeting with the executive committee.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">Where can I find resources to learn new skills?</summary>
+          <p class="mt-2 text-gray-700">NETWORK maintains a resources list shared to members. We also organize workshops and peer mentoring for web dev, data, hardware, and soft skills.</p>
+        </details>
+
+        <details class="bg-[#fff7ee]/60 border p-4 rounded-lg">
+          <summary class="font-semibold cursor-pointer">How can I become an officer?</summary>
+          <p class="mt-2 text-gray-700">Officer positions are elected/appointed based on the constitution/bylaws. Watch for announcements (usually at semester start) and prepare a short platform or show recent contributions.</p>
+        </details>
+      </div>
+
+      <div class="mt-4 text-center">
+        <button onclick="closeFAQ()" class="primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS: helpers + Firebase + admin scripts -->
+  <script>
+    // FAQ modal helpers + search/filter
+    function openFAQ() {
+      const modal = document.getElementById('faqModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      // focus the search input for convenience
+      const s = document.getElementById('faqSearch');
+      if (s) { setTimeout(()=>s.focus(), 50); }
+    }
+    function closeFAQ() {
+      const modal = document.getElementById('faqModal');
+      if (!modal) return;
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+      clearFAQSearch();
+    }
+
+    // Simple live search/filter for FAQ items
+    const faqSearch = document.getElementById('faqSearch');
+    const faqList = document.getElementById('faqList');
+
+    function clearFAQSearch(){
+      if (faqSearch) { faqSearch.value = ''; filterFAQs(''); }
+    }
+
+    function filterFAQs(q){
+      q = (q||'').trim().toLowerCase();
+      Array.from(faqList.querySelectorAll('details')).forEach(d => {
+        const summary = (d.querySelector('summary')?.textContent || '').toLowerCase();
+        const body = (d.querySelector('p')?.textContent || '').toLowerCase();
+        const match = !q || summary.includes(q) || body.includes(q);
+        d.style.display = match ? '' : 'none';
+        if (!match) d.removeAttribute('open');
+      });
+    }
+
+    if (faqSearch) {
+      faqSearch.addEventListener('input', (e) => filterFAQs(e.target.value));
+    }
+
+    // close modal with ESC and clicking backdrop
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('faqModal');
+      if (!modal || modal.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeFAQ();
+    });
+    document.getElementById('faqModal')?.addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeFAQ();
+    });
+
+    // small utility: set current year
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- FIREBASE (module) - Realtime news + Admin + Join counter -->
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, collection, query, orderBy, onSnapshot,
+      addDoc, doc, setDoc, deleteDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Use your Firebase config (same as in your page)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyZ14QkIWTOKDpHWBbAPFpJzN_-P0dQ3I",
+      authDomain: "network-organization-6adce.firebaseapp.com",
+      projectId: "network-organization-6adce",
+      storageBucket: "network-organization-6adce.firebasestorage.app",
+      messagingSenderId: "529881698138",
+      appId: "1:529881698138:web:776fbbdf07af31c113ad63",
+      measurementId: "G-98VS64MPEB"
+    };
+
+    // init
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM refs for news rendering
+    const newsGrid = document.getElementById('newsGrid');
+    const noNews = document.getElementById('noNews');
+
+    // Admin UI refs
+    const openAdminBtn = document.getElementById('openAdminBtn'); // will be null (button removed)
+    const adminOverlay = document.getElementById('adminOverlay');
+    const closeAdminBtn = document.getElementById('closeAdminBtn');
+    const adminUserInfo = document.getElementById('adminUserInfo');
+    const adminSignOutBtn = document.getElementById('adminSignOutBtn');
+    const adminPosts = document.getElementById('adminPosts');
+    const btnCreateNew = document.getElementById('btnCreateNew');
+    const adminForm = document.getElementById('adminForm');
+    const adminPostId = document.getElementById('adminPostId');
+    const adminTitle = document.getElementById('adminTitle');
+    const adminDesc = document.getElementById('adminDesc');
+    const adminImages = document.getElementById('adminImages');
+    const adminPublished = document.getElementById('adminPublished');
+    const adminOrder = document.getElementById('adminOrder');
+    const adminFormTitle = document.getElementById('adminFormTitle');
+    const adminFilter = document.getElementById('adminFilter');
+
+    // News modal refs (existing)
+    const newsModal = document.getElementById('newsModal');
+    const newsCarousel = document.getElementById('newsCarousel');
+    const newsModalTitle = document.getElementById('newsModalTitle');
+    const newsModalDesc = document.getElementById('newsModalDesc');
+    const descToggleBtn = document.getElementById('descToggleBtn');
+    const newsPrevBtn = document.getElementById('newsPrevBtn');
+    const newsNextBtn = document.getElementById('newsNextBtn');
+    const carouselPrev = document.getElementById('carouselPrev');
+    const carouselNext = document.getElementById('carouselNext');
+    const openOtherNewsBtn = document.getElementById('openOtherNewsBtn');
+
+    // state
+    let unsubscribeNews = null;
+    let newsSnapshotDocs = []; // local copy
+    let currentModalIndex = 0;
+
+    // Firestore collection reference & query (order by 'order' asc, fallback to createdAt)
+    const newsCol = collection(db, 'news');
+    const newsQuery = query(newsCol, orderBy('order', 'asc'));
+
+    // Real-time listener to render news on page
+    function startNewsListener() {
+      if (unsubscribeNews) return;
+      unsubscribeNews = onSnapshot(newsQuery, (snap) => {
+        newsSnapshotDocs = [];
+        snap.forEach(d => newsSnapshotDocs.push({ id: d.id, data: d.data() }));
+        renderNewsGrid(newsSnapshotDocs);
+        if (!newsSnapshotDocs.length) {
+          noNews.classList.remove('hidden');
+        } else {
+          noNews.classList.add('hidden');
+        }
+      }, (err) => {
+        console.error('news listener error', err);
+      });
+    }
+
+    // render grid cards
+    function renderNewsGrid(items) {
+      newsGrid.innerHTML = '';
+      if (!items || !items.length) {
+        noNews.classList.remove('hidden'); return;
+      }
+      noNews.classList.add('hidden');
+      items.forEach((it, idx) => {
+        const d = it.data || it;
+        // skip drafts on public index
+        if (d.published === false) return;
+        const images = Array.isArray(d.images) && d.images.length ? d.images : ['./pics/placeholder.png'];
+        const card = document.createElement('article');
+        card.className = 'news-card';
+        card.innerHTML = `
+          <div class="thumb"><img src="${escapeHtml(images[0])}" loading="lazy" onerror="this.src='./pics/placeholder.png'"></div>
+          <div class="body">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <h3 style="margin:0;font-weight:700;color:var(--deep-blue)">${escapeHtml(d.title||'Untitled')}</h3>
+              <span class="small" style="color:${d.published ? '#b57a45' : '#9CA3AF'}">${d.published ? 'Published' : 'Draft'}</span>
+            </div>
+            <p class="muted-dark small" style="margin:0">${escapeHtml((d.desc||'').slice(0,120))}${(d.desc && d.desc.length>120)?'…':''}</p>
+            <div style="display:flex;justify-content:flex-end">
+              <button class="btn ghost small viewPostBtn" data-docid="${escapeHtml(it.id)}" style="margin-top:8px">View Full Article</button>
+            </div>
+          </div>
+        `;
+        const viewBtn = card.querySelector('.viewPostBtn');
+        // navigate to news.html with post id query param
+        viewBtn.addEventListener('click', () => {
+          const docId = viewBtn.getAttribute('data-docid');
+          window.location.href = `news.html?post=${encodeURIComponent(docId)}`;
+        });
+        newsGrid.appendChild(card);
+      });
+    }
+
+    // ---------- News modal functions (kept simpler) ----------
+    function openNewsModal(publishedIndex) {
+      const publishedList = newsSnapshotDocs.filter(n => n.data && n.data.published !== false);
+      if (!publishedList.length) return;
+      currentModalIndex = Math.max(0, Math.min(publishedList.length-1, publishedIndex || 0));
+      const item = publishedList[currentModalIndex].data;
+      const images = Array.isArray(item.images) && item.images.length ? item.images : ['./pics/placeholder.png'];
+      newsCarousel.innerHTML = '';
+      images.forEach((src, i) => {
+        const wrap = document.createElement('div');
+        wrap.style.display = i === 0 ? 'block':'none';
+        wrap.style.width = '100%';
+        wrap.style.height = '100%';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = item.title || 'news image';
+        img.style.maxWidth = '100%'; img.style.maxHeight = '100%';
+        img.className = 'object-contain mx-auto';
+        wrap.appendChild(img);
+        newsCarousel.appendChild(wrap);
+      });
+      newsModalTitle.textContent = item.title || 'News';
+      newsModalDesc.textContent = item.desc || '';
+      if (images.length <= 1) { carouselPrev.classList.add('hidden'); carouselNext.classList.add('hidden'); }
+      else { carouselPrev.classList.remove('hidden'); carouselNext.classList.remove('hidden'); }
+      newsModal.classList.remove('hidden'); newsModal.classList.add('flex');
+    }
+
+    function closeNewsModal(){ newsModal.classList.add('hidden'); newsModal.classList.remove('flex'); }
+    window.closeNewsModal = closeNewsModal;
+
+    // news modal keyboard and nav
+    window.addEventListener('keydown', (e) => {
+      if (newsModal.classList.contains('hidden')) return;
+      if (e.key === 'Escape') closeNewsModal();
+    });
+    newsModal.addEventListener('click', (ev)=> { if (ev.target === newsModal) closeNewsModal(); });
+
+    // ---------- Admin panel UI behavior ----------
+    if (openAdminBtn) {
+      openAdminBtn.addEventListener('click', () => {
+        adminOverlay.style.display = 'flex';
+        adminOverlay.setAttribute('aria-hidden','false');
+      });
+    }
+
+    if (closeAdminBtn) {
+      closeAdminBtn.addEventListener('click', closeAdminPanel);
+    }
+    function closeAdminPanel(){ if (adminOverlay) { adminOverlay.style.display = 'none'; adminOverlay.setAttribute('aria-hidden','true'); } }
+
+    // sign out button in admin panel
+    if (adminSignOutBtn) {
+      adminSignOutBtn.addEventListener('click', async () => {
+        try { await signOut(auth); } catch(e){ console.error(e); alert('Sign out failed'); }
+      });
+    }
+
+    // Show a minimal login form in admin panel if user not signed in
+    function renderAdminAuthUI(user){
+      if (user) {
+        adminUserInfo.textContent = 'Signed in as ' + user.email;
+        if (adminSignOutBtn) adminSignOutBtn.style.display = '';
+        startNewsListener(); // ensure news visible to public as well
+        startAdminPostListener();
+      } else {
+        adminUserInfo.innerHTML = '';
+        if (adminSignOutBtn) adminSignOutBtn.style.display = 'none';
+        adminUserInfo.innerHTML = `
+          <form id="adminLoginForm" style="display:flex;gap:8px;align-items:center">
+            <input id="adminEmail" type="email" placeholder="email" style="padding:6px;border-radius:6px;background:#fff;border:1px solid rgba(0,0,0,0.06);color:var(--deep-blue)" />
+            <input id="adminPass" type="password" placeholder="password" style="padding:6px;border-radius:6px;background:#fff;border:1px solid rgba(0,0,0,0.06);color:var(--deep-blue)" />
+            <button id="adminLoginBtn" class="btn primary" type="submit">Sign in</button>
+          </form>
+        `;
+        const loginForm = document.getElementById('adminLoginForm');
+        loginForm.addEventListener('submit', async (ev) => {
+          ev.preventDefault();
+          const email = document.getElementById('adminEmail').value.trim();
+          const password = document.getElementById('adminPass').value;
+          if (!email || !password) { alert('Provide email and password.'); return; }
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+          } catch(err) {
+            alert('Sign in failed: ' + err.message);
+            console.error(err);
+          }
+        });
+      }
+    }
+
+    // auth state listener
+    onAuthStateChanged(auth, user => {
+      renderAdminAuthUI(user);
+      if (!user) {
+        if (adminPosts) adminPosts.innerHTML = '<div class="muted">Sign in to manage posts.</div>';
+      }
+    });
+
+    // admin posts realtime listener & UI
+    let unsubscribeAdmin = null;
+    function startAdminPostListener(){
+      if (unsubscribeAdmin) return;
+      unsubscribeAdmin = onSnapshot(newsQuery, (snap) => {
+        const docs = [];
+        snap.forEach(d => docs.push({ id: d.id, data: d.data() }));
+        renderAdminPosts(docs);
+      }, err => console.error('admin listener error', err));
+    }
+
+    function renderAdminPosts(docs){
+      if (!adminPosts) return;
+      adminPosts.innerHTML = '';
+      if (!docs.length) { adminPosts.innerHTML = '<div class="muted">No posts yet.</div>'; return; }
+      const filter = adminFilter.value;
+      const filtered = docs.filter(d => {
+        if (filter === 'all') return true;
+        if (filter === 'published') return d.data && d.data.published !== false;
+        if (filter === 'draft') return d.data && d.data.published === false;
+        return true;
+      });
+      filtered.forEach(d => {
+        const el = document.createElement('div');
+        el.style.display = 'flex'; el.style.gap = '8px'; el.style.alignItems = 'center'; el.style.justifyContent = 'space-between';
+        el.style.padding = '8px'; el.style.border = '1px solid rgba(0,0,0,0.04)'; el.style.borderRadius = '8px'; el.style.background = '#fff';
+        const left = document.createElement('div');
+        left.style.display='flex'; left.style.gap='8px'; left.style.alignItems='center';
+        const thumb = document.createElement('div'); thumb.style.width='72px'; thumb.style.height='56px'; thumb.style.overflow='hidden'; thumb.style.borderRadius='8px';
+        const img = document.createElement('img'); img.src = (d.data.images && d.data.images[0]) ? d.data.images[0] : './pics/placeholder.png';
+        img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
+        img.onerror = () => { img.src='./pics/placeholder.png'; }
+        thumb.appendChild(img);
+        const meta = document.createElement('div'); meta.innerHTML = `<div style="font-weight:700;color:var(--deep-blue)">${escapeHtml(d.data.title||'Untitled')}</div><div class="muted small">${escapeHtml((d.data.desc||'').slice(0,80))}${(d.data.desc && d.data.desc.length>80)?'…':''}</div>`;
+        left.appendChild(thumb); left.appendChild(meta);
+        const right = document.createElement('div'); right.style.display='flex'; right.style.gap='6px';
+        const editBtn = document.createElement('button'); editBtn.className='btn ghost small'; editBtn.textContent='Edit';
+        const delBtn = document.createElement('button'); delBtn.className='btn ghost small'; delBtn.textContent='Delete';
+        const pubBtn = document.createElement('button'); pubBtn.className='btn ghost small'; pubBtn.textContent = d.data.published ? 'Unpublish' : 'Publish';
+        editBtn.onclick = ()=> openAdminEdit(d.id, d.data);
+        delBtn.onclick = ()=> adminDeleteConfirm(d.id);
+        pubBtn.onclick = ()=> togglePublish(d.id, !d.data.published);
+        right.appendChild(pubBtn); right.appendChild(editBtn); right.appendChild(delBtn);
+        el.appendChild(left); el.appendChild(right);
+        adminPosts.appendChild(el);
+      });
+    }
+
+    // admin create / edit / delete / publish functions
+    if (btnCreateNew) {
+      btnCreateNew.addEventListener('click', ()=> {
+        adminPostId.value = '';
+        adminTitle.value = '';
+        adminDesc.value = '';
+        adminImages.value = '';
+        adminPublished.checked = true;
+        adminOrder.value = 0;
+        adminFormTitle.textContent = 'Create a post';
+        adminTitle.focus();
+      });
+    }
+
+    if (adminForm) {
+      adminForm.addEventListener('submit', async (ev)=> {
+        ev.preventDefault();
+        const id = adminPostId.value;
+        const payload = {
+          title: adminTitle.value.trim(),
+          desc: adminDesc.value.trim(),
+          images: adminImages.value.split(',').map(s=>s.trim()).filter(Boolean),
+          published: !!adminPublished.checked,
+          order: Number(adminOrder.value) || 0
+        };
+        if (!payload.title) { alert('Title required'); return; }
+        try {
+          if (id) {
+            await setDoc(doc(db, 'news', id), {...payload, updatedAt: serverTimestamp()}, { merge: true });
+            alert('Updated');
+          } else {
+            await addDoc(newsCol, {...payload, createdAt: serverTimestamp()});
+            alert('Created');
+          }
+          adminPostId.value=''; adminFormTitle.textContent='Create a post'; adminForm.reset();
+        } catch(err) {
+          console.error(err); alert('Save failed: '+err.message);
+        }
+      });
+    }
+
+    function openAdminEdit(id, data){
+      adminPostId.value = id;
+      adminTitle.value = data.title || '';
+      adminDesc.value = data.desc || '';
+      adminImages.value = Array.isArray(data.images) ? data.images.join(', ') : '';
+      adminPublished.checked = !!data.published;
+      adminOrder.value = (data.order !== undefined ? data.order : 0);
+      adminFormTitle.textContent = 'Edit post';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      adminTitle.focus();
+    }
+
+    async function adminDeleteConfirm(id){
+      if (!confirm('Delete this post? This is permanent.')) return;
+      try {
+        await deleteDoc(doc(db,'news',id));
+        alert('Deleted');
+      } catch(err) { console.error(err); alert('Delete failed: '+err.message); }
+    }
+
+    async function togglePublish(id, newState){
+      try {
+        await setDoc(doc(db,'news',id), { published: !!newState, updatedAt: serverTimestamp() }, { merge: true });
+      } catch(err) { console.error(err); alert('Operation failed: '+err.message); }
+    }
+
+    if (adminFilter) adminFilter.addEventListener('change', ()=> { /* listener will re-render via snapshot */ });
+
+    // helpers
+    function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // ensure we start public news listener even before admin auth
+    startNewsListener();
+
+    // join counter
+    (function startJoinCounter() {
+      try {
+        const joinCol = collection(db, 'joinRequests');
+        onSnapshot(joinCol, (snap) => {
+          const count = snap.size || 0;
+          const el = document.getElementById('memberCount');
+          if (el) el.textContent = String(count);
+        }, (err) => { console.error('joinRequests listener error', err); });
+      } catch (err) { console.error('Failed to start joinRequests listener', err); }
+    })();
+
+    // accessibility & overlay behavior
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (adminOverlay && adminOverlay.style.display === 'flex') closeAdminPanel();
+      }
+    });
+    if (adminOverlay) adminOverlay.addEventListener('click', (ev) => { if (ev.target === adminOverlay) closeAdminPanel(); });
+  </script>
+
+  <!-- small patch to set nav height var -->
+  <script>
+    (function () {
+      function updateNavVar() {
+        const nav = document.querySelector('nav');
+        let navHeight = 76;
+        if (nav) {
+          const rect = nav.getBoundingClientRect();
+          if (rect && rect.height) navHeight = Math.round(rect.height);
+        }
+        document.documentElement.style.setProperty('--nav-height', navHeight + 'px');
+        document.documentElement.style.setProperty('--nav-height-mobile', Math.max(navHeight + 20, 80) + 'px');
+      }
+      window.addEventListener('load', updateNavVar);
+      window.addEventListener('resize', updateNavVar);
+    })();
+  </script>
+</body>
+</html>

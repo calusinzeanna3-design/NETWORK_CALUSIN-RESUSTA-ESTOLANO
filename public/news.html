@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NETWORK - News (Live)</title>
+
+  <!-- TAILWIND -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root{
+      --accent-blue:#800020; --accent-blue-light:#F5E9D6; --accent-maroon:#800020; --bg-dark:#050308; --muted-strong:#cbd5e1;
+    }
+    html{scroll-behavior:smooth; height: 100%; margin: 0; padding: 0; overflow-x: hidden; overscroll-behavior: none;}
+    body{overscroll-behavior:y contain;background:var(--bg-dark);color:var(--muted-strong);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial; height: 100%; margin: 0; padding: 0; overflow-x: hidden; overscroll-behavior: none;}
+    .logo-dot{width:42px;height:42px;border-radius:999px;border:2px solid var(--accent-maroon);display:flex;align-items:center;justify-content:center;background:var(--bg-dark);overflow:hidden}
+    .accent-beige{color:var(--accent-blue-light)}
+    .schedule-card{background:#fff;border:1px solid #e6e6e6;color:#111827;border-radius:0.75rem;padding:0.75rem}
+    :focus{outline:3px solid rgba(245,233,214,0.18);outline-offset:2px}
+    .muted-small{color:#94a3b8;font-size:13px}
+
+    nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 50; }
+    .nav-inner {
+      background:
+        radial-gradient(1000px 420px at 88% 50%, rgba(245,160,110,0.06) 0%, rgba(128,0,20,0.12) 6%, rgba(54,0,0,0.95) 18%),
+        linear-gradient(180deg, rgba(20,3,3,0.98), rgba(30,6,6,0.98));
+      color: #fff;
+      backdrop-filter: blur(4px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    }
+
+    .nav-divider {
+      height: 6px;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,200,160,0.06) 12%, rgba(245,170,110,0.12) 28%, rgba(245,170,110,0.08) 52%, rgba(0,0,0,0) 100%);
+      filter: blur(10px) saturate(1.1);
+      box-shadow: 0 6px 24px rgba(128,0,32,0.10), 0 2px 8px rgba(128,0,32,0.06) inset;
+      opacity: .95;
+    }
+
+    .logo-dot{ width:48px;height:48px;border-radius:999px;border:2px solid rgba(255,255,255,0.06); display:flex;align-items:center;justify-content:center; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); overflow:hidden; box-shadow: var(--elevation-1); }
+    .logo-dot img{ width:100%;height:100%;object-fit:cover;border-radius:999px;display:block; filter: saturate(0.9) contrast(0.95); }
+
+    /* modal styles (image fixed, content scrollable) */
+    .news-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 1200; background: rgba(0,0,0,0.6); padding: 20px; }
+    .news-modal.open { display: flex; }
+    .news-modal .panel { width: 100%; max-width: 980px; background: #fff; border-radius: 12px; overflow: hidden; color: #111827; box-shadow: 0 30px 80px rgba(0,0,0,0.4); display:flex; flex-direction:column; max-height: 86vh; }
+    .news-modal .media { width:100%; height: 360px; background: #f2ede3; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; flex: 0 0 auto; }
+    .news-modal .media img { width:100%; height:100%; object-fit:cover; display:block; }
+    .carousel-controls { position:absolute; top:50%; transform:translateY(-50%); width:100%; display:flex; justify-content:space-between; pointer-events:none; }
+    .carousel-controls button { pointer-events:all; background:rgba(255,255,255,0.85); border:none; padding:8px 10px; border-radius:8px; margin:0 10px; box-shadow:0 6px 16px rgba(0,0,0,0.12); }
+    .news-modal .meta { padding: 18px 20px; overflow-y:auto; flex:1 1 auto; } /* scrollable area */
+    .news-modal .meta h3 { font-size: 1.4rem; margin:0 0 8px 0; color: #111827; }
+    .news-modal .meta p { margin:0 0 12px 0; color: #374151; white-space: pre-wrap; }
+    .news-modal .footer { display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-top:1px solid rgba(0,0,0,0.06); background: #fafafa; flex:0 0 auto; }
+    .news-modal .tags { display:flex; gap:8px; align-items:center; color:#6b7280; font-size:13px; }
+
+    @media (max-width: 700px) {
+      .news-modal .media { height: 220px; }
+      .news-modal .meta h3 { font-size:1.1rem; }
+    }
+  </style>
+</head>
+<body class="text-gray-100">
+
+  <!-- NAV -->
+<nav>
+    <div class="nav-inner">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+          <div class="logo-dot">
+            <img src="./pics/logo.png" alt="NETWORK Logo" />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="text-sm tracking-wide" style="color:rgba(255,235,220,0.95)">NETWORK</span>
+            <span class="text-[10px] uppercase tracking-[0.18em]" style="color:rgba(255,235,220,0.85)">SLSU LUCENA</span>
+          </div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <a href="index.html" class="relative" style="color:rgba(255,235,220,0.95)">Home</a>
+          <a href="about.html" class="relative hover:text-white transition">About</a>
+          <a href="news.html" class="relative hover:text-white transition">News</a>
+          <a href="administration.html" class="relative hover:text-white transition">Administration</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="joinus.html" class="hidden sm:inline-flex items-center justify-center text-xs sm:text-sm font-semibold px-5 py-2 rounded-full" style="background:var(--accent-maroon); color: #fff; box-shadow: 0 8px 18px rgba(128,0,32,0.12)">Join Us</a>
+        </div>
+      </div>
+
+      <!-- glowing divider between navbar and header -->
+      <div class="nav-divider" aria-hidden="true"></div>
+    </div>
+
+    <!-- MOBILE NAV -->
+    <div class="md:hidden bg-transparent border-t border-[#0000000b] px-4 pb-3 pt-2 flex flex-wrap justify-center gap-4 text-xs font-semibold">
+      <a href="index.html" style="color:rgba(255,235,220,0.95)">Home</a>
+      <a href="about.html" class="hover:text-white">About</a>
+      <a href="news.html" class="hover:text-white">News</a>
+      <a href="administration.html" class="hover:text-white">Administration</a>
+      <a href="joinus.html" class="mt-1 inline-flex items-center justify-center px-4 py-1.5 rounded-full" style="background:var(--accent-maroon); color:#fff">Join Us</a>
+    </div>
+  </nav>
+
+  <div class="h-20 sm:h-24"></div>
+
+  <main class="min-h-screen pb-16" style="background: linear-gradient(180deg, rgba(18,1,10,1) 0%, rgba(59,0,0,1) 40%, var(--bg-dark) 100%);">
+    <!-- HERO & NEWS LIST -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-16">
+      <div class="mb-8">
+        <p class="text-xs tracking-[0.25em] uppercase accent-beige mb-2">Latest updates</p>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-white">News &amp; Announcements</h2>
+        <p class="text-sm sm:text-base text-gray-200 max-w-2xl mt-3">Stay informed with the latest programs, recognitions, and activities led by NETWORK.</p>
+      </div>
+
+      <div class="grid gap-10 lg:grid-cols-3">
+        <article class="lg:col-span-2" id="mainNewsCard">
+          <div id="mainImageWrap" class="overflow-hidden rounded-3xl border border-slate-800/80 bg-[#020617]/80 shadow-2xl">
+            <img id="mainImage" src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg" alt="Main news" class="w-full h-[260px] md:h-[340px] object-cover opacity-95 transition-transform duration-500" />
+          </div>
+          <div class="mt-6">
+            <h3 id="mainNewsTitle" class="text-xl md:text-2xl font-bold accent-beige mb-3 leading-snug">Loading latest...</h3>
+            <p id="mainNewsDesc" class="text-gray-200 mb-4 text-[15px] leading-relaxed">Please wait while we fetch the latest news.</p>
+            <div class="flex gap-3 items-center">
+              <button id="mainReadMore" class="px-4 py-2 border rounded-full text-sm font-semibold transition" style="border-color:var(--accent-blue-light); color:var(--accent-blue-light); background:transparent;">Read More</button>
+            </div>
+          </div>
+        </article>
+
+        <div id="sideNews" class="space-y-10">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <div id="moreNews" class="hidden mt-14"></div>
+      <div class="mt-12 flex justify-center">
+        <button id="seeMoreBtn" onclick="toggleMoreNews()" class="px-8 py-3 rounded-full shadow text-sm md:text-base font-semibold transition" style="background:var(--accent-blue-light); color:#3b0000; box-shadow: 0 10px 30px rgba(128,0,32,0.08)">See More</button>
+      </div>
+    </section>
+
+    <!-- CALENDAR + SCHEDULE -->
+    <section id="event-calendar" class="w-full border-t border-[#1f2937]/70">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div class="mb-6">
+          <p class="text-xs sm:text-sm tracking-[0.25em] uppercase accent-beige mb-1">Activities</p>
+          <h2 class="text-3xl md:text-4xl font-bold text-white">Latest News &amp; Events</h2>
+          <p class="text-gray-300 text-sm md:text-base mt-1 max-w-xl">Tap a highlighted date to view scheduled news &amp; events.</p>
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 flex flex-col lg:flex-row gap-8">
+          <div class="w-full lg:w-7/12 border border-gray-200 rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 id="calendarMonthLabel" class="text-xl md:text-2xl font-semibold text-gray-900"></h3>
+                <p class="text-xs md:text-sm text-gray-500">Tap a highlighted date to view scheduled news &amp; events.</p>
+              </div>
+              <div class="flex gap-2">
+                <button id="prevMonthBtn" class="px-4 py-2 rounded-full font-semibold" style="background:var(--accent-maroon); color:var(--accent-blue-light); border:1px solid rgba(245,233,214,0.12)">← Prev</button>
+                <button id="nextMonthBtn" class="px-4 py-2 rounded-full font-semibold" style="background:var(--accent-maroon); color:var(--accent-blue-light); border:1px solid rgba(245,233,214,0.12)">Next →</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-7 text-center text-xs md:text-sm font-semibold text-gray-500 mb-2">
+              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+
+            <div id="calendarGrid" class="grid grid-cols-7 gap-1 md:gap-2 text-sm"></div>
+
+            <div class="mt-4 flex items-center gap-2 text-xs text-gray-500">
+              <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:var(--accent-maroon)"></span>
+              <span>Dates with events</span>
+            </div>
+          </div>
+
+          <div class="w-full lg:w-5/12 border border-gray-200 rounded-2xl p-5 flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-xl md:text-2xl font-semibold text-gray-900">Schedule</h3>
+                <p class="text-xs md:text-sm text-gray-500">Tap a date in the calendar to view announcements.</p>
+              </div>
+              <button id="showAllEventsBtn" class="text-xs md:text-sm px-3 py-1.5 rounded-full font-semibold" style="border:1px solid var(--accent-maroon); color:var(--accent-maroon); background:transparent">Show all events</button>
+            </div>
+
+            <div id="scheduleContent" class="flex-1 rounded-xl border border-dashed border-gray-200 px-4 py-4 text-sm overflow-y-auto">Select a date to view events.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- NEWS MODAL (no admin edit link; content scrollable) -->
+  <div id="newsModal" class="news-modal" aria-hidden="true">
+    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="media" id="modalMedia">
+        <!-- images appended here -->
+        <div class="carousel-controls" style="display:none">
+          <button id="modalPrev" title="Previous">‹</button>
+          <button id="modalNext" title="Next">›</button>
+        </div>
+      </div>
+
+      <!-- meta is scrollable (max-height controlled by panel) -->
+      <div class="meta">
+        <h3 id="modalTitle">Post title</h3>
+        <div class="tags" id="modalTags"></div>
+        <p id="modalDesc" class="mt-3"></p>
+      </div>
+
+      <div class="footer">
+        <div class="tags">
+          <span id="modalEventDate"></span>
+        </div>
+        <div>
+          <button onclick="closeNewsModal()" class="px-3 py-1.5 rounded-full ml-3" style="background:transparent;border:1px solid rgba(0,0,0,0.06)">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="contact" class="bg-transparent text-white" style="border-top:1px solid rgba(0,0,0,0.04);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10 grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg sm:text-xl font-bold mb-4" style="color:rgba(255,235,220,0.95)">Empowering Students, Powering Technology.</h3>
+
+        <div class="flex items-center gap-3 mb-3 group">
+          <i class="fas fa-envelope text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">support@bitcourse.com</span>
+        </div>
+
+        <div class="flex items-center gap-3 group">
+          <i class="fas fa-phone text-base sm:text-lg cursor-pointer" style="color:rgba(255,235,220,0.95)"></i>
+          <div class="w-[2px] h-5 bg-gray-400"></div>
+          <span class="text-xs sm:text-sm opacity-100" style="color:rgba(255,235,220,0.95)">1800-1234-5678</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Company</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="about.html" class="footer-link">About Us</a></li>
+            <li><a href="administration.html" class="footer-link">Officers</a></li>
+            <li><a href="news.html" class="footer-link">Activities</a></li>
+            <li><a href="joinus.html" class="footer-link">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-2 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Help</h4>
+          <ul class="space-y-1 text-xs sm:text-sm" style="color:rgba(255,235,220,0.95)">
+            <li><a href="javascript:void(0)" onclick="openFAQ()" class="footer-link cursor-pointer">FAQ</a></li>
+            <li><a href="https://slsubit.web.app/" class="footer-link">Support</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 text-lg sm:text-xl">
+        <h4 class="font-bold mb-3 text-sm sm:text-base" style="color:rgba(255,235,220,0.95)">Get In Touch!</h4>
+        <div class="flex gap-4 mb-4">
+          <a href="https://www.facebook.com/profile.php?id=61551892495218" aria-label="Facebook" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.linkedin.com/in/zeanna-patricia-calusin-139249393/?trk=public-profile-join-page" aria-label="LinkedIn" class="social-icon" style="color:var(--accent-maroon); background:#fff; padding:8px; border-radius:8px;"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-3 sm:py-4 w-full" style="border-top:1px solid rgba(255,255,255,0.04);">
+      <div class="max-w-[95%] sm:max-w-[90%] lg:max-w-[85%] mx-auto px-2 sm:px-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-[10px] sm:text-[12px] leading-tight">
+        <p class="opacity-90 text-center sm:text-left" style="color:rgba(255,235,220,0.95)">© <span id="currentYear"></span> NETWORK Organization — SLSU Lucena. All rights reserved. This website is developed by BIT-Computer Technology students. Images and trademarks belong to their respective owners.</p>
+        <p class="inline-flex items-center gap-2 opacity-90 text-center sm:text-right whitespace-nowrap footer-shield-text" style="color:rgba(255,235,220,0.95)"><i class="fas fa-shield-alt" style="color:rgba(255,200,160,0.95)"></i><span>Secure &amp; Quality Education at SLSU Lucena</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- minimal FAQ modal -->
+  <div id="faqModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-[999]">
+    <div class="bg-[#0e0a14] border border-[rgba(245,233,214,0.4)] rounded-2xl w-[90%] max-w-2xl p-6 sm:p-8 shadow-xl relative text-gray-200">
+      <button onclick="closeFAQ()" class="absolute top-3 right-3 text-gray-300 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+      <h2 class="text-2xl sm:text-3xl font-bold text-center accent-beige mb-4">Frequently Asked Questions</h2>
+      <div class="space-y-4 text-sm sm:text-base">
+        <details class="bg-[#1a1325]/60 border border-[rgba(245,233,214,0.3)] p-4 rounded-lg"><summary class="font-semibold cursor-pointer accent-beige">What is NETWORK?</summary><p class="mt-2 text-gray-300">NETWORK stands for New Enhanced Team With Oriented Knowledge—student-led BIT org focused on leadership & community service.</p></details>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREBASE + APP SCRIPT -->
+  <script type="module">
+    const ADMIN_PAGE = 'administration.html';
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDyZ14QkIWTOKDpHWBbAPFpJzN_-P0dQ3I",
+      authDomain: "network-organization-6adce.firebaseapp.com",
+      projectId: "network-organization-6adce",
+      storageBucket: "network-organization-6adce.firebasestorage.app",
+      messagingSenderId: "529881698138",
+      appId: "1:529881698138:web:776fbbdf07af31c113ad63",
+      measurementId: "G-98VS64MPEB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const mainImage = document.getElementById('mainImage');
+    const mainNewsTitle = document.getElementById('mainNewsTitle');
+    const mainNewsDesc = document.getElementById('mainNewsDesc');
+    const mainReadMore = document.getElementById('mainReadMore');
+    const sideNews = document.getElementById('sideNews');
+    const calendarMonthLabel = document.getElementById("calendarMonthLabel");
+    const calendarGrid = document.getElementById("calendarGrid");
+    const scheduleContent = document.getElementById("scheduleContent");
+    const showAllEventsBtn = document.getElementById("showAllEventsBtn");
+    const seeMoreBtn = document.getElementById("seeMoreBtn");
+    const moreNewsDiv = document.getElementById("moreNews");
+
+    // modal refs
+    const newsModal = document.getElementById('newsModal');
+    const modalMedia = document.getElementById('modalMedia');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalTags = document.getElementById('modalTags');
+    const modalEventDate = document.getElementById('modalEventDate');
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
+    const carouselControls = document.querySelector('.carousel-controls');
+
+    let newsItems = [];
+    let events = [];
+    let calendarItems = [];
+    let eventDatesSet = new Set();
+
+    // modal state
+    let modalOrderedPublished = []; // only published posts in display order
+    let modalCurrentIndex = 0;
+    let modalCurrentImageIndex = 0;
+
+    function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function normalizeToISODate(val) {
+      if (!val) return '';
+      val = String(val).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(val)) return val;
+      const dmy = val.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if (dmy) {
+        const dd = String(dmy[1]).padStart(2,'0');
+        const mm = String(dmy[2]).padStart(2,'0');
+        const yyyy = dmy[3];
+        return `${yyyy}-${mm}-${dd}`;
+      }
+      const dt = new Date(val);
+      if (!isNaN(dt.getTime())) {
+        const yyyy = dt.getFullYear();
+        const mm = String(dt.getMonth()+1).padStart(2,'0');
+        const dd = String(dt.getDate()).padStart(2,'0');
+        return `${yyyy}-${mm}-${dd}`;
+      }
+      return '';
+    }
+
+    function formatDisplayDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    }
+
+    // Firestore listeners (realtime)
+    const newsCol = collection(db, 'news');
+    const eventsCol = collection(db, 'events');
+
+    onSnapshot(query(newsCol, orderBy('order','asc')), snap => {
+      const arr = [];
+      snap.forEach(d => {
+        const data = d.data();
+        arr.push({
+          id: d.id,
+          title: data.title || '',
+          desc: data.desc || '',
+          images: Array.isArray(data.images) ? data.images : [],
+          published: !!data.published,
+          eventDate: normalizeToISODate(data.eventDate || ''),
+          order: (data.order !== undefined ? data.order : 0),
+          raw: data
+        });
+      });
+      newsItems = arr;
+      mergeAndRender();
+    }, err => console.error('news listen err', err));
+
+    onSnapshot(query(eventsCol, orderBy('date','asc')), snap => {
+      const arr = [];
+      snap.forEach(d => {
+        const data = d.data();
+        arr.push({
+          id: d.id,
+          date: normalizeToISODate(data.date || ''),
+          title: data.title || '',
+          time: data.time || '',
+          location: data.location || data.description || '',
+          category: data.category || 'Event',
+          raw: data
+        });
+      });
+      events = arr;
+      mergeAndRender();
+    }, err => console.error('events listen err', err));
+
+    function mergeAndRender(){
+      const combined = [];
+      events.forEach(e => combined.push({
+        id: e.id, date: e.date, title: e.title, time: e.time, location: e.location, category: e.category, source: 'events', raw: e.raw
+      }));
+      newsItems.forEach(n => {
+        if (n.eventDate) combined.push({ id: n.id, date: n.eventDate, title: n.title, time: '', location: '', category: 'News', source: 'news', raw: n.raw });
+      });
+
+      combined.sort((a,b) => (a.date > b.date ? 1 : (a.date < b.date ? -1 : 0)));
+      calendarItems = combined;
+      eventDatesSet = new Set(calendarItems.filter(i => i.date).map(i => i.date));
+
+      renderNewsSection();
+      renderCalendar();
+      if (selectedDate) renderScheduleForDate(selectedDate);
+    }
+
+    function renderNewsSection(){
+      // pick main post: first published (order asc), fallback first
+      const published = newsItems.filter(n=>n.published);
+      const main = published.length ? published[0] : (newsItems[0] || null);
+
+      if (main) {
+        mainImage.src = (main.images && main.images[0]) ? main.images[0] : 'https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg';
+        mainImage.onerror = () => { mainImage.src = 'https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg'; };
+        mainNewsTitle.textContent = main.title || 'Untitled';
+        mainNewsDesc.textContent = (main.desc || '').slice(0, 240) + ((main.desc && main.desc.length>240)?'…':'');
+        mainReadMore.onclick = () => openNewsModalById(main.id);
+      } else {
+        mainImage.src = 'https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg';
+        mainNewsTitle.textContent = 'No news yet';
+        mainNewsDesc.textContent = 'There are no news posts. Create one from the admin dashboard.';
+        mainReadMore.onclick = () => window.location.href = ADMIN_PAGE;
+      }
+
+      // side news (first 4)
+      sideNews.innerHTML = '';
+      const side = (published.length ? published : newsItems).slice(0,4);
+      side.forEach(n => {
+        const a = document.createElement('article');
+        a.className = 'flex flex-col cursor-pointer';
+        a.innerHTML = `
+          <div class="overflow-hidden rounded-3xl border border-slate-800/80 bg-[#020617]/80 shadow-xl">
+            <img src="${escapeHtml((n.images && n.images[0]) || 'https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg')}" alt="${escapeHtml(n.title)}" class="w-full h-[170px] md:h-[180px] object-cover opacity-95 transition-transform duration-500"/>
+          </div>
+          <div class="mt-4">
+            <h3 class="text-lg md:text-xl font-semibold accent-beige mb-2 leading-snug">${escapeHtml(n.title)}</h3>
+            <p class="text-gray-200 mb-3 text-[15px] leading-relaxed">${escapeHtml((n.desc||'').slice(0,140))}${(n.desc && n.desc.length>140)?'…':''}</p>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 rounded-full text-sm font-semibold transition" style="border:1px solid var(--accent-blue-light); color:var(--accent-blue-light); background:transparent">Read More</button>
+            </div>
+          </div>
+        `;
+        // wire read more
+        a.querySelector('button').addEventListener('click', () => openNewsModalById(n.id));
+        // fallback image error
+        a.querySelector('img').addEventListener('error', (ev)=> ev.currentTarget.src='https://images.pexels.com/photos/3184325/pexels-photo-3184325.jpeg');
+        sideNews.appendChild(a);
+      });
+
+      // moreNews grid
+      moreNewsDiv.innerHTML = '';
+      const grid = document.createElement('div');
+      grid.className = 'grid md:grid-cols-3 gap-10';
+      (published.length ? published : newsItems).forEach(n => {
+        const art = document.createElement('article');
+        art.className = 'cursor-pointer';
+        art.innerHTML = `
+          <div class="rounded-3xl overflow-hidden shadow-xl border border-slate-800/80 bg-[#020617]/80">
+            <img src="${escapeHtml((n.images && n.images[0]) || 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg')}" alt="${escapeHtml(n.title)}" class="w-full h-[200px] object-cover opacity-95 transition-transform duration-500"/>
+          </div>
+          <h3 class="mt-4 text-xl font-semibold accent-beige">${escapeHtml(n.title)}</h3>
+          <p class="text-gray-300 mt-2 text-sm">${escapeHtml((n.desc||'').slice(0,120))}${(n.desc && n.desc.length>120)?'…':''}</p>
+        `;
+        art.querySelector('div img').addEventListener('error', (ev) => ev.currentTarget.src='https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg');
+        // open modal on click of whole card
+        art.addEventListener('click', () => openNewsModalById(n.id));
+        grid.appendChild(art);
+      });
+      moreNewsDiv.appendChild(grid);
+
+      // prepare modalOrderedPublished for navigation (only published)
+      modalOrderedPublished = (newsItems.filter(n => n.published)).slice();
+    }
+
+    // Open modal by post id
+    function openNewsModalById(id) {
+      // find index in modalOrderedPublished; if not published, include it temporarily
+      let idx = modalOrderedPublished.findIndex(p => p.id === id);
+      if (idx === -1) {
+        // maybe it's an unpublished post; show it if present in newsItems (admin users might link)
+        const temp = newsItems.find(n => n.id === id);
+        if (!temp) { alert('Post not found'); return; }
+        // add to beginning for viewing (not altering original array)
+        modalOrderedPublished = [temp, ...modalOrderedPublished];
+        idx = 0;
+      }
+      modalCurrentIndex = idx;
+      modalCurrentImageIndex = 0;
+      renderModalForIndex(modalCurrentIndex);
+      newsModal.classList.add('open');
+      newsModal.setAttribute('aria-hidden','false');
+      // focus management
+      document.body.style.overflow = 'hidden';
+    }
+
+    function renderModalForIndex(idx) {
+      const item = modalOrderedPublished[idx];
+      if (!item) return;
+      // media area: build carousel slides
+      modalMedia.innerHTML = ''; // clear
+      const images = (item.images && item.images.length) ? item.images : ['https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg'];
+      images.forEach((src, i) => {
+        const wrap = document.createElement('div');
+        wrap.style.display = (i === modalCurrentImageIndex) ? 'block' : 'none';
+        wrap.style.width = '100%';
+        wrap.style.height = '100%';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = item.title || 'news image';
+        img.loading = 'lazy';
+        img.onerror = () => { img.src = 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg'; };
+        wrap.appendChild(img);
+        modalMedia.appendChild(wrap);
+      });
+
+      // show carousel controls only if >1
+      if (images.length > 1) {
+        carouselControls.style.display = '';
+        modalPrev.onclick = (e) => { e.stopPropagation(); changeModalImage(-1); };
+        modalNext.onclick = (e) => { e.stopPropagation(); changeModalImage(1); };
+      } else {
+        carouselControls.style.display = 'none';
+      }
+
+      modalTitle.textContent = item.title || 'Untitled';
+      modalDesc.textContent = item.desc || '';
+      modalEventDate.textContent = item.eventDate ? formatDisplayDate(item.eventDate) : '';
+
+      // prev/next navigation for posts
+      if (modalOrderedPublished.length > 1) {
+        removePostNavZones();
+        addPostNavZones();
+      } else {
+        removePostNavZones();
+      }
+    }
+
+    function changeModalImage(delta) {
+      const item = modalOrderedPublished[modalCurrentIndex];
+      if (!item) return;
+      const total = (item.images && item.images.length) ? item.images.length : 1;
+      modalCurrentImageIndex = (modalCurrentImageIndex + delta + total) % total;
+      renderModalForIndex(modalCurrentIndex);
+    }
+
+    function addPostNavZones() {
+      removePostNavZones();
+      // left zone
+      const left = document.createElement('div');
+      left.id = 'postNavLeft';
+      left.style.position = 'absolute';
+      left.style.left = '0';
+      left.style.top = '0';
+      left.style.bottom = '0';
+      left.style.width = '18%';
+      left.style.cursor = 'pointer';
+      left.style.zIndex = '2';
+      left.style.background = 'linear-gradient(90deg, rgba(0,0,0,0.0), rgba(0,0,0,0.02))';
+      left.addEventListener('click', (e) => { e.stopPropagation(); navigateModalPost(-1); });
+      modalMedia.appendChild(left);
+      // right zone
+      const right = document.createElement('div');
+      right.id = 'postNavRight';
+      right.style.position = 'absolute';
+      right.style.right = '0';
+      right.style.top = '0';
+      right.style.bottom = '0';
+      right.style.width = '18%';
+      right.style.cursor = 'pointer';
+      right.style.zIndex = '2';
+      right.style.background = 'linear-gradient(270deg, rgba(0,0,0,0.0), rgba(0,0,0,0.02))';
+      right.addEventListener('click', (e) => { e.stopPropagation(); navigateModalPost(1); });
+      modalMedia.appendChild(right);
+    }
+
+    function removePostNavZones() {
+      const l = document.getElementById('postNavLeft');
+      const r = document.getElementById('postNavRight');
+      if (l) l.remove();
+      if (r) r.remove();
+    }
+
+    function navigateModalPost(delta) {
+      if (!modalOrderedPublished.length) return;
+      modalCurrentIndex = (modalCurrentIndex + delta + modalOrderedPublished.length) % modalOrderedPublished.length;
+      modalCurrentImageIndex = 0;
+      renderModalForIndex(modalCurrentIndex);
+    }
+
+    function closeNewsModal() {
+      newsModal.classList.remove('open');
+      newsModal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      removePostNavZones();
+    }
+    window.closeNewsModal = closeNewsModal;
+
+    // keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (!newsModal.classList.contains('open')) return;
+      if (e.key === 'Escape') closeNewsModal();
+      if (e.key === 'ArrowLeft') {
+        if (e.shiftKey) navigateModalPost(-1); else changeModalImage(-1);
+      }
+      if (e.key === 'ArrowRight') {
+        if (e.shiftKey) navigateModalPost(1); else changeModalImage(1);
+      }
+    });
+
+    // click outside to close
+    newsModal.addEventListener('click', (ev) => {
+      if (ev.target === newsModal) closeNewsModal();
+    });
+
+    // CALENDAR logic (same as before)
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    let currentYear, currentMonth, selectedDate = null;
+
+    function setCalendarToDate(dateStr){
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return;
+      currentYear = d.getFullYear();
+      currentMonth = d.getMonth();
+      selectedDate = dateStr;
+      renderCalendar();
+      renderScheduleForDate(dateStr);
+      const sec = document.getElementById('event-calendar');
+      if (sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function renderCalendar(){
+      calendarGrid.innerHTML = '';
+      if (typeof currentMonth === 'undefined') {
+        const now = new Date();
+        currentYear = now.getFullYear();
+        currentMonth = now.getMonth();
+      }
+      calendarMonthLabel.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      for (let i=0;i<firstDay;i++){
+        const empty = document.createElement('div');
+        calendarGrid.appendChild(empty);
+      }
+
+      for (let day=1; day<=daysInMonth; day++){
+        const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'relative aspect-square w-full rounded-xl text-sm flex items-center justify-center border transition text-gray-800 font-semibold';
+        const hasEvent = eventDatesSet.has(dateStr);
+        if (hasEvent) { btn.style.borderColor = 'rgba(128,0,32,0.12)'; btn.style.background = 'rgba(128,0,32,0.06)'; } else { btn.classList.add('border-gray-200','hover:bg-gray-50'); }
+        if (selectedDate === dateStr) { btn.classList.add('ring-2','ring-offset-2'); btn.style.boxShadow='0 0 0 4px rgba(128,0,32,0.08)'; }
+        btn.textContent = day;
+
+        if (hasEvent){
+          const dot = document.createElement('span');
+          dot.className = 'absolute bottom-1 w-1.5 h-1.5 rounded-full';
+          dot.style.background = 'var(--accent-maroon)';
+          btn.appendChild(dot);
+        }
+
+        btn.addEventListener('click', () => {
+          selectedDate = dateStr;
+          renderCalendar();
+          renderScheduleForDate(dateStr);
+        });
+
+        calendarGrid.appendChild(btn);
+      }
+    }
+
+    function renderScheduleForDate(dateStr){
+      const items = calendarItems.filter(i => i.date === dateStr);
+      scheduleContent.innerHTML = '';
+      if (!items.length) {
+        scheduleContent.innerHTML = `<p class="text-sm text-gray-600">No events scheduled for <span class="font-semibold">${dateStr}</span>.</p>`;
+        return;
+      }
+
+      const d = new Date(dateStr);
+      const pretty = `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      const header = document.createElement('div'); header.className='mb-3';
+      header.innerHTML = `<p class="text-xs uppercase tracking-wide text-gray-500">Events on</p><p class="text-base font-semibold text-gray-800">${pretty}</p>`;
+      scheduleContent.appendChild(header);
+
+      items.forEach(it => {
+        const card = document.createElement('div'); card.className = 'mb-3 last:mb-0 schedule-card';
+        const adminLink = it.source === 'events' ? `${ADMIN_PAGE}?editEvent=${encodeURIComponent(it.id)}` : `${ADMIN_PAGE}?editNews=${encodeURIComponent(it.id)}`;
+        card.innerHTML = `
+          <p class="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style="background:rgba(128,0,32,0.06); color:var(--accent-maroon); font-weight:700; margin-bottom:6px;">
+            <span class="w-1.5 h-1.5 rounded-full" style="background:var(--accent-maroon); display:inline-block; margin-right:6px;"></span>
+            ${escapeHtml(it.category || '')}
+          </p>
+          <p class="text-sm font-semibold" style="color:#111827;">${escapeHtml(it.title)}</p>
+          <p class="text-xs mt-1" style="color:#4b5563;"><i class="fa-solid fa-clock mr-1"></i>${escapeHtml(it.time||'')}</p>
+          <p class="text-xs" style="color:#4b5563;"><i class="fa-solid fa-location-dot mr-1"></i>${escapeHtml(it.location||'')}</p>
+          <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+            <button class="px-3 py-1 rounded-md" style="border:1px solid rgba(0,0,0,0.06); background:transparent" onclick="openNewsModalById('${it.id}')">Open</button>
+          </div>
+        `;
+        scheduleContent.appendChild(card);
+      });
+    }
+
+    document.getElementById('prevMonthBtn').addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
+    document.getElementById('nextMonthBtn').addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
+
+    let showingAll = false;
+    showAllEventsBtn.addEventListener('click', () => {
+      if (!showingAll) {
+        scheduleContent.innerHTML = '';
+        if (!calendarItems.length) scheduleContent.textContent = 'No events available.';
+        calendarItems.forEach(it => {
+          const card = document.createElement('div'); card.className='mb-3 last:mb-0 schedule-card';
+          const adminLink = it.source === 'events' ? `${ADMIN_PAGE}?editEvent=${encodeURIComponent(it.id)}` : `${ADMIN_PAGE}?editNews=${encodeURIComponent(it.id)}`;
+          card.innerHTML = `<p class="text-xs text-gray-500 mb-0.5">${escapeHtml(it.date)}</p>
+            <p class="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style="background:rgba(128,0,32,0.06); color:var(--accent-maroon); font-weight:700; margin-bottom:6px;">
+              <span class="w-1.5 h-1.5 rounded-full" style="background:var(--accent-maroon); display:inline-block; margin-right:6px;"></span>
+              ${escapeHtml(it.category)}
+            </p>
+            <p class="text-sm font-semibold" style="color:#111827;">${escapeHtml(it.title)}</p>
+            <p class="text-xs mt-1" style="color:#4b5563;"><i class="fa-solid fa-clock mr-1"></i>${escapeHtml(it.time||'')}</p>
+            <p class="text-xs" style="color:#4b5563;"><i class="fa-solid fa-location-dot mr-1"></i>${escapeHtml(it.location||'')}</p>
+           
+          `;
+          scheduleContent.appendChild(card);
+        });
+        showAllEventsBtn.textContent = 'Back to date view';
+        showingAll = true;
+      } else {
+        scheduleContent.textContent = 'Select a date to view events.';
+        showAllEventsBtn.textContent = 'Show all events';
+        showingAll = false;
+      }
+    });
+
+    window.toggleMoreNews = function(){ if (moreNewsDiv.classList.contains('hidden')) { moreNewsDiv.classList.remove('hidden'); seeMoreBtn.textContent = 'See Less'; } else { moreNewsDiv.classList.add('hidden'); seeMoreBtn.textContent = 'See More'; } };
+
+    // init calendar month from URL ?date or today
+    window.addEventListener('load', () => {
+      const params = new URLSearchParams(window.location.search);
+      const dateParam = params.get('date');
+      const now = new Date();
+      if (dateParam && normalizeToISODate(dateParam)) {
+        selectedDate = normalizeToISODate(dateParam);
+        const d = new Date(selectedDate);
+        currentYear = d.getFullYear();
+        currentMonth = d.getMonth();
+      } else {
+        currentYear = now.getFullYear();
+        currentMonth = now.getMonth();
+      }
+      renderCalendar();
+      if (selectedDate) renderScheduleForDate(selectedDate);
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+    });
+
+    // FAQ open/close (existing)
+    window.openFAQ = function(){ const m = document.getElementById('faqModal'); m.classList.remove('hidden'); m.classList.add('flex'); };
+    window.closeFAQ = function(){ const m = document.getElementById('faqModal'); m.classList.add('hidden'); m.classList.remove('flex'); };
+  </script>
+</body>
+</html>
